@@ -1,0 +1,67 @@
+{
+  "autoMemoryEnabled": false,
+  "autoContinueAtUsageLimit": true,
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/anthropics/claude-plugins-official.git"
+      }
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bd prime --hook-json",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ]
+  },
+  "permissions": {
+    "additionalDirectories": [
+      "{{HOME}}\\home\\agents\\second-brain"
+    ],
+    "deny": [
+      "Read(//**/.env)",
+      "Edit(//**/.env)",
+      "Read(//wsl.localhost/**/.env)",
+      "Edit(//wsl.localhost/**/.env)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "PowerShell(git push *)",
+      "Bash(bd sync *)",
+      "PowerShell(bd sync *)",
+      "Bash(bd dolt push *)",
+      "PowerShell(bd dolt push *)",
+      "Bash(*wsl*git push*)",
+      "PowerShell(*wsl*git push*)",
+      "Bash(*wsl*bd sync*)",
+      "PowerShell(*wsl*bd sync*)",
+      "Bash(*wsl*bd dolt push*)",
+      "PowerShell(*wsl*bd dolt push*)"
+    ]
+  },
+  "autoMode": {
+    "hard_deny": [
+      "$defaults",
+      "Reading, printing, creating or modifying any .env file by any means, including shell commands (.env.example is allowed)",
+      "Printing environment variables or credentials: env, printenv, set, Get-ChildItem env:, dumping credential stores, debug modes that dump the environment"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Pushing to any remote: git push, opening or merging pull requests, bd sync, bd dolt push",
+      "Force operations and history rewrites: git push --force, git reset --hard, git clean -fd, rebasing or deleting branches",
+      "Deleting files or directories outside the current git repository or worktree",
+      "Installing or uninstalling software, or changing system settings or Claude Code settings"
+    ]
+  }
+}

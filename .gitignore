@@ -1,0 +1,4 @@
+# local Claude project settings and backups
+.claude/
+backups/
+*.bak

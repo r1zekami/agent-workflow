@@ -1,0 +1,12 @@
+@~/.claude/instructions/workflow.md
+@~/.claude/instructions/language.md
+@~/.claude/instructions/environment.md
+@~/.claude/instructions/context7.md
+@~/.claude/instructions/beads.md
+@~/.claude/instructions/openspec.md
+@~/.claude/instructions/second-brain.md
+@~/.claude/instructions/secrets.md
+@~/.claude/instructions/sensitive-data.md
+@~/.claude/instructions/code-style.md
+@~/.claude/instructions/code-design.md
+@~/.claude/instructions/git.md
