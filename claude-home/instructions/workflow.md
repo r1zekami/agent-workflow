@@ -28,7 +28,7 @@ the user elevates the approach.
 - **Questions** — don't ask unless blocked; assume, and list assumptions in the report.
 - **Scope** — read only what the change needs. No subagents, no broad exploration.
 - **Skip** — no plan, no docs, no beads, no second-brain notes (except the
-  session-log row and technology reports, see "Every approach"), no new tests.
+  session-log entry and technology reports, see "Every approach"), no new tests.
 - **Code conventions** — code-design.md does NOT apply: no interface gate, no
   registries or contracts, no final-report template. Naming style is preferred,
   not required. Log output stays English (non-ASCII breaks Windows consoles).
@@ -88,6 +88,7 @@ beads, isolated on its own branch, reviewed.
    infrastructure specifics). Process the findings with
    `superpowers:receiving-code-review` — verify each one, push back on wrong
    ones, never apply blindly. Blocking findings are fixed before step 8.
+   Review rounds are limited — see "Reviews" under Every approach.
 8. **Verify** — `superpowers:verification-before-completion` (evidence before claims)
 9. **Document** — OpenSpec repo: `/opsx:archive` + repo docs first (openspec.md).
    Then record the work in second-brain by its rules (second-brain.md):
@@ -139,13 +140,13 @@ its prompt — so never attempt one.
   that leaves the machine;
 - changes outside the work branch or worktree — second-brain included: nothing
   unattended goes into the persistent knowledge base (the one exception: the
-  run's session-log row at the end);
+  run's session-log entry at the end);
 - deleting data, force operations, history rewrites;
 - production systems, secrets, `.env`;
 - installing software or changing settings.
 
 **End of run** — stop when no ready tasks remain. Run `leak-auditor` on the
-branch diff; its findings go into the report. Append the run's session-log row.
+branch diff; its findings go into the report. Add the run's session-log entry.
 Send the user a push notification that the run is over (done / blocked counts).
 The final message is the morning report:
 1. **Done** — task id, one line, commit hash;
@@ -160,9 +161,23 @@ document → finish → close.
 
 ### Every approach
 - **Session log** — at the end of every task that changed something or produced
-  an artifact (pure questions and answers are not logged), append one row to
-  second-brain `agents-data/session-log/<YYYY-MM>.md` — format in
-  second-brain.md. An Autonomous run logs one row for the whole run.
+  an artifact (pure questions and answers are not logged), add one entry to
+  second-brain `agents-data/session-log/<YYYY-MM>/` — format in
+  second-brain.md. An Autonomous run logs one entry for the whole run.
+- **Reviews** — of code, designs or specs, by any reviewer — at most two rounds
+  per artifact: the full review, then one re-check limited to the fixed items.
+  - Blocking: Critical and Important findings only.
+  - Minor findings and nits are not re-reviewed: collect them into one beads
+    issue (Hard, Autonomous) or the report's open items (Medium) and move on.
+  - A third round only when the user asks for it. A re-check that finds new
+    Important issues goes to the user, not into another round.
+- **Subagents** — dispatch one only for a well-defined scope:
+  - one goal; explicit inputs (files, diff range, change id — not "the repo");
+    the expected output and its size; when to stop;
+  - a re-check gets only the delta and the findings it checks, never the whole
+    artifact again;
+  - work that fits in a few tool calls is done inline — a subagent starts cold
+    and re-reads everything.
 - **Context7** — when and how: context7.md.
 - **Technology choice** — "what to use for X", "alternatives to Y" → the
   `architecture-designer` subagent; it builds on earlier reports. Save its report

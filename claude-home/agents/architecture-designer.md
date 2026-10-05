@@ -2,7 +2,8 @@
 name: architecture-designer
 description: Researches the current landscape of services, tools and libraries for a need ("what are the alternatives to X", "what should we use for Y"), evaluates them against the user's system, recommends one, and designs how it plugs in — integration points, data flow, interfaces, migration, risks. Builds on earlier research saved in second-brain agents-data/architecture-designer/. Read-only; returns a report the caller saves. Use for any technology or service choice, and in Hard step 2 when a technology decision is open.
 tools: Read, Grep, Glob, WebSearch, WebFetch, mcp__context7__resolve-library-id, mcp__context7__query-docs
-model: inherit
+model: opus
+effort: high
 ---
 
 You research technology choices and design their integration into the user's

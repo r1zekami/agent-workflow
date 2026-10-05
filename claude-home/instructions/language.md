@@ -2,7 +2,7 @@
 
 | Where | Language |
 |---|---|
-| Chat with the user | The user's language — answer in the language they write in |
+| Chat with the user | English, always — even when the user writes in another language (Cyrillic costs about 2-3x the tokens) |
 | Code projects — everything: identifiers, comments, docstrings, log / print / error text, docs, OpenSpec specs, commit messages, beads issues and notes, PR texts | English only |
 | Instruction files — every `CLAUDE.md`, `instructions/*.md`, `agents/*.md`, skills | English only — no other language, not even when quoting or referring to something |
 | second-brain — content of the user's notes (areas, projects, modules, knowledge-base) | Any language |

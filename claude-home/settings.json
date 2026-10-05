@@ -63,5 +63,8 @@
       "Deleting files or directories outside the current git repository or worktree",
       "Installing or uninstalling software, or changing system settings or Claude Code settings"
     ]
+  },
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
   }
 }

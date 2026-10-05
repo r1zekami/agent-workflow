@@ -10,6 +10,40 @@ the user's own projects live in the second-brain note
 `knowledge-base/code-style-examples.md` (once it exists) — read it before
 designing any new interface.
 
+### Simplicity — KISS and YAGNI, above every rule below
+Simple means understandable; understandable means easy to debug; easy to debug
+means fewer bugs. The rules below give code its *structure*; Simplicity keeps
+everything inside that structure minimal.
+
+**KISS — plain code, never clever code.**
+```
+clever: let user = sessions.iter().filter_map(|s| s.ok()).find(|s| s.id == id && !s.expired(now)).map(|s| s.user).ok_or(Error::NotFound)?;
+plain:  let session = find_session(id)?;
+        if session.is_expired(now) { return Err(Error::Expired); }
+        Ok(session.user)
+```
+- Early returns instead of nesting; one step per line; no tricks to save lines.
+- One way to do each thing in a codebase.
+- No checks for states the types already rule out.
+- The standard library before a new dependency.
+
+**YAGNI — build the axis, never the speculative members.**
+A family contract and a registry for something that will plausibly get siblings
+(rule 1) is structure — it stays. What YAGNI forbids is code nobody calls yet:
+```
+stays:    trait PasswordHasher { ... }     registry: [Argon2id]
+YAGNI:    struct Bcrypt;                                    // "for later", no caller
+          HasherOptions { pepper: Option<..>, legacy: bool } // nobody sets them
+          fn load_hasher_from_config(name)                   // only one hasher exists
+          enum Verb { ..., Execute }                         // used nowhere
+```
+- A registry holds only members that exist.
+- An option, parameter, enum variant or hook appears together with its first caller.
+
+**Designs and specs too.** A design states contracts and invariants — signatures,
+data, failure modes — not the code of every call site. Code belongs to
+implementation, where it compiles and is tested.
+
 ### 1. A variant is a parameter, never part of a name
 About to write a second function whose name encodes a variant — stop: the varying
 part is an axis, and an axis is a parameter.
@@ -20,6 +54,7 @@ right:  sign_message(msg, key, algorithm=Elgamal, hash=Sha256)     # new variant
 Design the axis up front. As soon as something is one of a kind that could plausibly get
 siblings (a check, a transport, a format, a mode, a data source), give it a family
 contract and a registry from the very first implementation — even with one member.
+The registry holds only members that exist (Simplicity).
 Adding the next member must be "new module + one registry line", never a refactor.
 A plain function is only for genuinely one-off logic (a helper, a formula).
 

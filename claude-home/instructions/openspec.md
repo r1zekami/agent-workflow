@@ -31,12 +31,35 @@ elevating to Hard. This overrides Easy's "don't stop" rule.
   (`## ADDED / MODIFIED / REMOVED Requirements`). `openspec validate <change>`
   passes. Wait for the user's OK on the whole change.
 - **4. Sub-tasks** — every item in `tasks.md` becomes a beads sub-task; its
-  acceptance criteria are the matching spec scenarios.
+  acceptance criteria are the matching spec scenarios. From here on beads is the
+  only state: `tasks.md` stays the approved plan and is not ticked item by item.
 - **6. Implement** — through the beads loop, not `/opsx:apply`: each scenario
-  becomes a test first (RED → GREEN); tick the `tasks.md` item when its bead closes.
-- **9. Document** — `/opsx:archive` merges the delta into `openspec/specs/`;
-  update repo docs if install / run / config / architecture changed; then the
-  second-brain entry links the archived change.
+  becomes a test first (RED → GREEN).
+- **9. Document** — tick all of `tasks.md` in one edit (every bead is closed),
+  then `/opsx:archive` merges the delta into `openspec/specs/`; update repo docs
+  if install / run / config / architecture changed; then the second-brain entry
+  links the archived change.
+
+### One change = one slice (Simplicity, code-design.md)
+
+A change is the smallest slice that can be implemented, tested and archived on
+its own — never a whole subsystem up front. Signs a change must be split:
+more than about 20 requirements, a `design.md` longer than about 300 lines, or
+parts that could ship separately. Split it into an ordered series of changes;
+the first one is specified in full, later ones are a list of titles in its
+`proposal.md` ("Follow-up changes"). `design.md` holds contracts and
+invariants — signatures, data, failure modes — never the code of call sites.
+
+### Why we deviate from default OpenSpec
+
+Default OpenSpec is built for a team on mixed AI tools: `tasks.md` checkboxes
+are the tracker, `/opsx:apply` works through them, and the PR carries spec and
+code together. We work solo across long, interrupted sessions, so:
+- beads replaces the checkboxes — dependencies, a ready queue and notes that
+  survive compaction;
+- every scenario becomes a test first — default apply doesn't require tests;
+- reviews and second-brain links come from the Hard steps;
+- OpenSpec stays local (below) until the user decides to share it.
 
 ### Spec format
 
@@ -59,6 +82,31 @@ The <system> SHALL <behavior>.
 - `openspec` is installed in WSL only — run it inside WSL (environment.md).
 - A repo without `openspec/` → ask before `openspec init`; review every file it
   writes (commands, instruction blocks) — they are subordinate to these rules.
+- **Local by default**, like beads stealth: append `openspec/`,
+  `.claude/commands/opsx/` and `.claude/skills/openspec-*/` to `.git/info/exclude`
+  right after `openspec init`. Commit OpenSpec only when the user asks for it.
+- **`openspec/config.yaml`** — OpenSpec injects `context` into every artifact it
+  writes and `rules` into the matching one, so our conventions travel with the
+  artifacts. Start every repo from this, then add the project's own context:
+
+  ```yaml
+  schema: spec-driven
+  context: |
+    <stack, layout, what exists now — short; no secrets, no infrastructure specifics>
+    All text is English. Made-up names in examples.
+  rules:
+    proposal:
+      - One change is one slice that ships on its own; list later slices under "Follow-up changes"
+    specs:
+      - One requirement is one behavior with at least one WHEN/THEN scenario
+      - Scenarios state observable outcomes, never implementation details
+    design:
+      - Contracts and invariants only (signatures, data, failure modes), never call-site code
+      - Include the interface block in the code-design rule 6 format
+      - Simplicity: no speculative options, members or hooks
+    tasks:
+      - Every task names the spec scenarios that are its acceptance criteria
+  ```
 - Useful CLI: `openspec list`, `openspec show <item>`, `openspec validate <item>`,
   `openspec status`.
 - Telemetry stays off (`openspec config set telemetry.enabled false`).

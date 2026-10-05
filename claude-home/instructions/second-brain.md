@@ -21,7 +21,7 @@ second-brain/
 ├── knowledge-base/       ← the user's own research articles
 ├── agents-data/
 │   ├── <agent>/          ← subagent output, one file per topic
-│   └── session-log/      ← one table per month of agent work
+│   └── session-log/      ← one note per agent task, month folders + dashboard.md
 ├── templates/            ← note templates (source: claude-code-setup repo)
 └── archive/              ← finished projects, moved whole, never deleted
 ```
@@ -49,7 +49,7 @@ Areas, knowledge-base articles and agents-data reports are single files.
 | A pipeline | built as its own goal → project; a piece reused in several places → module |
 | The user's research article | `knowledge-base/<slug>.md` |
 | A subagent's output (e.g. `architecture-designer`) | `agents-data/<agent>/<topic>.md` |
-| A record of agent work | `agents-data/session-log/<YYYY-MM>.md` |
+| A record of agent work | `agents-data/session-log/<YYYY-MM>/<entry>.md` |
 | A finished project | move the whole folder to `archive/` |
 
 Before creating anything, search for an existing note (Glob by path, Grep by
@@ -99,23 +99,30 @@ before inventing a new one.
 
 ### Session log
 
-`agents-data/session-log/<YYYY-MM>.md` — one file per month. Create it with:
+One note per entry, so Dataview and Charts can query it:
+`agents-data/session-log/<YYYY-MM>/<YYYY-MM-DD-HHMM>-<slug>.md`, slug = the
+first words of the description, kebab-case. `dashboard.md` next to the month
+folders shows the table (newest first) and the charts.
 
 ```markdown
-# Session log — YYYY-MM
-
-| Timestamp | Approach | Description | Targeted projects or systems | Status |
-|---|---|---|---|---|
+---
+tags: [agent/session-log]
+timestamp: YYYY-MM-DDTHH:MM
+approach: easy / medium / hard / autonomous
+effort: low / medium / high / xhigh / max / unknown
+target: [<repo or tool name>, "[[note]]"]
+status: done / partial / blocked / not-verified / abandoned
+---
+<one line, English, generic: what was done>
 ```
 
-- One row per task that changed something or produced an artifact; pure
-  questions and answers are not logged. An Autonomous run is one row.
-- **Timestamp** — local time at the end of the task, `YYYY-MM-DD HH:MM`, from the
-  system clock (never guessed). **Approach** — Easy / Medium / Hard / Autonomous.
-  **Description** — one line, English, generic. **Targets** — `[[wikilinks]]` to
-  notes, or a repo / tool name. **Status** — `done`, `partial`, `blocked`,
-  `not verified`, `abandoned`.
-- Rows are appended, never edited. No secrets, no infrastructure specifics.
+- One entry per task that changed something or produced an artifact; pure
+  questions and answers are not logged. An Autonomous run is one entry.
+- Entries are never edited afterwards.
+- **timestamp** — local time at the end of the task, from the system clock
+  (never guessed). **effort** — the session's reasoning effort if known.
+  **target** — wikilinks are quoted inside the list.
+- No secrets, no infrastructure specifics.
 
 ### Links
 
