@@ -1,0 +1,44 @@
+name: litellm
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:1.103.3@sha256:e6e1c46cec92ab58b7ff95c790420aba9f05269b662a66c0dd11714171b9c64b
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    ports:
+      - "127.0.0.1:4000:4000"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://litellm:${POSTGRES_PASSWORD:?set in .env}@db:5432/litellm
+      STORE_MODEL_IN_DB: "False"
+      LITELLM_LOCAL_MODEL_COST_MAP: "True"
+      LITELLM_LOCAL_BLOG_POSTS: "True"
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4000/health/liveliness', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    restart: unless-stopped
+
+  db:
+    image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+    environment:
+      POSTGRES_DB: litellm
+      POSTGRES_USER: litellm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U litellm -d litellm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  db-data:

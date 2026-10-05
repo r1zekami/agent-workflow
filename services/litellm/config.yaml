@@ -1,0 +1,27 @@
+# Aliases name the provider and model, so usage logs show who did the work.
+# Prices are set explicitly (USD per token, DeepSeek peak rates): the bundled
+# price map is used offline and may not know new models, and budgets need them.
+model_list:
+  - model_name: worker-deepseek-flash
+    litellm_params:
+      model: deepseek/deepseek-flash
+      api_key: os.environ/DEEPSEEK_API_KEY
+    model_info:
+      input_cost_per_token: 3.0e-07
+      cache_read_input_token_cost: 6.0e-09
+      output_cost_per_token: 1.2e-06
+
+  - model_name: worker-deepseek-v4-pro
+    litellm_params:
+      model: deepseek/deepseek-v4-pro
+      api_key: os.environ/DEEPSEEK_API_KEY
+    model_info:
+      input_cost_per_token: 1.32e-06
+      cache_read_input_token_cost: 4.4e-08
+      output_cost_per_token: 3.96e-06
+
+litellm_settings:
+  drop_params: true
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
