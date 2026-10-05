@@ -25,3 +25,6 @@ litellm_settings:
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
+  # Clients connect directly, no proxy in front: throttle admin UI sign-ins
+  # per source address across usernames too.
+  trusted_proxy_ranges: []
