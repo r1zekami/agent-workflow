@@ -20,10 +20,15 @@ the result. A worker saves my output tokens — it never replaces my judgment.
 
 ### Models
 
-| Alias | Use |
-|---|---|
-| `worker-deepseek-flash` | default |
-| `worker-deepseek-v4-pro` | multi-file work, or a retry after Flash failed |
+The aliases are `worker-<provider>-<model>`, defined in the gateway's
+`services/litellm/config.yaml`; each also needs its entry in
+`workers/codex/models.json`. Default: the cheapest alias (`worker-deepseek-flash`);
+a stronger one for multi-file work or a retry after a failed run.
+
+Adding a model: a `config.yaml` entry with prices (its key goes into `.env`, by
+the user), a copied `models.json` entry with the new slug, restart the gateway.
+Adding another worker CLI: its own `workers/<name>/` folder and a section here;
+the gateway, key, budget and cost tracking stay shared.
 
 ### Run
 
@@ -35,7 +40,8 @@ the result. A worker saves my output tokens — it never replaces my judgment.
    `git worktree add .worktrees/worker-<task> -b worker/<task>` (inside WSL).
    The sandbox has no network: fetch dependencies first (`cargo fetch`,
    `bun install`, …) so builds and tests run offline.
-3. **Start** — as a background Bash task, so it shows in the Tasks pane:
+3. **Start** — as a background Bash task, so it shows in the Tasks pane; its
+   description names the task and the alias (`Worker <task> (<alias>)`):
 
    ```bash
    MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-26.04 --cd <worktree> --exec bash -lc 'R=~/.codex-runs/<task>; codex exec --ephemeral -s workspace-write -m worker-deepseek-flash -o $R/final.txt - < $R/task.md > $R/log.txt 2>&1'
