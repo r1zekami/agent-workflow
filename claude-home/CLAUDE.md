@@ -1,4 +1,5 @@
 @~/.claude/instructions/workflow.md
+@~/.claude/instructions/workers.md
 @~/.claude/instructions/language.md
 @~/.claude/instructions/environment.md
 @~/.claude/instructions/context7.md

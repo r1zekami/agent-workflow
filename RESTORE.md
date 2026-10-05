@@ -164,7 +164,31 @@ The `.env` is written and filled by the user only.
 `healthy`; `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:4000/health/liveliness`
 prints `200` from WSL and from Windows.
 
-## 9. Final verification
+## 9. Worker agent — Codex CLI in WSL (optional, needs step 8)
+
+The user installs Codex CLI inside WSL (official release, standalone binary),
+then sets the worker key once as a Windows user variable and passes it into WSL —
+in PowerShell 7, the input is masked:
+
+```powershell
+$k = Read-Host "LiteLLM worker key" -MaskInput; [Environment]::SetEnvironmentVariable("LITELLM_WORKER_KEY", $k, "User"); $w = [Environment]::GetEnvironmentVariable("WSLENV", "User"); [Environment]::SetEnvironmentVariable("WSLENV", ((@($w, "LITELLM_WORKER_KEY") | Where-Object { $_ }) -join ":"), "User"); Remove-Variable k
+```
+
+Restart Claude desktop. Then Claude installs the config (in WSL):
+
+```bash
+S=/mnt/c/Users/<user>/home/agents/claude-code-setup/workers/codex
+mkdir -p ~/.codex && sed "s#{{HOME}}#$HOME#g" $S/config.toml > ~/.codex/config.toml && chmod 600 ~/.codex/config.toml
+cp $S/models.json $S/instructions.md ~/.codex/
+```
+
+How Claude uses it: `instructions/workers.md`.
+
+**Check:** in an empty WSL git repo,
+`codex exec --ephemeral -s read-only -o out.txt "Reply with exactly: OK"` exits 0
+and `out.txt` contains `OK`.
+
+## 10. Final verification
 
 | What | How | Expected |
 |---|---|---|
@@ -176,4 +200,5 @@ prints `200` from WSL and from Windows.
 | WSL toolchain | the step 6 check | five versions |
 | Knowledge base | `git -C $HOME\home\agents\second-brain status` | a clean repo |
 | Worker gateway (if set up) | the step 8 check | `healthy`, `200` |
+| Worker agent (if set up) | the step 9 check | exit 0, `OK` |
 | WSL repo from Claude | open a session in `\\wsl.localhost\Ubuntu-26.04\home\<user>\wsl-dev\<repo>` | file tools work, commands run via `wsl.exe --exec` |

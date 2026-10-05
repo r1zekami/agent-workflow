@@ -82,6 +82,7 @@ beads, isolated on its own branch, reviewed.
    A bug or an unexpected failure → `superpowers:systematic-debugging` before
    any fix. Ready sub-tasks with no dependency between them and no shared files →
    may run in parallel via `superpowers:dispatching-parallel-agents`.
+   A sub-task may go to a worker instead (workers.md).
 7. **Review** — three independent reviews of the branch diff:
    `superpowers:requesting-code-review` (correctness), `code-design-reviewer`
    (our rules, with the approved interface block), `leak-auditor` (secrets and

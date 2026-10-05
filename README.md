@@ -20,12 +20,15 @@ claude-code-setup/
 │   └── agents/               ← subagents: code-design-reviewer, leak-auditor, architecture-designer, Explore
 ├── services/
 │   └── litellm/              ← local LLM gateway for worker agents (Docker in WSL)
+├── workers/
+│   └── codex/                ← Codex CLI worker config: gateway, model metadata, worker prompt
 └── second-brain-templates/   ← note templates for the knowledge base
 ```
 
 | Instruction file | What it governs |
 |---|---|
 | `workflow.md` | The four approaches — Easy, Medium, Hard, Autonomous — and their steps |
+| `workers.md` | Delegating scoped code tasks to cheap models through Codex workers |
 | `language.md` | English for code, docs, specs, commits and instructions |
 | `environment.md` | Windows host for routine, WSL for all development |
 | `context7.md` | When and how to fetch current library docs |
