@@ -28,3 +28,6 @@ general_settings:
   # Clients connect directly, no proxy in front: throttle admin UI sign-ins
   # per source address across usernames too.
   trusted_proxy_ranges: []
+  # Admin UI accepts only database users (create a proxy_admin first — see
+  # README); the master key keeps working for the API. Locked out: remove this.
+  disable_env_credential_login: true
