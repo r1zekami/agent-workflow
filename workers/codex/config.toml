@@ -1,0 +1,26 @@
+# Codex CLI as a worker agent: every model call goes to the local LiteLLM
+# gateway (services/litellm). Lives in WSL ~/.codex/config.toml.
+# The key is read from LITELLM_WORKER_KEY — set by the user, never written here.
+
+model_provider = "litellm"
+model = "worker-deepseek-flash"
+check_for_update_on_startup = false
+# Metadata for the worker-* models (Codex has none for them); {{HOME}} = WSL home.
+model_catalog_json = "{{HOME}}/.codex/models.json"
+# One worker prompt for every worker-* model (instead of the built-in one).
+model_instructions_file = "{{HOME}}/.codex/instructions.md"
+
+[analytics]
+enabled = false
+
+[feedback]
+enabled = false
+
+[model_providers.litellm]
+name = "LiteLLM (local)"
+base_url = "http://127.0.0.1:4000/v1"
+env_key = "LITELLM_WORKER_KEY"
+wire_api = "responses"
+
+[tui]
+screen_reader_detection_done = true
