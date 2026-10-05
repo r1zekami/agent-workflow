@@ -146,15 +146,34 @@ only if the user backs it up elsewhere (external drive, encrypted archive).
 
 **Check:** the folders exist and `git -C $sb status` works.
 
-## 8. Final verification
+## 8. Worker gateway — LiteLLM (optional)
+
+A local, OpenAI-compatible gateway for worker agents; Claude Code itself never
+goes through it. Docker runs inside WSL — no Docker Desktop. Inside WSL, the user runs:
+
+```bash
+sudo apt update && sudo apt install -y docker.io docker-compose-v2 docker-buildx && sudo usermod -aG docker $USER
+```
+
+Then `wsl.exe --terminate Ubuntu-26.04` from Windows, so the group applies.
+Everything after that — runtime folder, the generated `.env`, first start, the
+worker key with a budget — is in [services/litellm/README.md](services/litellm/README.md).
+The `.env` is written and filled by the user only.
+
+**Check:** `docker compose ps` in WSL `~/services/litellm` shows both containers
+`healthy`; `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:4000/health/liveliness`
+prints `200` from WSL and from Windows.
+
+## 9. Final verification
 
 | What | How | Expected |
 |---|---|---|
 | Instructions loaded | new session, ask anything | reply starts with `Approach: …` |
 | Settings valid | `pwsh -c "Get-Content $HOME\.claude\settings.json -Raw \| ConvertFrom-Json"` | no error |
 | Plugins | new session | `superpowers:*` skills and `context7` tools available |
-| Subagents | new session | `code-design-reviewer`, `leak-auditor`, `architecture-designer` available |
+| Subagents | new session | `code-design-reviewer`, `leak-auditor`, `architecture-designer`, `Explore` available |
 | Windows bd | `bd version` | a version |
 | WSL toolchain | the step 6 check | five versions |
 | Knowledge base | `git -C $HOME\home\agents\second-brain status` | a clean repo |
+| Worker gateway (if set up) | the step 8 check | `healthy`, `200` |
 | WSL repo from Claude | open a session in `\\wsl.localhost\Ubuntu-26.04\home\<user>\wsl-dev\<repo>` | file tools work, commands run via `wsl.exe --exec` |

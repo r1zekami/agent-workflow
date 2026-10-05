@@ -17,7 +17,9 @@ claude-code-setup/
 │   ├── CLAUDE.md             ← global instructions entry point (@imports)
 │   ├── settings.json         ← user settings; {{HOME}} = your home folder
 │   ├── instructions/         ← the rules, one topic per file
-│   └── agents/               ← subagents: code-design-reviewer, leak-auditor, architecture-designer
+│   └── agents/               ← subagents: code-design-reviewer, leak-auditor, architecture-designer, Explore
+├── services/
+│   └── litellm/              ← local LLM gateway for worker agents (Docker in WSL)
 └── second-brain-templates/   ← note templates for the knowledge base
 ```
 
