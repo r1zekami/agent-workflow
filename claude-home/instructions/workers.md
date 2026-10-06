@@ -32,7 +32,8 @@ the gateway, key, budget and cost tracking stay shared.
 
 ### Run
 
-1. **Brief** — write the task to `~/.codex-runs/<task>/task.md` (WSL):
+1. **Brief** — write the task to `~/.codex-runs/<task>/task.md` (WSL) with the
+   file tool (`\\wsl.localhost\…` path), not a shell heredoc — code quotes break it:
    goal; files to touch; approved signatures (code-design rule 6) to implement
    exactly; acceptance criteria as tests; the commands that check it; out of
    scope. One task per brief.
@@ -56,10 +57,14 @@ the gateway, key, budget and cost tracking stay shared.
    worker's code as if I wrote it.
 6. **Land** — fixes are mine (small) or a follow-up brief (large). Then commit
    on the worker branch and merge it into the work branch; remove the worktree.
+   Delete the worker branch only after `git branch --merged <work-branch>` lists
+   it — `git branch -d` compares with the current checkout, not the work branch.
    A failed run: one retry with a sharper brief or the stronger model, then I
    do it myself.
-7. **Report** — name the alias and the run's cost (LiteLLM spend log) in the
-   task report.
+7. **Report** — name the alias and the run's cost in the task report:
+   `bash ~/.codex/run-cost.sh <task>` (WSL) prints calls, tokens and USD from the
+   gateway's spend log; no key needed. Codex's own "tokens used" is not the bill:
+   every call resends the conversation, so billed input is many times larger.
 
 ### Safety
 

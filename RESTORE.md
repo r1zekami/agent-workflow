@@ -179,7 +179,7 @@ Restart Claude desktop. Then Claude installs the config (in WSL):
 ```bash
 S=/mnt/c/Users/<user>/home/agents/claude-code-setup/workers/codex
 mkdir -p ~/.codex && sed "s#{{HOME}}#$HOME#g" $S/config.toml > ~/.codex/config.toml && chmod 600 ~/.codex/config.toml
-cp $S/models.json $S/instructions.md ~/.codex/
+cp $S/models.json $S/instructions.md $S/run-cost.sh ~/.codex/
 ```
 
 How Claude uses it: `instructions/workers.md`.
