@@ -55,6 +55,8 @@ no beads, no worktree, no review cycle.
    wait for OK.
 4. **Implement** — code: `superpowers:test-driven-development` (RED → GREEN →
    REFACTOR) where testable; a bug starts with `superpowers:systematic-debugging`.
+   A step that passes the workers.md checks goes to a worker by default; doing
+   it myself needs the failed check in the plan.
    Not code (config, setup, docs): do it, then check it the closest real way.
 5. **Verify** — `superpowers:verification-before-completion`.
 6. **Report** — code: final report (code-design rule 7); otherwise the result
@@ -82,7 +84,8 @@ beads, isolated on its own branch, reviewed.
    A bug or an unexpected failure → `superpowers:systematic-debugging` before
    any fix. Ready sub-tasks with no dependency between them and no shared files →
    may run in parallel via `superpowers:dispatching-parallel-agents`.
-   A sub-task may go to a worker instead (workers.md).
+   A sub-task that passes the workers.md checks goes to a worker by default;
+   doing it myself needs the failed check in `bd note`.
 7. **Review** — three independent reviews of the branch diff:
    `superpowers:requesting-code-review` (correctness), `code-design-reviewer`
    (our rules, with the approved interface block), `leak-auditor` (secrets and
@@ -124,7 +127,9 @@ its prompt — so never attempt one.
 **During the run:**
 - Loop: `bd ready` → claim → `superpowers:test-driven-development` →
   `superpowers:verification-before-completion` → commit on the work branch →
-  `bd close` → next. For long queues prefer `superpowers:subagent-driven-development`
+  `bd close` → next. A task that passes the workers.md checks goes to a worker
+  (preferred here: nobody waits, and every task is reviewed in the morning);
+  otherwise, for long queues prefer `superpowers:subagent-driven-development`
   (fresh context per task).
 - Never ask questions — nobody will answer. A decision the plan doesn't cover:
   - trivial and reversible → make it, record it with `bd note`;

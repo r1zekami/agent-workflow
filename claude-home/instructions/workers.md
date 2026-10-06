@@ -5,18 +5,29 @@ gateway (`claude-code-setup/services/litellm`, config in `workers/codex`). It
 writes code; I stay the orchestrator: I scope the task, review the diff and own
 the result. A worker saves my output tokens — it never replaces my judgment.
 
-### When
+### When — delegation is the default
 
-- **Medium, Hard, Autonomous** — not Easy (setup costs more than it saves).
-- **Delegate**: well-scoped code with a check — implementing an approved
-  interface, tests for given scenarios, a mechanical change across files, a
-  bug with a reproducing test. A Hard sub-task with acceptance criteria is the
-  ideal unit.
-- **Never delegate**: decisions (interfaces, design, scope), reviews, anything
-  touching secrets, `.env` or credentials, git operations, and tasks that fit in
-  a few edits — doing those myself is cheaper than briefing and reviewing.
-- WSL repos only. The worker's code leaves the machine to the model provider —
-  never for a repo whose code must stay private (ask when unsure).
+In Medium, Hard and Autonomous, a coding task **goes to a worker by default**
+when every check holds (not in Easy — briefing costs more than it saves):
+
+1. **Decided** — the interface is approved (code-design rule 6) or nothing
+   public changes; no design or scope decision is left open.
+2. **Checkable** — acceptance criteria exist as tests the worker can run.
+3. **Offline** — it builds and tests without network or a live service once
+   dependencies are fetched.
+4. **Clean** — no secrets, `.env`, credentials or real production data in the
+   files it needs; the repo's code may leave the machine (ask when unsure).
+5. **Worth it** — more than a few edits; anything smaller I do myself, because
+   briefing and reviewing cost more than writing it.
+
+Any check fails → I do it myself and give the failed check as the reason (Hard
+and Autonomous: `bd note`; Medium: the plan). Typical delegates: implementing an
+approved interface, tests for given scenarios, a mechanical change across files,
+a bug with a reproducing test. Never delegated: decisions, reviews, git
+operations. WSL repos only.
+
+Every final report says which tasks went to workers (alias, cost) and which
+did not, with the failed check.
 
 ### Models
 

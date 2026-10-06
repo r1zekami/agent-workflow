@@ -128,17 +128,20 @@ function Find-PersonalIdentifierInRepo {
             $patterns[$kind] = "(?i)(?<![a-z0-9])" + [regex]::Escape($identifiers[$kind]) + "(?![a-z0-9])"
         }
     }
+    # Only what git could commit: tracked files plus untracked ones not ignored
+    # (.gitignore, .git/info/exclude) - local tool data like .beads/ is never published.
     # LICENSE carries the copyright holder's name on purpose - the only exception.
-    $licensePath = Join-Path $PSScriptRoot "LICENSE"
-    $repoFiles = Get-ChildItem -LiteralPath $PSScriptRoot -Recurse -File |
-        Where-Object { $_.FullName -notmatch "[\\/]\.git[\\/]" -and $_.FullName -ne $licensePath }
-    foreach ($file in $repoFiles) {
+    $repoFiles = git -C $PSScriptRoot ls-files --cached --others --exclude-standard |
+        Where-Object { $_ -ne "LICENSE" }
+    foreach ($relativePath in $repoFiles) {
+        $fullPath = Join-Path $PSScriptRoot $relativePath
+        if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) { continue }
         $lineNumber = 0
-        foreach ($line in [System.IO.File]::ReadAllLines($file.FullName)) {
+        foreach ($line in [System.IO.File]::ReadAllLines($fullPath)) {
             $lineNumber++
             foreach ($kind in $patterns.Keys) {
                 if ($line -match $patterns[$kind]) {
-                    $file.FullName.Substring($PSScriptRoot.Length + 1) + ":" + $lineNumber + " ($kind)"
+                    $relativePath + ":" + $lineNumber + " ($kind)"
                 }
             }
         }
