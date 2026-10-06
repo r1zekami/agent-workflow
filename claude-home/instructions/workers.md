@@ -56,7 +56,7 @@ the gateway, key, budget and cost tracking stay shared.
    description names the task and the alias (`Worker <task> (<alias>)`):
 
    ```bash
-   MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-26.04 --cd <worktree> --exec bash -lc 'R=~/.codex-runs/<task>; codex exec --ephemeral -s workspace-write -m worker-deepseek-flash -o $R/final.txt - < $R/task.md > $R/log.txt 2>&1'
+   MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-26.04 --cd <worktree> --exec bash -lc 'R=~/.codex-runs/<task>; codex exec --ephemeral -m worker-deepseek-flash -o $R/final.txt - < $R/task.md > $R/log.txt 2>&1'
    ```
 
    Independent tasks may run in parallel, each in its own worktree.
@@ -83,3 +83,9 @@ the gateway, key, budget and cost tracking stay shared.
   only `LITELLM_WORKER_KEY` (budgeted, set by the user) and never shows it.
 - The worker never commits, pushes or installs (its prompt forbids it; the
   sandbox blocks network and writes outside the worktree). Landing is my job.
+- The sandbox is the `worker` permission profile in `workers/codex/config.toml`:
+  the worktree is writable; `~/services`, `~/.ssh`, `/mnt` and other secret
+  paths are unreadable; commands get no `*KEY*` / `*TOKEN*` / `*SECRET*` variables;
+  no network. Never pass `-s` — it would replace the profile.
+- No network means no database or service: a task whose tests need one fails
+  check 3 and stays with me.

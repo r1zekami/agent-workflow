@@ -9,6 +9,26 @@ check_for_update_on_startup = false
 model_catalog_json = "{{HOME}}/.codex/models.json"
 # One worker prompt for every worker-* model (instead of the built-in one).
 model_instructions_file = "{{HOME}}/.codex/instructions.md"
+# Sandbox for every command the worker runs: the workspace is writable, the
+# filesystem readable except the paths below, network off.
+default_permissions = "worker"
+
+[permissions.worker]
+extends = ":workspace"
+
+# Whatever a command reads reaches the model provider: keep secrets unreadable.
+[permissions.worker.filesystem]
+"{{HOME}}/services" = "deny"          # LiteLLM .env: master and provider keys
+"{{HOME}}/.ssh" = "deny"
+"{{HOME}}/.docker" = "deny"
+"{{HOME}}/.git-credentials" = "deny"
+"{{HOME}}/.bash_history" = "deny"
+"/mnt" = "deny"                       # Windows drives: Claude, SSH and browser data
+
+# Commands never see credentials from the environment, the worker key included
+# (Codex itself still reads it for its model calls).
+[shell_environment_policy]
+exclude = ["*KEY*", "*TOKEN*", "*SECRET*", "*PASSWORD*", "*CREDENTIAL*"]
 
 [analytics]
 enabled = false
