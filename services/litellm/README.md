@@ -1,4 +1,4 @@
-# LiteLLM — gateway for worker agents
+# LiteLLM: gateway for worker agents
 
 One local, OpenAI-compatible endpoint for every worker agent. Workers ask for an
 alias; this gateway holds the provider keys, enforces budgets and logs usage.
@@ -8,15 +8,15 @@ Claude Code itself never goes through it.
 |---|---|
 | Templates (this folder, in git) | `claude-code-setup/services/litellm/` |
 | Runtime copy (with `.env`) | WSL `~/services/litellm/` |
-| API | `http://127.0.0.1:4000` — from WSL and from Windows, not from the network |
-| Admin UI | `http://127.0.0.1:4000/ui` — database admin users only |
+| API | `http://127.0.0.1:4000` (from WSL and from Windows, not from the network) |
+| Admin UI | `http://127.0.0.1:4000/ui` (database admin users only) |
 
 ## Aliases
 
 | Alias | Model |
 |---|---|
-| `worker-deepseek-flash` | DeepSeek Flash — default worker |
-| `worker-deepseek-v4-pro` | DeepSeek V4 Pro — harder tasks |
+| `worker-deepseek-flash` | DeepSeek Flash, default worker |
+| `worker-deepseek-v4-pro` | DeepSeek V4 Pro, harder tasks |
 
 Add a model: a new entry in `config.yaml` (alias `worker-<provider>-<model>`,
 explicit prices), its key in `.env`, then restart.
@@ -32,12 +32,12 @@ docker compose up -d && docker compose ps
 ```
 
 Then in the admin UI:
-1. **Own admin account** — `config.yaml` sets `disable_env_credential_login: true`,
+1. **Own admin account**: `config.yaml` sets `disable_env_credential_login: true`,
    so on a fresh start comment that line out first and sign in as `admin` with
    the master key. Internal Users → Invite User, role Admin, open the link, set a
    password, sign in with it. Then restore the line and restart.
-2. **Worker key** — Virtual Keys → Create New Key: only the `worker-*` models,
-   max budget and a reset period. Workers only ever get that key — never the
+2. **Worker key**: Virtual Keys → Create New Key: only the `worker-*` models,
+   max budget and a reset period. Workers only ever get that key, never the
    master key or provider keys.
 
 ## Operate

@@ -1,6 +1,6 @@
 # Codex CLI as a worker agent: every model call goes to the local LiteLLM
 # gateway (services/litellm). Lives in WSL ~/.codex/config.toml.
-# The key is read from LITELLM_WORKER_KEY — set by the user, never written here.
+# The key is read from LITELLM_WORKER_KEY, set by the user, never written here.
 
 model_provider = "litellm"
 model = "worker-deepseek-flash"

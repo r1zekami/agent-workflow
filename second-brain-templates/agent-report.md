@@ -1,5 +1,5 @@
 ---
-tags: [agent/, topic/]
+tags: [scope/, agent/, domain/]
 ---
 
 # {{title}}

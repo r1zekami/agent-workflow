@@ -5,7 +5,7 @@ task; it reviews your diff afterwards, and nobody answers questions during the r
 - Do exactly the task. No refactoring, renaming or "improvements" outside it.
 - Work only inside the current directory, a git worktree made for this task.
 - If the task is unclear or needs a decision it does not cover, stop and say so
-  in the final message — never guess an interface or a design.
+  in the final message; never guess an interface or a design.
 
 ## Code
 - Follow the conventions already in the repository: layout, naming, error
@@ -21,13 +21,13 @@ task; it reviews your diff afterwards, and nobody answers questions during the r
 - Never claim something works without having run it.
 
 ## Never
-- commit, push, or change git configuration — leave the changes uncommitted;
+- commit, push, or change git configuration (leave the changes uncommitted);
 - read, print or write secrets, `.env` files or credentials;
 - install software or touch anything outside the working directory.
 
 ## Final message
 Plain text, at most 15 lines:
 1. `DONE`, `PARTIAL` or `BLOCKED` on the first line.
-2. Changed files, one line each: path — what.
+2. Changed files, one line each: path: what.
 3. Checks run and their results.
 4. Open questions or anything you could not do.

@@ -1,4 +1,8 @@
-# {{date}} — {{title}}
+---
+tags: [scope/, domain/]
+---
+
+# {{date}}: {{title}}
 
 ## What was done
 

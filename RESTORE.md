@@ -1,15 +1,14 @@
 # Restore
 
-Rebuilds the whole agent environment on a clean Windows PC. Written for a human
-and for Claude alike: follow it by hand, or open Claude desktop in this repo's
-folder and say *"follow RESTORE.md"*.
+Rebuilds the agent environment on a clean Windows PC. It is followed by a human
+or by Claude: by hand, or by opening Claude desktop in this repo's folder and saying *"follow RESTORE.md"*.
 
 ## For Claude
 
 - Before each step run its **Check**. If it already passes, skip the step.
 - Anything that installs software, needs administrator rights or `sudo`: print
   the exact command and wait for the user to run it. Never run installers yourself.
-- Never ask for secrets, tokens or keys in the chat — GitHub access and sign-ins
+- Never ask for secrets, tokens or keys in the chat; GitHub access and sign-ins
   are the user's job.
 - After the last step run the final verification table and report every row.
 
@@ -18,14 +17,14 @@ folder and say *"follow RESTORE.md"*.
 | Path | What |
 |---|---|
 | `~/home/agents/claude-code-setup` | this repo (Windows) |
-| `~/home/agents/second-brain` | the knowledge base — local git, no remote |
+| `~/home/agents/second-brain` | the knowledge base (local git, no remote) |
 | `~/.claude/` | live Claude config: `CLAUDE.md`, `settings.json`, `instructions/`, `agents/` |
 | WSL `~/wsl-dev/` | code repos |
 
-Other locations work too — then update `second-brain.md`, `environment.md` and
+Other locations work too, then update `second-brain.md`, `environment.md` and
 `permissions.additionalDirectories` in `settings.json` after step 3.
 
-## 1. Windows base tools — user
+## 1. Windows base tools (user)
 
 - Claude desktop: <https://claude.ai/download>, sign in.
 - In a terminal:
@@ -37,7 +36,7 @@ Other locations work too — then update `second-brain.md`, `environment.md` and
   winget install --id Obsidian.Obsidian -e   # optional, viewer for the knowledge base
   ```
 
-- Git identity and a GitHub SSH key — set them up yourself
+- Git identity and a GitHub SSH key: the user sets them up
   (`git config --global user.name / user.email`, GitHub docs for SSH keys).
 
 **Check:** `git --version`, `pwsh -v`, `py --version` all print a version.
@@ -59,24 +58,24 @@ pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToClaude -DryRun
 pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToClaude
 ```
 
-Copies `claude-home/` — `CLAUDE.md`, `settings.json` (with `{{HOME}}` expanded),
-`instructions/`, `agents/` — into `~/.claude`. Files it would overwrite are backed up first to
-`~/.claude/backups/restore-<timestamp>/`. Restart Claude desktop afterwards.
+Copies `claude-home/` (`CLAUDE.md`, `settings.json` with `{{HOME}}` expanded,
+`instructions/`, `agents/`) into `~/.claude`. Files that would be overwritten
+are first backed up to `~/.claude/backups/restore-<timestamp>/`. Restart Claude desktop afterwards.
 
 **Check:** `~/.claude/instructions/workflow.md` exists; in a new session the
 first line of a reply names the approach (`Approach: …`).
 
-## 4. Plugins — user, in Claude desktop
+## 4. Plugins (user, in Claude desktop)
 
-- **Superpowers** — `settings.json` already enables
-  `superpowers@claude-plugins-official`; if it isn't installed after the restart,
-  install it from the plugin directory.
-- **Context7** — install the Context7 plugin from the plugin directory (a hosted
-  MCP server; no Node needed). Signing in is optional — it only raises rate limits.
+- **Superpowers**: `settings.json` already enables
+  `superpowers@claude-plugins-official`; if it is not installed after the
+  restart, install it from the plugin directory.
+- **Context7**: install the Context7 plugin from the plugin directory (a hosted
+  MCP server; no Node needed). Signing in is optional and only raises rate limits.
 
 **Check:** a new session lists `superpowers:*` skills and `context7` tools.
 
-## 5. beads on Windows — for host-side repos
+## 5. beads on Windows (for host-side repos)
 
 ```powershell
 irm https://raw.githubusercontent.com/gastownhall/beads/main/install.ps1 | iex
@@ -84,18 +83,18 @@ irm https://raw.githubusercontent.com/gastownhall/beads/main/install.ps1 | iex
 ```
 
 Restart Claude desktop. `settings.json` already contains the SessionStart hook
-`bd prime --hook-json` — do **not** run `bd setup claude` (it writes a CLAUDE.md
-into whatever folder it runs in).
+`bd prime --hook-json`. Do **not** run `bd setup claude` (it writes a CLAUDE.md
+into the folder it runs in).
 
 **Check:** `bd version`.
 
-## 6. WSL — all development tools
+## 6. WSL (all development tools)
 
 ```powershell
 wsl --install -d Ubuntu-26.04
 ```
 
-A different Ubuntu release works too — then replace the distro name in
+A different Ubuntu release works too, then replace the distro name in
 `environment.md`. Reboot if asked and create the Linux user. Then, inside WSL:
 
 ```bash
@@ -112,7 +111,7 @@ git config --global user.name "<name>" && git config --global user.email "<email
 exec bash -l
 ```
 
-PATH entries go into `~/.profile`, not `~/.bashrc` — agent commands run in a
+PATH entries go into `~/.profile`, not `~/.bashrc`: agent commands run in a
 non-interactive login shell. Keep the `bd` version equal on Windows and in WSL.
 
 **Check** (from Git Bash on Windows):
@@ -127,7 +126,9 @@ Claude creates it from `instructions/second-brain.md`:
 
 ```powershell
 $sb = "$HOME\home\agents\second-brain"
-foreach ($d in "inbox","areas","projects","modules","knowledge-base","agents-data\session-log","archive","templates") {
+foreach ($d in "work\scratchpad","work\services","work\pipelines","work\projects","work\knowledge-base","work\archive",
+                "personal\scratchpad","personal\projects","personal\knowledge-base","personal\archive",
+                "agents-data\session-log","templates") {
     New-Item -ItemType Directory -Force "$sb\$d" | Out-Null
 }
 Copy-Item .\second-brain-templates\*.md "$sb\templates\"
@@ -135,40 +136,41 @@ git -C $sb init -b main
 ```
 
 Then Claude writes `CLAUDE.md` (a pointer to `second-brain.md`), `README.md`
-(the map) and `.gitignore` (`.obsidian/workspace*.json`, `.obsidian/cache`,
-`.trash/`), and creates the user's areas from `templates/area.md`.
+(the map), a `README.md` and an empty `domain-tags.md` in each scope, and
+`.gitignore` (`.obsidian/workspace*.json`, `.obsidian/cache`,
+`.obsidian/plugins/`, `.trash/`). Empty folders get a `.gitkeep`.
 
 Obsidian: open the folder as a vault, enable the core plugin **Templates**, set
 its folder to `templates`.
 
-The knowledge base has no remote by design — its content survives a lost machine
+The knowledge base has no remote by design. Its content survives a lost machine
 only if the user backs it up elsewhere (external drive, encrypted archive).
 
 **Check:** the folders exist and `git -C $sb status` works.
 
-## 8. Worker gateway — LiteLLM (optional)
+## 8. Worker gateway: LiteLLM (optional)
 
 A local, OpenAI-compatible gateway for worker agents; Claude Code itself never
-goes through it. Docker runs inside WSL — no Docker Desktop. Inside WSL, the user runs:
+goes through it. Docker runs inside WSL (no Docker Desktop). The user runs, inside WSL:
 
 ```bash
 sudo apt update && sudo apt install -y docker.io docker-compose-v2 docker-buildx && sudo usermod -aG docker $USER
 ```
 
 Then `wsl.exe --terminate Ubuntu-26.04` from Windows, so the group applies.
-Everything after that — runtime folder, the generated `.env`, first start, the
-worker key with a budget — is in [services/litellm/README.md](services/litellm/README.md).
+Everything after that (runtime folder, the generated `.env`, first start, the
+worker key with a budget) is in [services/litellm/README.md](services/litellm/README.md).
 The `.env` is written and filled by the user only.
 
 **Check:** `docker compose ps` in WSL `~/services/litellm` shows both containers
 `healthy`; `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:4000/health/liveliness`
 prints `200` from WSL and from Windows.
 
-## 9. Worker agent — Codex CLI in WSL (optional, needs step 8)
+## 9. Worker agent: Codex CLI in WSL (optional, needs step 8)
 
 The user installs Codex CLI inside WSL (official release, standalone binary),
-then sets the worker key once as a Windows user variable and passes it into WSL —
-in PowerShell 7, the input is masked:
+then sets the worker key once as a Windows user variable and passes it into WSL
+(in PowerShell 7 the input is masked):
 
 ```powershell
 $k = Read-Host "LiteLLM worker key" -MaskInput; [Environment]::SetEnvironmentVariable("LITELLM_WORKER_KEY", $k, "User"); $w = [Environment]::GetEnvironmentVariable("WSLENV", "User"); [Environment]::SetEnvironmentVariable("WSLENV", ((@($w, "LITELLM_WORKER_KEY") | Where-Object { $_ }) -join ":"), "User"); Remove-Variable k

@@ -1,5 +1,5 @@
 ---
-tags: [topic/]
+tags: [scope/, domain/]
 status: draft
 ---
 

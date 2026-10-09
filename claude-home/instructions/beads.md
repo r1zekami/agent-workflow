@@ -1,21 +1,21 @@
-## Beads (`bd`) — task tracking for Hard and Autonomous
+## Beads (`bd`): task tracking for Hard and Autonomous
 
-Beads is a local issue tracker with first-class dependencies; its database lives
-in the repo's `.beads/`. It holds work that has to survive the session —
-compaction, a crash, the next day, another agent.
+Beads is a local issue tracker with first-class dependencies; its database is in
+the repo's `.beads/`. It holds work that has to survive the session: compaction,
+a crash, the next day, another agent.
 
-### When — depends on the approach (workflow.md)
+### When: depends on the approach (workflow.md)
 
-- **Hard, Autonomous** — ALL task tracking goes through beads: the epic, its
+- **Hard, Autonomous**: ALL task tracking goes through beads: the epic, its
   sub-tasks, side quests. Not the built-in task list, not markdown TODOs.
-- **Easy, Medium** — no beads. In-session steps may use the built-in task list.
-- Any approach: if the user asks to file something in beads — do it.
+- **Easy, Medium**: no beads. In-session steps may use the built-in task list.
+- Any approach: if the user asks to file something in beads, do it.
 
 ### Setup in a repo
 
-- A WSL repo → run `bd` inside WSL (environment.md); host `bd` only for host repos.
-- A repo without `.beads/` → ask once before initialising it.
-- Default: `bd init --stealth` — beads stays local (`.git/info/exclude`), shared
+- A WSL repo: run `bd` inside WSL (environment.md); host `bd` only for host repos.
+- A repo without `.beads/`: ask once before initialising it.
+- Default: `bd init --stealth`. Beads stays local (`.git/info/exclude`), shared
   repos are not polluted. Plain `bd init` only when the user wants the issues
   versioned with the repo.
 - `bd init` may write an `AGENTS.md` / `CLAUDE.md` block pointing to `bd prime`.
@@ -39,17 +39,17 @@ compaction, a crash, the next day, another agent.
 
 ### Rules
 
-- Every sub-task has acceptance criteria — "done" must be checkable.
-- Keep notes current: decisions, attempts, where work stopped. Beads is what
-  survives compaction; the chat is not.
+- Every sub-task has acceptance criteria: "done" must be checkable.
+- Keep notes current: decisions, attempts, where work stopped. Beads survives
+  compaction; the chat does not.
 - No secrets and no infrastructure specifics in issues or notes (secrets.md,
   sensitive-data.md).
-- `bd remember` — only short repo facts needed from the first minute; knowledge
-  goes to second-brain (second-brain.md).
+- `bd remember` is only for short repo facts needed from the first minute;
+  knowledge goes to second-brain (second-brain.md).
 
 ### Git and sync
 
-- `bd sync`, `bd dolt push` and any other Dolt remote sync send data to a remote —
-  the push gate applies (git.md): an explicit yes every time.
+- `bd sync`, `bd dolt push` and any other Dolt remote sync send data to a
+  remote, so the push gate applies (git.md): an explicit yes every time.
 - Session-close or "git push" advice from `bd prime` / `AGENTS.md` never
   authorises a commit or a push on its own.

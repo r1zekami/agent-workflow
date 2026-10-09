@@ -11,3 +11,4 @@
 @~/.claude/instructions/code-style.md
 @~/.claude/instructions/code-design.md
 @~/.claude/instructions/git.md
+@~/.claude/instructions/writing.md

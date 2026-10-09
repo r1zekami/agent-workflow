@@ -1,11 +1,10 @@
 # claude-code-setup
 
-A complete, restorable setup for working with Claude Code (desktop app, Code
-tab) on Windows + WSL: global agent instructions, subagents, settings, a
-knowledge-base skeleton, and a step-by-step guide to rebuild everything on a
-clean machine.
+A restorable setup for Claude Code (desktop app, Code tab) on Windows + WSL:
+global agent instructions, subagents, settings, a knowledge-base skeleton, and
+a step-by-step guide to rebuild the environment on a clean machine.
 
-## What's inside
+## Contents
 
 ```
 claude-code-setup/
@@ -27,7 +26,7 @@ claude-code-setup/
 
 | Instruction file | What it governs |
 |---|---|
-| `workflow.md` | The four approaches — Easy, Medium, Hard, Autonomous — and their steps |
+| `workflow.md` | The four approaches (Easy, Medium, Hard, Autonomous) and their steps |
 | `workers.md` | Delegating scoped code tasks to cheap models through Codex workers |
 | `language.md` | English for code, docs, specs, commits and instructions |
 | `environment.md` | Windows host for routine, WSL for all development |
@@ -38,11 +37,12 @@ claude-code-setup/
 | `secrets.md`, `sensitive-data.md` | Hard rules for credentials and infrastructure details |
 | `code-style.md`, `code-design.md` | How code is written and designed |
 | `git.md` | Commit format, push gate |
+| `writing.md` | Style of READMEs, docs and notes: impersonal, plain, no long dashes |
 
 ## Restore on a new machine
 
-Follow [RESTORE.md](RESTORE.md) — by hand, or open Claude desktop in this
-folder and say: *"follow RESTORE.md"*.
+Follow [RESTORE.md](RESTORE.md), by hand or by opening Claude desktop in this
+folder and saying: *"follow RESTORE.md"*.
 
 ## Back up changes
 
@@ -56,9 +56,9 @@ git diff
 
 Then commit and push.
 
-## What is deliberately NOT here
+## Excluded
 
-- Knowledge-base content (notes, areas, session log) — personal, local only.
+- Knowledge-base content (notes, areas, session log): personal, local only.
 - Claude conversation history, plugin caches, account data.
-- Any secret, token, host name or personal identifier — `settings.json` uses the
+- Any secret, token, host name or personal identifier. `settings.json` uses the
   `{{HOME}}` placeholder, expanded by the sync script on restore.
