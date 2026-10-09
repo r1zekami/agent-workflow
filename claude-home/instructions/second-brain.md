@@ -8,25 +8,50 @@ here — keep it readable for a human first. Read and write it directly with the
 file tools (it is in `permissions.additionalDirectories`; no MCP, no running
 Obsidian needed). This section is the authority for its structure and rules.
 
+One vault serves two kinds of work, split by **scope** (`work` / `personal`):
+
+| Scope | What it holds |
+|---|---|
+| `work` | Job: external systems, pipelines, projects, regulations |
+| `personal` | Own life: personal projects, research |
+
 ### Structure
 
 ```
 second-brain/
 ├── CLAUDE.md             ← pointer to this file
 ├── README.md             ← the map, for the user
-├── inbox/                ← quick capture, unsorted
-├── areas/                ← life zones, one file per area; each defines one tag
-├── projects/<slug>/      ← anything with a goal and an end
-├── modules/<slug>/       ← anything reusable and pluggable: libraries, scripts, configs, templates
-├── knowledge-base/       ← the user's own research articles
+├── work/
+│   ├── README.md         ← the scope map
+│   ├── domain-tags.md        ← registry: every domain tag, one line of meaning
+│   ├── scratchpad/       ← raw notes, prompts, ideas, unstructured
+│   ├── services/<slug>/  ← external systems, one per vault
+│   ├── pipelines/<slug>/ ← regular processes with a data flow
+│   ├── projects/<slug>/  ← one-off work with a result
+│   ├── knowledge-base/   ← articles, regulations, guides
+│   └── archive/          ← finished work, moved whole, never deleted
+├── personal/
+│   ├── README.md         ← the scope map
+│   ├── domain-tags.md        ← registry: every domain tag, one line of meaning
+│   ├── scratchpad/       ← raw notes, prompts, ideas, unstructured
+│   ├── projects/<slug>/  ← anything with a goal and an end
+│   ├── knowledge-base/   ← the user's own research articles
+│   └── archive/          ← finished projects, moved whole, never deleted
 ├── agents-data/
 │   ├── <agent>/          ← subagent output, one file per topic
 │   └── session-log/      ← one note per agent task, month folders + dashboard.md
-├── templates/            ← note templates (source: claude-code-setup repo)
-└── archive/              ← finished projects, moved whole, never deleted
+└── templates/            ← note templates (source: claude-code-setup repo)
 ```
 
-Projects and modules share one skeleton:
+- There are no `modules/`, `epics/` or `areas/` folders. A reusable thing is a
+  project (its README is the context, `repo:` points at the code); an epic or an
+  area is a `domain/` tag.
+- `archive/` and `scratchpad/` exist once per scope — never at the vault root.
+- `scratchpad/` is the user's free space: unstructured notes, prompts, ideas. Agents
+  read it only when asked and never reorganize it unasked.
+- A folder appears together with its first note; a scope does not mirror the
+  other scope's folders (`services/` and `pipelines/` are work-only).
+- A service, pipeline or project is an entity folder with one skeleton:
 
 ```
 <slug>/
@@ -36,55 +61,87 @@ Projects and modules share one skeleton:
     └── YYYY-MM-DD-<slug>.md   ← one file per work session / milestone
 ```
 
-Areas, knowledge-base articles and agents-data reports are single files.
+Knowledge-base articles and agents-data reports are single files.
+
+### Reading directives — segmentation by scope
+
+The vault is read in slices, never as a whole. These rules apply to every read
+(Read, Glob, Grep, Obsidian search) in every approach.
+
+1. **Resolve the scope first.** In order: the user's tag (`[work]`, `[personal]`)
+   -> the entity whose `repo:` matches the working directory -> the user's words.
+   Still unclear -> ask once; never guess, never read both "to be safe".
+2. **Read only `<scope>/`.** The other scope does not exist for the
+   session. Scope the tool call itself (`path: second-brain/work`); a tag search
+   (`#domain/...`) always carries the same path filter. Never run a vault-wide
+   Grep, Glob or tag search.
+3. **Top-down, cheapest first.** vault `README.md` -> `<scope>/README.md` ->
+   `<scope>/domain-tags.md` (pick the domain) -> Grep `tags:` for that domain on the
+   scope path -> entity `README.md` -> note bodies, only those the task needs.
+   `log/` and `decisions.md` are read on demand, `scratchpad/` and `archive/` only
+   when asked.
+4. **Cross-scope reads need an explicit request** from the user for that
+   specific question. The request covers that question, not the session.
+5. **No links across scopes.** `work` and `personal` notes link only within
+   their own scope. Something needed on both sides is a separate note in each
+   scope, never a link or a shared copy.
+6. **Writes follow the same slice.** A note goes into the session's scope.
+   Unsure about the scope -> ask the user; never park a note outside a scope.
+7. **Agent output carries the scope too** — session-log entries and agents-data
+   reports get the `scope/` tag of the session's scope.
 
 ### Where things go
 
 | It is… | Goes to |
 |---|---|
-| Unsure where it belongs, a quick idea | `inbox/<slug>.md` |
-| A zone of life with no end | `areas/<slug>.md` |
-| Something with a goal and an end | `projects/<slug>/` |
-| Something reusable that plugs into other things | `modules/<slug>/` |
-| A pipeline | built as its own goal → project; a piece reused in several places → module |
-| The user's research article | `knowledge-base/<slug>.md` |
+| Unsure where it belongs, a quick idea, a prompt | `<scope>/scratchpad/<slug>.md` |
+| A work external system | `work/services/<slug>/` |
+| A work regular process with a data flow | `work/pipelines/<slug>/` |
+| A goal with an end, or a reusable piece with its own context | `<scope>/projects/<slug>/` |
+| A research article, regulation, guide | `<scope>/knowledge-base/<slug>.md` |
 | A subagent's output (e.g. `architecture-designer`) | `agents-data/<agent>/<topic>.md` |
 | A record of agent work | `agents-data/session-log/<YYYY-MM>/<entry>.md` |
-| A finished project | move the whole folder to `archive/` |
+| Finished work | move the whole folder to `<scope>/archive/` |
 
-Before creating anything, search for an existing note (Glob by path, Grep by
-title and tags) and extend it instead of creating a near-duplicate.
+Before creating anything, search the scope for an existing note (Glob by path,
+Grep by title and tags) and extend it instead of creating a near-duplicate.
 
 ### Tags
 
-Lowercase kebab-case, nested with `/`:
-- `area/<area-slug>` — on projects, modules and articles; this is how an area
-  finds everything related to it. Every area file defines exactly one.
-- `topic/<topic>` — on knowledge-base articles and agents-data reports; an
-  article may have several.
+Obsidian-native, lowercase kebab-case, nested with `/`:
+- `scope/<work|personal>` — on every note, equal to its top-level folder.
+  A mismatch is a bug: fix the note, not the folder.
+- `domain/<domain>[/<subject>]` — the field of work or life a note belongs to:
+  an epic (`domain/inventory`), a life zone (`domain/health`), or a finer
+  subject (`domain/security/tls`). One level by default; the second level only
+  when a domain has too many notes to scan by one tag. A note may have several.
 - `agent/<agent-name>` — on agents-data reports.
 
-No folders by topic — tags do that job. List existing tags first (Grep `tags:`)
-before inventing a new one.
+Each scope's `domain-tags.md` lists its domain tags with one line of meaning; a new
+domain tag is added there in the same edit. No folders by domain — tags do that
+job. Read `domain-tags.md` before inventing a tag.
 
 ### Frontmatter
 
+Every note starts with `tags:` holding its `scope/` tag first.
+
 | Type | Keys |
 |---|---|
-| area | `tags: [area/<slug>]` |
-| project | `tags: [area/…]`, `status: idea / active / paused / done`, `repo: <path or none>` |
-| module | `tags: [area/…]`, `status: active / deprecated`, `repo: <path or none>`, `used-in: [[…]]` |
-| knowledge-base | `tags: [topic/…, area/…]`, `status: draft / done` |
-| agents-data | `tags: [agent/<name>, topic/…]` |
+| service | `tags: [scope/…, domain/…]`, `status: active / deprecated` |
+| pipeline | `tags: […]`, `status: active / paused / done`, `repo: <path or none>` |
+| project | `tags: […]`, `status: idea / active / paused / done`, `repo: <path or none>` |
+| knowledge-base | `tags: […]`, `status: draft / done` |
+| agents-data | `tags: [scope/…, agent/<name>, domain/…]` |
 
 ### Naming and language (language.md)
 
 - Structure is English kebab-case: folder and file names, tags, frontmatter keys
   and values, template headings. Knowledge-base articles go from general to
   specific, versions keep their dots: `tls-ssl-1.3-1.2.md`.
+- All note content is English too — a note in another language exists only when
+  the user explicitly asks for that note.
 - A date prefix appears only in `log/` file names; decision entries carry their
   date in the heading.
-- Content of the user's notes: any language. `agents-data/`: English.
 
 ### Update rules
 
@@ -106,7 +163,7 @@ folders shows the table (newest first) and the charts.
 
 ```markdown
 ---
-tags: [agent/session-log]
+tags: [agent/session-log, scope/work]   # or scope/personal
 timestamp: YYYY-MM-DDTHH:MM
 approach: easy / medium / hard / autonomous
 effort: low / medium / high / xhigh / max / unknown
@@ -126,7 +183,8 @@ status: done / partial / blocked / not-verified / abandoned
 
 ### Links
 
-- Between notes: `[[wikilinks]]`. To code: the `repo:` path.
+- Between notes: `[[wikilinks]]`, within the scope (directive 5).
+  To code: the `repo:` path.
 - Specs (`openspec/specs/`) and docs (`docs/`, `README.md`) stay in the code repo —
   link to them, never copy them here.
 - A beads epic links its note: `bd note <epic-id> "docs: <note path>"`.
@@ -145,7 +203,7 @@ status: done / partial / blocked / not-verified / abandoned
 | What | Where |
 |---|---|
 | Rules — how to work | the global `CLAUDE.md` and its imported files, or a project `CLAUDE.md` |
-| Knowledge — projects, modules, decisions, history, research | second-brain |
+| Knowledge — projects, decisions, history, research | second-brain |
 | Behavior specs and code docs | the code repo (`openspec/specs/`, `docs/`, `README.md`) — linked from second-brain |
 | Tasks | beads in the repo |
 | A short repo fact needed from the first minute | `bd remember` |

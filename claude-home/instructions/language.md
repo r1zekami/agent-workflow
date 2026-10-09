@@ -5,9 +5,7 @@
 | Chat with the user | English, always — even when the user writes in another language (Cyrillic costs about 2-3x the tokens) |
 | Code projects — everything: identifiers, comments, docstrings, log / print / error text, docs, OpenSpec specs, commit messages, beads issues and notes, PR texts | English only |
 | Instruction files — every `CLAUDE.md`, `instructions/*.md`, `agents/*.md`, skills | English only — no other language, not even when quoting or referring to something |
-| second-brain — content of the user's notes (areas, projects, modules, knowledge-base) | Any language |
-| second-brain — structure: folder and file names, tags, frontmatter keys and values | English, kebab-case — so the structure never drifts |
-| second-brain — `agents-data/` (reports, session log) | English |
+| second-brain — everything: note content, structure (folder and file names, tags, frontmatter), `agents-data/` | English; structure in kebab-case so it never drifts. Another language only for a note the user explicitly asks for |
 
 - Applies in every approach, Easy included.
 - Anything that goes to a remote repository is English, without exception.
