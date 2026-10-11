@@ -21,6 +21,7 @@ claude-code-setup/
 │   └── litellm/              ← local LLM gateway for worker agents (Docker in WSL)
 ├── workers/
 │   └── codex/                ← Codex CLI worker config: gateway, model metadata, worker prompt
+├── second-brain-obsidian/    ← Obsidian CSS snippet: hides templates/ in the file explorer
 └── second-brain-templates/   ← note templates for the knowledge base
 ```
 

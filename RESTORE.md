@@ -143,6 +143,13 @@ Then Claude writes `CLAUDE.md` (a pointer to `second-brain.md`), `README.md`
 Obsidian: open the folder as a vault, enable the core plugin **Templates**, set
 its folder to `templates`.
 
+The `templates` folder is hidden from Obsidian views:
+- Settings, **Files and links**, **Excluded files**: add `templates/` (search,
+  graph and quick switcher).
+- Copy `second-brain-obsidian/hide-templates.css` to `<vault>/.obsidian/snippets/`,
+  then enable it in Settings, **Appearance**, **CSS snippets** (file explorer).
+  Inserting templates still works.
+
 The knowledge base has no remote by design. Its content survives a lost machine
 only if the user backs it up elsewhere (external drive, encrypted archive).
 
