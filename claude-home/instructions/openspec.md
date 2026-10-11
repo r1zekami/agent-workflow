@@ -32,7 +32,7 @@ elevating to Hard. This overrides Easy's "don't stop" rule.
 
 ### OpenSpec inside the Hard steps (workflow.md)
 
-- **1. Epic and plan**: `/opsx:propose` produces `proposal.md` (why, scope), `design.md`
+- **1. Plan**: `/opsx:propose` produces `proposal.md` (why, scope), `design.md`
   (how, including the interface block, code-design rule 6) and the spec delta
   (`## ADDED / MODIFIED / REMOVED Requirements`). `openspec validate <change>`
   passes. Wait for the user's OK on the whole change.
@@ -41,7 +41,7 @@ elevating to Hard. This overrides Easy's "don't stop" rule.
   only state: `tasks.md` stays the approved plan and is not ticked item by item.
 - **3. Implement**: through the beads loop, not `/opsx:apply`. Each scenario
   becomes a test first (RED, then GREEN).
-- **6. Document**: tick all of `tasks.md` in one edit (every bead is closed),
+- **6. Document and close**: tick all of `tasks.md` in one edit (every bead is closed),
   then `/opsx:archive` merges the delta into `openspec/specs/`. Update repo docs
   if install / run / config / architecture changed. Then the second-brain entry
   links the archived change.
