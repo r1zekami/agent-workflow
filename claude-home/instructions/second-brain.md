@@ -5,6 +5,7 @@
 - The user's knowledge base: `~/home/agents/second-brain` (Windows: `%USERPROFILE%\home\agents\second-brain`), local git, never a remote. Called second-brain, never "vault".
 - Two scopes: `work/` and `personal/`. Resolve the scope first, then read and write only inside it; never search the whole vault.
 - Read top-down: `README.md`, `<scope>/README.md`, `<scope>/domain-tags.md`, the entity `README.md`, then only the notes the task needs.
+- A quick note or idea goes to `<scope>/scratchpad/<slug>.md`; ask the scope when unclear.
 - Every note starts with `tags: [scope/<scope>, domain/<domain>]`. Names are English kebab-case.
 - `README.md` holds the current state; `decisions.md` is append-only; `log/` only gets new files. `scratchpad/` and `archive/` only when asked. Knowledge-base content belongs to the user.
 - Session log: one note per task in `agents-data/session-log/<YYYY-MM>/<YYYY-MM-DD-HHMM>-<slug>.md` with frontmatter `tags`, `timestamp`, `approach`, `effort`, `target`, `status` and one English line.
