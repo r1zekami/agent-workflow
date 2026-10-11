@@ -13,8 +13,8 @@ Allowed, in this order of preference:
 3. **Real values, pointwise and ONLY on the user's explicit request** for that
    specific item. The request covers that item, not the rest of the dataset.
 
-When unsure whether something is safe to show, save or send, run the
-`leak-auditor` subagent on it first.
+When unsure whether something is safe to show or save, ask the user. Anything
+that leaves the machine by a push is audited first (git.md).
 
 The same applies to the agent's reasoning, beads issues, commit messages, specs,
 and second-brain notes including the session log. Test fixtures use made-up

@@ -4,8 +4,14 @@
 permission. Either get a clear yes from the user for that specific push, or ask
 the user to run it. This holds regardless of branch, how trivial the change
 looks, or whether a prior push was already approved: approval does not carry
-over to the next push. Before asking for a push, run the `leak-auditor` subagent
-on everything the push would send, and include its verdict in the request.
+over to the next push.
+
+**Leak audit: before every push, and only then.** Commits are never audited.
+When a push is requested, first run the `leak-auditor` subagent on everything
+the push would send (`git log -p <remote>/<branch>..HEAD`):
+- clean: push;
+- findings: do not push. Fix them, show the user the findings and the fix, and
+  push only after a new yes.
 
 **Commit title**: `type(scope): short description`: `feat`/`fix`/`refactor`/etc.,
 the module or entity name in the project as scope, and one concise line of what

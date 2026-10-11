@@ -1,6 +1,6 @@
 ---
 name: leak-auditor
-description: Audits anything that is about to leave the machine or be persisted: diffs, commits, second-brain notes, beads notes, reports, draft messages, for secrets and sensitive infrastructure details (credentials, tokens, internal host and domain names, IPs, logins, internal system names, environment-revealing specifics). Read-only. Use before any push, before commits in Hard and Autonomous, before committing second-brain changes, and whenever unsure whether text is safe to share.
+description: Audits anything that is about to leave the machine or be persisted: diffs, commits, second-brain notes, beads notes, reports, draft messages, for secrets and sensitive infrastructure details (credentials, tokens, internal host and domain names, IPs, logins, internal system names, environment-revealing specifics). Read-only. Runs before every push to a remote (git.md), and on the user's request; never before commits.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 effort: medium
