@@ -5,7 +5,7 @@
 - Every task gets an approach, named in the first line of the reply: Easy (make it work), Medium (done right in one sitting), Hard (planned, tracked in beads, isolated, reviewed), Autonomous (unattended run from an approved plan).
 - The user's tag (`[Easy]`, `[Medium]`, ...) wins; otherwise pick from context and ask when it is unclear.
 - Easy: no plan, no new tests; the cheapest real check; "not verified" when nothing could be checked.
-- Medium: open questions in one message up front, a short plan, public interfaces shown for approval before coding, tests where testable, verification before any claim of done.
+- Medium: one brief up front (open questions, a short plan, any public interface change) and one approval when needed; tests first where testable; verification before any claim of done.
 - No completion claim without running a check.
 - Every task that changed something gets a session-log entry in second-brain.
 
@@ -57,19 +57,18 @@ the user elevates the approach.
 Goal: correct and clean by our rules, without the cross-session machinery:
 no beads, no worktree, no review cycle.
 
-1. **Clarify**: ask all open questions in ONE message up front; afterwards
-   ask again only if something genuinely new comes up.
-2. **Plan**: goal + 3-7 steps in chat. Proceed right away, unless the plan
-   contains a decision that is the user's; then wait.
-3. **Gate**: interface block (code-design rule 6) if anything public changes;
-   wait for OK.
-4. **Implement**: code: `superpowers:test-driven-development` (RED, GREEN,
+1. **Brief**: one message with all open questions, a plan (goal + 3-7 steps)
+   and, if anything public changes, the interface block (code-design rule 6).
+   Proceed at once when there are no questions, no decision that is the user's
+   and no public change; otherwise wait for one OK that covers all of it. Ask
+   again later only if something genuinely new comes up.
+2. **Implement**: code: `superpowers:test-driven-development` (RED, GREEN,
    REFACTOR) where testable; a bug starts with `superpowers:systematic-debugging`.
    A step that passes the workers.md checks goes to a worker by default; doing
    it directly needs the failed check in the plan.
    Not code (config, setup, docs): do it, then check it the closest real way.
-5. **Verify**: `superpowers:verification-before-completion`.
-6. **Report**: code: final report (code-design rule 7); otherwise the result
+3. **Verify**: `superpowers:verification-before-completion`.
+4. **Report**: code: final report (code-design rule 7); otherwise the result
    first, then how it was checked and what is open.
 
 - **Review**: none, unless the user explicitly asks; then run the reviewer(s) asked for.
@@ -81,12 +80,14 @@ no beads, no worktree, no review cycle.
 Goal: work that can be paused, handed over and resumed: planned, tracked in
 beads, isolated on its own branch, reviewed.
 
-1. **Epic and plan**: `bd create -t epic "Goal"` (intent + context; beads.md).
-   Then one design pass: `superpowers:brainstorming` followed by
-   `superpowers:writing-plans` (2-5 min tasks) with the interface block
-   (code-design rule 6). One approval from the user covers the whole plan.
+Hard is Medium plus tracking, isolation, review and documentation.
+
+1. **Plan**: `bd create -t epic "Goal"` (intent + context; beads.md). Then one
+   design pass, `superpowers:brainstorming` followed by `superpowers:writing-plans`
+   (2-5 min tasks), delivered as the Medium brief: open questions, the plan and
+   the interface block (code-design rule 6), approved with one OK.
    OpenSpec repo: `/opsx:propose` with a spec delta instead (openspec.md).
-2. **Sub-tasks and isolation**: `bd create --parent <epic-id>` for each task,
+2. **Track and isolate**: `bd create --parent <epic-id>` for each task,
    with acceptance criteria and `bd dep add` (blocks); then
    `superpowers:using-git-worktrees`.
 3. **Implement**: `bd ready`, pick, `bd update --claim`,
@@ -105,15 +106,15 @@ beads, isolated on its own branch, reviewed.
    findings are fixed before step 5. Review rounds are limited, see "Reviews"
    under Every approach. The leak audit runs only before a push (git.md).
 5. **Verify**: `superpowers:verification-before-completion` (evidence before claims).
-6. **Document**: OpenSpec repo: `/opsx:archive` + repo docs first (openspec.md).
-   Then record the work in second-brain by its rules (second-brain.md): the
-   entity README gets the new current state, `log/` gets what was done,
-   `decisions.md` the decisions (append-only). Link it in the epic:
-   `bd note <epic-id> "docs: <note path>"`. Commit there:
-   `docs(<entity-slug>): <what was done>`.
-7. **Finish and close**: `superpowers:finishing-a-development-branch` (push gate
-   still applies), `bd close <epic-id> --reason "Done"`, final report
-   (code-design rule 7) with a link to the second-brain note.
+6. **Document and close**: OpenSpec repo: `/opsx:archive` + repo docs first
+   (openspec.md). Then record the work in second-brain by its rules
+   (second-brain.md): the entity README gets the new current state, `log/` gets
+   what was done, `decisions.md` the decisions (append-only); link it in the
+   epic (`bd note <epic-id> "docs: <note path>"`) and commit there
+   (`docs(<entity-slug>): <what was done>`). Then
+   `superpowers:finishing-a-development-branch` (push gate still applies),
+   `bd close <epic-id> --reason "Done"` and the final report (code-design rule 7)
+   with a link to the second-brain note.
 
 Side quests: `bd create "..." -t bug --deps discovered-from:<current-id>` (beads.md)
 

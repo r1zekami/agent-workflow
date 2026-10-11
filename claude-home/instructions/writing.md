@@ -5,6 +5,7 @@
 - Documentation style: impersonal (no I, we, you), no traces of the conversation ("the user decided").
 - Short plain sentences; no filler, no marketing words, no figurative verbs.
 - No long dashes; exact names, paths and values in backticks.
+- No invented figures: no made-up numbers, statistics or sample data presented as real in UI, docs and examples.
 
 Scope: every text meant to be read later by a person. READMEs, docs, specs,
 second-brain notes, articles, commit bodies, issue and PR text. Not the chat
@@ -68,6 +69,10 @@ sentence: "Run `make test`." is better than "The test suite may be executed by
 invoking make test."
 
 ### 5. Precision where it matters
+
+- No invented figures: numbers, statistics, latencies and sample data are real
+  and sourced, or clearly marked as examples. A UI never shows placeholder
+  statistics as if they were measured.
 
 - Names, paths, commands, values and versions are exact and in backticks.
 - A claim names its object: "the config is validated", not "it is validated".
