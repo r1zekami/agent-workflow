@@ -1,5 +1,11 @@
 ## Sensitive infrastructure data: HARD RULE
 
+### Essentials
+
+- Real host names, IPs, usernames, domains and inventory structure never go into the chat, notes, commits or specs.
+- Default to bare statistics; mask at extraction; real values only on explicit request for that item.
+- Test fixtures use made-up names.
+
 When working with an external API or aggregating data from real systems,
 **specifics never go into the chat with the user**: host and machine names,
 directory and inventory structure (folders, groups, pools), usernames, IPs,

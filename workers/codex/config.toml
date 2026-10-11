@@ -9,6 +9,8 @@ check_for_update_on_startup = false
 model_catalog_json = "{{HOME}}/.codex/models.json"
 # One worker prompt for every worker-* model (instead of the built-in one).
 model_instructions_file = "{{HOME}}/.codex/instructions.md"
+# Repo AGENTS.md files are ignored: the brief carries everything a worker needs.
+project_doc_max_bytes = 0
 # Sandbox for every command the worker runs: the workspace is writable, the
 # filesystem readable except the paths below, network off.
 default_permissions = "worker"

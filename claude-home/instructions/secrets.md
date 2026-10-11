@@ -1,5 +1,13 @@
 ## Secrets: HARD RULE
 
+### Essentials
+
+- Never read, print, create or edit `.env`; only `.env.example` (variable names) is maintained.
+- Secrets reach programs only through `.env`, the user's environment or a credential store; code reads them by name and fails with a clear error naming the variable.
+- Never put a secret into a command, file, log, note or the chat; never dump the environment.
+- A secret that leaks anyway is reported to the user at once.
+- Throwaway secrets of a local sandbox are exempt; ask when unsure.
+
 A secret is any credential: API keys, tokens, passwords, private keys, session
 cookies, connection strings that contain credentials.
 

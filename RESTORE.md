@@ -188,8 +188,11 @@ Restart Claude desktop. Then Claude installs the config (in WSL):
 ```bash
 S=/mnt/c/Users/<user>/home/agents/claude-code-setup/workers/codex
 mkdir -p ~/.codex && sed "s#{{HOME}}#$HOME#g" $S/config.toml > ~/.codex/config.toml && chmod 600 ~/.codex/config.toml
-cp $S/models.json $S/instructions.md $S/run-cost.sh ~/.codex/
+cp $S/models.json $S/run-cost.sh ~/.codex/
 ```
+
+Then, on Windows, build the worker prompt (`~/.codex/instructions.md`) from the
+rule Essentials: `py build-agent-rules.py` in this repo.
 
 How Claude uses it: `instructions/workers.md`.
 
@@ -197,7 +200,26 @@ How Claude uses it: `instructions/workers.md`.
 `codex exec --ephemeral -s read-only -o out.txt "Reply with exactly: OK"` exits 0
 and `out.txt` contains `OK`.
 
-## 10. Final verification
+## 10. OpenCode (optional, needs step 8)
+
+OpenCode is the GUI harness for other models; the user installs it on Windows.
+
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.config\opencode" | Out-Null
+Copy-Item .\harnesses\opencode\opencode.json "$HOME\.config\opencode\"
+py .\build-agent-rules.py
+```
+
+`opencode.json` holds the LiteLLM provider (key read from `LITELLM_WORKER_KEY`,
+or a dedicated key variable) and the permissions: `.env` denied to reads, edits
+and shell, environment dumps denied, push and installs ask. `build-agent-rules.py`
+writes `~/.config/opencode/AGENTS.md`, the short rules. Rebuild after any rule change.
+Never run OpenCode with `--auto`: it approves every rule set to ask.
+
+**Check:** in OpenCode, the model picker lists `LiteLLM (local)`; asking it to show a
+`.env` file is refused.
+
+## 11. Final verification
 
 | What | How | Expected |
 |---|---|---|

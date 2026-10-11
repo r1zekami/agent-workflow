@@ -1,5 +1,10 @@
 ## OpenSpec: behavior specs in the repo
 
+### Essentials
+
+- A repo with `openspec/` keeps behavior specs. Any change of behavior there is Hard; Easy and Medium only for changes that keep behavior identical. A task that turns out to change behavior stops and is proposed as Hard.
+- OpenSpec files stay local (not committed) unless the user asks.
+
 OpenSpec keeps a written contract of how the system must behave, inside the
 repo, and changes behavior only through a change proposal that edits that
 contract first. A repo uses OpenSpec when it has an `openspec/` directory.
@@ -27,16 +32,16 @@ elevating to Hard. This overrides Easy's "don't stop" rule.
 
 ### OpenSpec inside the Hard steps (workflow.md)
 
-- **3. Plan**: `/opsx:propose` produces `proposal.md` (why, scope), `design.md`
+- **1. Epic and plan**: `/opsx:propose` produces `proposal.md` (why, scope), `design.md`
   (how, including the interface block, code-design rule 6) and the spec delta
   (`## ADDED / MODIFIED / REMOVED Requirements`). `openspec validate <change>`
   passes. Wait for the user's OK on the whole change.
-- **4. Sub-tasks**: every item in `tasks.md` becomes a beads sub-task; its
+- **2. Sub-tasks**: every item in `tasks.md` becomes a beads sub-task; its
   acceptance criteria are the matching spec scenarios. From here beads is the
   only state: `tasks.md` stays the approved plan and is not ticked item by item.
-- **6. Implement**: through the beads loop, not `/opsx:apply`. Each scenario
+- **3. Implement**: through the beads loop, not `/opsx:apply`. Each scenario
   becomes a test first (RED, then GREEN).
-- **9. Document**: tick all of `tasks.md` in one edit (every bead is closed),
+- **6. Document**: tick all of `tasks.md` in one edit (every bead is closed),
   then `/opsx:archive` merges the delta into `openspec/specs/`. Update repo docs
   if install / run / config / architecture changed. Then the second-brain entry
   links the archived change.

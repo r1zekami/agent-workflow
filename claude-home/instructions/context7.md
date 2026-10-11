@@ -1,5 +1,10 @@
 ## Context7: current library documentation
 
+### Essentials
+
+- Questions about a library, framework, API or CLI: fetch current documentation (Context7) instead of answering from memory.
+- Never put secrets, internal names or proprietary code into a documentation query.
+
 Context7 is an MCP server (`resolve-library-id`, `query-docs`) that returns
 up-to-date, version-specific docs and code examples. Training data may not
 reflect recent changes, so Context7 is the source of truth for library APIs.

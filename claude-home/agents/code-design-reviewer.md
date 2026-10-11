@@ -1,6 +1,6 @@
 ---
 name: code-design-reviewer
-description: Reviews code changes against the user's design rules (code-design.md Simplicity, rules 1-8 and code-style.md): interfaces, families and registries, module boundaries, naming, imports, docstrings, logging. Read-only. Use in Hard step 7 (Review), or whenever asked to check code against "our rules". Give it the diff range or files, and the approved interface block if there is one.
+description: Reviews code changes against the user's design rules (code-design.md Simplicity, rules 1-8 and code-style.md): interfaces, families and registries, module boundaries, naming, imports, docstrings, logging. Read-only. Use in Hard step 4 (Review) for risky changes, or whenever asked to check code against "our rules". Give it the diff range or files, and the approved interface block if there is one.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 effort: high

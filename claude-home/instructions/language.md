@@ -1,5 +1,12 @@
 ## Language: HARD RULE, every approach
 
+### Essentials
+
+- Chat with the user: English, always.
+- Everything in code projects, instruction files and second-brain: English.
+- Translation only on request, as a copy of the English original.
+- Log output: English, ASCII only.
+
 | Where | Language |
 |---|---|
 | Chat with the user | English, always, even when the user writes in another language (Cyrillic costs about 2-3x the tokens) |
