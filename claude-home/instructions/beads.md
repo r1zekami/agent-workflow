@@ -1,5 +1,11 @@
 ## Beads (`bd`): task tracking for Hard and Autonomous
 
+### Essentials
+
+- Beads (`bd`) tracks Hard and Autonomous work in the repo's `.beads/`; Easy and Medium do not use it.
+- `bd sync` and `bd dolt push` send data to a remote: the push gate applies.
+- No secrets or infrastructure specifics in issues and notes.
+
 Beads is a local issue tracker with first-class dependencies; its database is in
 the repo's `.beads/`. It holds work that has to survive the session: compaction,
 a crash, the next day, another agent.

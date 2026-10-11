@@ -19,6 +19,9 @@ claude-code-setup/
 │   └── agents/               ← subagents: code-design-reviewer, leak-auditor, architecture-designer, Explore
 ├── services/
 │   └── litellm/              ← local LLM gateway for worker agents (Docker in WSL)
+├── build-agent-rules.py      ← short rules for OpenCode and Codex workers, built from the Essentials blocks
+├── harnesses/
+│   └── opencode/             ← OpenCode config template and its rules header
 ├── workers/
 │   └── codex/                ← Codex CLI worker config: gateway, model metadata, worker prompt
 ├── second-brain-obsidian/    ← Obsidian CSS snippet: hides templates/ in the file explorer

@@ -1,5 +1,11 @@
 ## Writing: READMEs, docs, notes, articles
 
+### Essentials
+
+- Documentation style: impersonal (no I, we, you), no traces of the conversation ("the user decided").
+- Short plain sentences; no filler, no marketing words, no figurative verbs.
+- No long dashes; exact names, paths and values in backticks.
+
 Scope: every text meant to be read later by a person. READMEs, docs, specs,
 second-brain notes, articles, commit bodies, issue and PR text. Not the chat
 with the user. Applies in every approach and in every language: language.md

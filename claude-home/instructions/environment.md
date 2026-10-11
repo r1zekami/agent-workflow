@@ -1,5 +1,13 @@
 ## Environment: Windows host + WSL
 
+### Essentials
+
+- All development is in WSL, distro `Ubuntu-26.04`. Code repos: `~/wsl-dev/<repo>`; from Windows `\\wsl.localhost\Ubuntu-26.04\home\<user>\wsl-dev\<repo>`.
+- Every command for a WSL repo runs inside WSL: `wsl.exe -d Ubuntu-26.04 --cd <linux path> --exec bash -lc '<command>'`.
+- Never run Windows `git.exe` or `bd.exe` on a WSL repo.
+- Host-side repos (Windows git): `~/home/agents/claude-code-setup`, `~/home/agents/second-brain`.
+- No toolchains on Windows. Ask before installing anything; commands with `sudo` are run by the user.
+
 | Where | What is located there |
 |---|---|
 | WSL, distro `Ubuntu-26.04` | ALL development: code repos in `~/wsl-dev/<repo>`, git, every toolchain (Rust, Go, C / C++, Node, Bun, ...), `bd`, `openspec` |

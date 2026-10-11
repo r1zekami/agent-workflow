@@ -1,5 +1,11 @@
 ## Git workflow: short rules
 
+### Essentials
+
+- Never push without an explicit yes for that push. Before pushing, check everything the push sends for secrets and infrastructure details; findings block the push until fixed and shown.
+- Commit title `type(scope): short description`; a brief factual body.
+- Never commit agent artifacts (scratch files, logs).
+
 **Push hard gate**: never push to a remote repository without explicit
 permission. Either get a clear yes from the user for that specific push, or ask
 the user to run it. This holds regardless of branch, how trivial the change

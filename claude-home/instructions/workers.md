@@ -1,5 +1,11 @@
 ## Workers: delegating code to cheap models
 
+### Essentials
+
+- Workers are Codex CLI runs in WSL, using a cheap model through the local LiteLLM gateway; the orchestrator briefs, reviews and lands their work.
+- Delegation is the default for a coding task that passes five checks: decided, checkable, offline, clean, worth it.
+- Workers never get secrets, never commit, push or install; their sandbox has no network.
+
 A worker is Codex CLI in WSL, running a cheap model through the local LiteLLM
 gateway (`claude-code-setup/services/litellm`, config in `workers/codex`). It
 writes code. Claude stays the orchestrator: it scopes the task, reviews the diff

@@ -1,5 +1,14 @@
 ## Code design: extensible interfaces (REQUIRED)
 
+### Essentials
+
+- Simplicity first (KISS, YAGNI): plain code, early returns, no speculative options, members or hooks.
+- A variant is a parameter, never part of a name; variants of one kind share one contract and a registry that holds only existing members.
+- Name hierarchy equals file hierarchy; modules split by responsibility; dependencies one-way.
+- Long clear names; imports by full path, no aliases.
+- New or changed public signatures are shown to the user before implementing (not for workers: their brief carries approved signatures).
+- Run the project's linters and formatters on changed files.
+
 Scope: applies to the Medium, Hard and Autonomous approaches. The Easy approach
 skips this file entirely (see workflow.md).
 

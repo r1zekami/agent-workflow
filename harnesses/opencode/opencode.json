@@ -1,0 +1,106 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "litellm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteLLM (local)",
+      "options": {
+        "baseURL": "http://127.0.0.1:4000/v1",
+        "apiKey": "{env:LITELLM_WORKER_KEY}"
+      },
+      "models": {
+        "worker-deepseek-flash": {
+          "name": "DeepSeek Flash",
+          "limit": {
+            "context": 128000,
+            "output": 16384
+          }
+        },
+        "worker-deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro",
+          "limit": {
+            "context": 128000,
+            "output": 16384
+          }
+        }
+      }
+    }
+  },
+  "model": "litellm/worker-deepseek-flash",
+  "small_model": "litellm/worker-deepseek-flash",
+  "share": "disabled",
+  "autoupdate": false,
+  "permission": {
+    "*": "ask",
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "glob": "allow",
+    "grep": "allow",
+    "edit": {
+      "*": "ask",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "webfetch": "allow",
+    "websearch": "allow",
+    "external_directory": {
+      "*": "ask",
+      "~/home/**": "allow",
+      "//wsl.localhost/Ubuntu-26.04/home/**": "allow",
+      "\\\\wsl.localhost\\Ubuntu-26.04\\home\\**": "allow"
+    },
+    "bash": {
+      "*": "ask",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git show*": "allow",
+      "git branch*": "allow",
+      "git remote -v*": "allow",
+      "git -c * status*": "allow",
+      "git -c * diff*": "allow",
+      "git -c * log*": "allow",
+      "git -c * show*": "allow",
+      "ls*": "allow",
+      "dir*": "allow",
+      "pwd": "allow",
+      "tree*": "allow",
+      "Get-ChildItem*": "allow",
+      "gci *": "allow",
+      "Get-Location*": "allow",
+      "Test-Path*": "allow",
+      "Get-Content*": "allow",
+      "type *": "allow",
+      "cat *": "allow",
+      "head *": "allow",
+      "tail *": "allow",
+      "rg *": "allow",
+      "findstr *": "allow",
+      "where *": "allow",
+      "which *": "allow",
+      "*.env*": "deny",
+      "*.env.example*": "allow",
+      "env": "deny",
+      "env *": "deny",
+      "printenv*": "deny",
+      "set": "deny",
+      "Get-ChildItem env:*": "deny",
+      "gci env:*": "deny",
+      "*$env:*": "deny",
+      "*git push*": "ask",
+      "*bd sync*": "ask",
+      "*bd dolt push*": "ask",
+      "*git reset --hard*": "ask",
+      "*git clean *": "ask",
+      "*winget *": "ask",
+      "*apt *": "ask",
+      "*npm i*": "ask",
+      "*pip install*": "ask"
+    }
+  }
+}

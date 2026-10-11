@@ -1,5 +1,14 @@
 ## Approach: how a task is worked
 
+### Essentials
+
+- Every task gets an approach, named in the first line of the reply: Easy (make it work), Medium (done right in one sitting), Hard (planned, tracked in beads, isolated, reviewed), Autonomous (unattended run from an approved plan).
+- The user's tag (`[Easy]`, `[Medium]`, ...) wins; otherwise pick from context and ask when it is unclear.
+- Easy: no plan, no new tests; the cheapest real check; "not verified" when nothing could be checked.
+- Medium: open questions in one message up front, a short plan, public interfaces shown for approval before coding, tests where testable, verification before any claim of done.
+- No completion claim without running a check.
+- Every task that changed something gets a session-log entry in second-brain.
+
 EVERY task gets an approach: Easy, Medium, Hard or Autonomous. The approach is
 HOW the work is done, not how big or difficult the task is. A hard problem can be
 worked Easy, a tiny one Hard. The approach scales process only: the hard rules
@@ -72,39 +81,39 @@ no beads, no worktree, no review cycle.
 Goal: work that can be paused, handed over and resumed: planned, tracked in
 beads, isolated on its own branch, reviewed.
 
-1. **Epic**: `bd create -t epic "Goal"` (container for intent + context; beads.md)
-2. **Brainstorm**: `superpowers:brainstorming` (design before code)
-3. **Plan**: `superpowers:writing-plans` (2-5 min tasks), including the interface
-   block (code-design rule 6); wait for OK. OpenSpec repo: `/opsx:propose` with a
-   spec delta instead (openspec.md)
-4. **Sub-tasks**: `bd create --parent <epic-id>` for each, with acceptance
-   criteria + `bd dep add` (blocks)
-5. **Isolate**: `superpowers:using-git-worktrees`
-6. **Implement**: `bd ready`, pick, `bd update --claim`,
+1. **Epic and plan**: `bd create -t epic "Goal"` (intent + context; beads.md).
+   Then one design pass: `superpowers:brainstorming` followed by
+   `superpowers:writing-plans` (2-5 min tasks) with the interface block
+   (code-design rule 6). One approval from the user covers the whole plan.
+   OpenSpec repo: `/opsx:propose` with a spec delta instead (openspec.md).
+2. **Sub-tasks and isolation**: `bd create --parent <epic-id>` for each task,
+   with acceptance criteria and `bd dep add` (blocks); then
+   `superpowers:using-git-worktrees`.
+3. **Implement**: `bd ready`, pick, `bd update --claim`,
    `superpowers:test-driven-development` (RED, GREEN, REFACTOR).
    A bug or an unexpected failure goes through `superpowers:systematic-debugging`
    before any fix. Ready sub-tasks with no dependency between them and no shared
    files may run in parallel via `superpowers:dispatching-parallel-agents`.
    A sub-task that passes the workers.md checks goes to a worker by default;
    doing it directly needs the failed check in `bd note`.
-7. **Review**: two independent reviews of the branch diff:
-   `superpowers:requesting-code-review` (correctness) and `code-design-reviewer`
-   (our rules, with the approved interface block). The leak audit runs only
-   before a push (git.md). Process the findings with
-   `superpowers:receiving-code-review`: verify each one, push back on wrong
-   ones, never apply blindly. Blocking findings are fixed before step 8.
-   Review rounds are limited, see "Reviews" under Every approach.
-8. **Verify**: `superpowers:verification-before-completion` (evidence before claims)
-9. **Document**: OpenSpec repo: `/opsx:archive` + repo docs first (openspec.md).
-   Then record the work in second-brain by its rules (second-brain.md):
-   find the entity (project or module) or create it per second-brain.md;
-   README gets the new current state, `log/` gets what was done, decisions
-   made (append-only). Link it in the epic: `bd note <epic-id> "docs: <note path>"`.
-   Commit there:
+4. **Review**: one review of the branch diff by default:
+   `superpowers:requesting-code-review`, briefed with the approved interface
+   block and code-design.md. A second, separate `code-design-reviewer` pass only
+   for risky changes: authentication and access control, data migrations,
+   public APIs. Process the findings with `superpowers:receiving-code-review`:
+   verify each one, push back on wrong ones, never apply blindly. Blocking
+   findings are fixed before step 5. Review rounds are limited, see "Reviews"
+   under Every approach. The leak audit runs only before a push (git.md).
+5. **Verify**: `superpowers:verification-before-completion` (evidence before claims).
+6. **Document**: OpenSpec repo: `/opsx:archive` + repo docs first (openspec.md).
+   Then record the work in second-brain by its rules (second-brain.md): the
+   entity README gets the new current state, `log/` gets what was done,
+   `decisions.md` the decisions (append-only). Link it in the epic:
+   `bd note <epic-id> "docs: <note path>"`. Commit there:
    `docs(<entity-slug>): <what was done>`.
-10. **Finish**: `superpowers:finishing-a-development-branch` (push gate still applies)
-11. **Close**: `bd close <epic-id> --reason "Done"` + final report (code-design rule 7)
-    with a link to the second-brain note
+7. **Finish and close**: `superpowers:finishing-a-development-branch` (push gate
+   still applies), `bd close <epic-id> --reason "Done"`, final report
+   (code-design rule 7) with a link to the second-brain note.
 
 Side quests: `bd create "..." -t bug --deps discovered-from:<current-id>` (beads.md)
 
@@ -113,9 +122,9 @@ For work while the user is away (e.g. overnight). Nobody answers questions, so
 the run only executes work whose decisions are already made.
 
 **Before the run (together with the user):**
-- A beads queue exists (beads.md), normally Hard steps 1-4: epic, brainstorm,
+- A beads queue exists (beads.md), normally Hard steps 1-2: epic, plan,
   a plan with approved interfaces, sub-tasks with clear acceptance criteria.
-- A work branch or worktree is set up (Hard step 5).
+- A work branch or worktree is set up (Hard step 2).
 - The user starts the session personally (usually for the night) in **auto mode**,
   because any permission prompt would stall the run until morning. Never schedule a run.
 - First action of the run: request keep-awake from the app.
@@ -162,7 +171,7 @@ The final message is the morning report:
 5. **Branch**: name, commits ahead of base.
 
 **After the run (together with the user)**: go through the report, answer the
-blocked questions, then continue as Hard from step 7: review, verify,
+blocked questions, then continue as Hard from step 4: review, verify,
 document, finish, close.
 
 ### Every approach
