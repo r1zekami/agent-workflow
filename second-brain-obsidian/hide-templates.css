@@ -1,0 +1,5 @@
+/* Hide the templates folder in the file explorer. Templates still work. */
+.nav-folder:has(> .nav-folder-title[data-path="templates"]),
+.tree-item:has(> .tree-item-self[data-path="templates"]) {
+  display: none;
+}
