@@ -15,6 +15,6 @@ This repo is the public, versioned snapshot of the live Claude Code config in
   After a template change: copy it over, restart the service, verify it.
 - **The repo is public.** Nothing personal ever goes in: no user names (paths use
   `~` or the `{{HOME}}` placeholder), no e-mail addresses, host names, IPs,
-  tokens, and no knowledge-base content. Run the `leak-auditor` subagent on the
-  staged diff before every commit.
+  tokens, and no knowledge-base content. The `leak-auditor` subagent runs before
+  every push, not before commits (git.md).
 - Everything in this repo is English.

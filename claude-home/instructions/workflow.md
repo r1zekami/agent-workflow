@@ -87,10 +87,10 @@ beads, isolated on its own branch, reviewed.
    files may run in parallel via `superpowers:dispatching-parallel-agents`.
    A sub-task that passes the workers.md checks goes to a worker by default;
    doing it directly needs the failed check in `bd note`.
-7. **Review**: three independent reviews of the branch diff:
-   `superpowers:requesting-code-review` (correctness), `code-design-reviewer`
-   (our rules, with the approved interface block), `leak-auditor` (secrets and
-   infrastructure specifics). Process the findings with
+7. **Review**: two independent reviews of the branch diff:
+   `superpowers:requesting-code-review` (correctness) and `code-design-reviewer`
+   (our rules, with the approved interface block). The leak audit runs only
+   before a push (git.md). Process the findings with
    `superpowers:receiving-code-review`: verify each one, push back on wrong
    ones, never apply blindly. Blocking findings are fixed before step 8.
    Review rounds are limited, see "Reviews" under Every approach.
@@ -100,7 +100,7 @@ beads, isolated on its own branch, reviewed.
    find the entity (project or module) or create it per second-brain.md;
    README gets the new current state, `log/` gets what was done, decisions
    made (append-only). Link it in the epic: `bd note <epic-id> "docs: <note path>"`.
-   Run `leak-auditor` on the second-brain changes, then commit there:
+   Commit there:
    `docs(<entity-slug>): <what was done>`.
 10. **Finish**: `superpowers:finishing-a-development-branch` (push gate still applies)
 11. **Close**: `bd close <epic-id> --reason "Done"` + final report (code-design rule 7)
@@ -152,8 +152,7 @@ its prompt, so never attempt one.
 - production systems, secrets, `.env`;
 - installing software or changing settings.
 
-**End of run**: stop when no ready tasks remain. Run `leak-auditor` on the
-branch diff; its findings go into the report. Add the run's session-log entry.
+**End of run**: stop when no ready tasks remain. Add the run's session-log entry.
 Send the user a push notification that the run is over (done / blocked counts).
 The final message is the morning report:
 1. **Done**: task id, one line, commit hash;
@@ -188,6 +187,6 @@ document, finish, close.
 - **Context7**: when and how: context7.md.
 - **Technology choice** ("what to use for X", "alternatives to Y"): use the
   `architecture-designer` subagent; it builds on earlier reports. Save its report
-  to second-brain `agents-data/architecture-designer/<topic>.md` (after `leak-auditor`).
+  to second-brain `agents-data/architecture-designer/<topic>.md`.
   This is the one second-brain write that Easy does too. Not in Autonomous.
 - No completion claims without running verification commands.
