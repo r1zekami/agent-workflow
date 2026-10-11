@@ -3,7 +3,8 @@
 ### Essentials
 
 - Workers are Codex CLI runs in WSL, using a cheap model through the local LiteLLM gateway; the orchestrator briefs, reviews and lands their work.
-- Delegation is the default for a coding task that passes five checks: decided, checkable, offline, clean, worth it.
+- Delegation is the default for a coding task that passes five checks: decided, checkable, offline, clean, worth it (large volume: about 400+ lines or a mechanical change across many files).
+- Substantial tasks below that size may go to a Sonnet subagent; small edits stay in the main session.
 - Workers never get secrets, never commit, push or install; their sandbox has no network.
 
 A worker is Codex CLI in WSL, running a cheap model through the local LiteLLM
@@ -24,8 +25,9 @@ when every check holds (not in Easy, where briefing costs more than it saves):
    dependencies are fetched.
 4. **Clean**: no secrets, `.env`, credentials or real production data in the
    files it needs; the repo's code may leave the machine (ask when unsure).
-5. **Worth it**: more than a few edits. Anything smaller is done directly,
-   because briefing and reviewing cost more than writing it.
+5. **Worth it**: large code volume: roughly 400 or more new or changed lines,
+   or a mechanical change across many files. Below that, the brief and the
+   review cost as much as writing the code (measured: worker-bench, below).
 
 If any check fails, Claude does the task directly and gives the failed check as
 the reason (Hard and Autonomous: `bd note`; Medium: the plan). Typical delegates:
@@ -35,6 +37,27 @@ reviews, git operations. WSL repos only.
 
 Every final report says which tasks went to workers (alias, cost) and which
 did not, with the failed check.
+
+### Sonnet subagents for mid-size tasks
+
+A task that fails only check 5 but is still substantial (a module with tests, a
+feature across a few files) may go to a `general-purpose` subagent with
+`model: sonnet` instead of being written in the main session. Same brief, same
+review; no sandbox, so check 4 still applies. A subagent starts with about 75k
+tokens of fixed context, so small edits stay in the main session.
+
+### Measured: worker-bench (2026-10)
+
+Python and Rust, three task sizes (about 20 to 300 lines), each done by an Opus
+subagent directly, by an Opus subagent with a DeepSeek Flash worker, and by a
+Sonnet subagent directly; 18 runs scored with hidden tests.
+- All 18 runs passed every hidden test. The worker made 1 real defect in 6
+  runs; the review caught it.
+- Orchestrator tokens were 74k to 81k in every mode: the fixed context
+  dominates, and a worker did not reduce them at these sizes.
+- Worker cost: 0.7 to 2.7 US cents per run, plus 30 to 60 s of wall time.
+- Sonnet matched Opus in quality and time at a lower price per token.
+Details: second-brain `personal/projects/claude-code-setup/log/2026-10-11-worker-bench.md`.
 
 ### Models
 
