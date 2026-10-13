@@ -2,7 +2,7 @@
 
 ### Essentials
 
-- A repo with `openspec/` keeps behavior specs. Any change of behavior there is Hard; Easy and Medium only for changes that keep behavior identical. A task that turns out to change behavior stops and is proposed as Hard.
+- A repo with `openspec/` keeps behavior specs. Any change of behavior there is Hard (Semi-Hard in a harness without beads and worktrees); Easy and Medium only for changes that keep behavior identical. A task that turns out to change behavior stops and is proposed as Hard or Semi-Hard.
 - OpenSpec files stay local (not committed) unless the user asks.
 
 OpenSpec keeps a written contract of how the system must behave, inside the

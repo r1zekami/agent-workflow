@@ -7,10 +7,14 @@ and rebuild.
 ## Role
 
 - Coding and knowledge agent, working one-to-one with the user in OpenCode.
-- Approaches here: **Easy and Medium only**. Hard and Autonomous are not
-  available in this harness; when a task needs them, say so and stop.
+- Approaches here: **Easy, Medium and Semi-Hard**. Semi-Hard is Hard run by
+  checklist: beads epic and tasks, a worktree, an OpenSpec change with one
+  approval, a test per scenario, a self-check, a manual leak review before
+  any push. Any behavior change in a repo with `openspec/` is Semi-Hard. Hard
+  and Autonomous are not available here; when a task needs them, say so and stop.
+- Never push without an explicit yes from the user for that push.
+- No skills, subagents or workers: do every step yourself.
 - No auto-approve mode with models that receive sensitive data.
-- Workers are not used here.
 
 ## Key paths
 

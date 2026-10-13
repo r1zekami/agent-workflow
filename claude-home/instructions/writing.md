@@ -6,6 +6,7 @@
 - Short plain sentences; no filler, no marketing words, no figurative verbs.
 - No long dashes; exact names, paths and values in backticks.
 - No invented figures: no made-up numbers, statistics or sample data presented as real in UI, docs and examples.
+- Explicit referent: every pronoun or demonstrative (it, its, they, them, this, that, such) resolves to one obvious noun in the same or the previous sentence; otherwise write the noun.
 
 Scope: every text meant to be read later by a person. READMEs, docs, specs,
 second-brain notes, articles, commit bodies, issue and PR text. Not the chat
@@ -68,7 +69,20 @@ idioms are out. Formal does not mean heavy: a simple thing stays a simple
 sentence: "Run `make test`." is better than "The test suite may be executed by
 invoking make test."
 
-### 5. Precision where it matters
+### 5. Explicit referent
+
+Every pronoun or demonstrative (it, its, they, them, this, that, such) resolves
+to one obvious noun in the same sentence or the previous one; when it does not,
+spell the noun out. A reader never has to guess which noun a pronoun points to.
+After writing, scan every pronoun and dangling phrase: if the noun it points to
+is not on the page, replace the pronoun with that noun.
+
+| Bad | Good |
+|---|---|
+| Take the first row with a label, and its value. | Take the first row with a label, and that row's value. |
+| The group is not in the branch's list, nor in its contact. | The group is not in the branch's list, nor in the branch's contact. |
+
+### 6. Precision where it matters
 
 - No invented figures: numbers, statistics, latencies and sample data are real
   and sourced, or clearly marked as examples. A UI never shows placeholder
@@ -81,5 +95,5 @@ invoking make test."
 ### Before finishing a text
 
 Re-read once and check: no "I/we/you/user decided", no dash characters, no
-filler or figurative verbs, nothing that the reader can do without. Fix in
+filler or figurative verbs, no pronoun without its noun, nothing that the reader can do without. Fix in
 place, do not add a note about the fix.

@@ -14,7 +14,9 @@ over to the next push.
 
 **Leak audit: before every push, and only then.** Commits are never audited.
 When a push is requested, first run the `leak-auditor` subagent on everything
-the push would send (`git log -p <remote>/<branch>..HEAD`):
+the push would send (`git log -p <remote>/<branch>..HEAD`); a harness without
+subagents (OpenCode) reads that whole diff by hand against the same checklist
+(secrets, host names, IPs, logins, user names, internal system names):
 - clean: push;
 - findings: do not push. Fix them, show the user the findings and the fix, and
   push only after a new yes.

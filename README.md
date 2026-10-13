@@ -19,6 +19,8 @@ claude-code-setup/
 │   └── agents/               ← subagents: code-design-reviewer, leak-auditor, architecture-designer, Explore
 ├── services/
 │   └── litellm/              ← local LLM gateway for worker agents (Docker in WSL)
+├── setup-reference.yaml      ← reference state of a fully set up machine
+├── setup-state.py            ← scan this machine into setup-state.yaml, diff against the reference
 ├── build-agent-rules.py      ← short rules for OpenCode and Codex workers, built from the Essentials blocks
 ├── harnesses/
 │   └── opencode/             ← OpenCode config template and its rules header
@@ -30,7 +32,7 @@ claude-code-setup/
 
 | Instruction file | What it governs |
 |---|---|
-| `workflow.md` | The four approaches (Easy, Medium, Hard, Autonomous) and their steps |
+| `workflow.md` | The five approaches (Easy, Medium, Hard, Semi-Hard, Autonomous) and their steps |
 | `workers.md` | Delegating scoped code tasks to cheap models through Codex workers |
 | `language.md` | English for code, docs, specs, commits and instructions |
 | `environment.md` | Windows host for routine, WSL for all development |

@@ -1,0 +1,46 @@
+schema: 1
+windows_tools:
+  git: "2.56.0"
+  pwsh: "7.6.6"
+  python: "3.14.8"
+  bd: "1.3.1"
+  opencode: "absent"
+wsl:
+  distro: "Ubuntu-26.04"
+wsl_tools:
+  git: "2.53.0"
+  cargo: "1.99.0"
+  node: "22.22.1"
+  bun: "1.4.2"
+  bd: "present"
+  openspec: "1.14.0"
+  docker: "29.1.3"
+  codex: "0.160.0"
+claude_config:
+  claude_md: "present"
+  settings_json: "present"
+  instructions_count: "14"
+  agents_count: "4"
+opencode:
+  config: "present"
+  agents_md: "present"
+  default_model: "litellm/deepseek-flash"
+  permission_default: "allow"
+  models: "deepseek-flash,deepseek-v4-pro"
+codex:
+  config_toml: "present"
+  models_json: "present"
+  instructions_md: "present"
+  default_model: "deepseek-flash"
+litellm:
+  runtime_dir: "present"
+  compose_yaml: "present"
+  gateway_liveness: "200"
+env:
+  UNIVERSAL_LOCAL_LITELLM_KEY: "present"
+  UNIVERSAL_EXTERNAL_LITELLM_KEY: "unset"
+  wslenv_has_local_key: "yes"
+manual:
+  deepseek_key_in_gateway_env: "unknown"
+  git_identity_configured: "unknown"
+  github_ssh_key_configured: "unknown"
