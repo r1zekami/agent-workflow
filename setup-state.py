@@ -4,7 +4,7 @@
     py setup-state.py diff   # compare that state with setup-reference.yaml
 
 Only names, versions and presence are recorded; secret values are never read.
-The `manual` section is not probed: edit it by hand, a scan keeps it.
+Nothing is filled in by hand: every field is probed.
 """
 import json
 import os
@@ -118,6 +118,36 @@ def codex_state():
             "default_model": model or "absent"}
 
 
+def git_identity(read):
+    name, email = read("user.name"), read("user.email")
+    return "yes" if name and email else "no"
+
+
+def windows_git_identity():
+    return git_identity(lambda key: run(["git", "config", "--global", key]))
+
+
+def wsl_git_identity():
+    return git_identity(lambda key: wsl(f"git config --global {key}"))
+
+
+def github_ssh_auth():
+    """GitHub answers an authenticated SSH login with exit code 1 and this banner."""
+    try:
+        done = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=8", "-T", "git@github.com"],
+                              capture_output=True, text=True, timeout=20)
+    except (OSError, subprocess.TimeoutExpired):
+        return "no"
+    return "yes" if "successfully authenticated" in done.stderr + done.stdout else "no"
+
+
+def gateway_deepseek_key_loaded():
+    """Asks the running container; prints only a flag, never the value."""
+    command = "cd ~/services/litellm && docker compose exec -T litellm sh -c '[ -n \"$DEEPSEEK_KEY\" ] && echo y'"
+    out = wsl(command)
+    return "yes" if out == "y" else "no"
+
+
 def gateway_liveness():
     try:
         with urllib.request.urlopen("http://127.0.0.1:4000/health/liveliness", timeout=5) as reply:
@@ -128,9 +158,6 @@ def gateway_liveness():
 
 def scan():
     claude = HOME / ".claude"
-    previous = parse_yaml(STATE_PATH.read_text(encoding="utf-8")) if STATE_PATH.exists() else {}
-    reference = parse_yaml(REFERENCE_PATH.read_text(encoding="utf-8"))
-    manual = previous.get("manual") or {key: "unknown" for key in reference.get("manual", {})}
     wslenv = os.environ.get("WSLENV", "").split(":")
     return {
         "schema": "1",
@@ -146,11 +173,13 @@ def scan():
         "codex": codex_state(),
         "litellm": {"runtime_dir": wsl_file("~/services/litellm"),
                     "compose_yaml": wsl_file("~/services/litellm/compose.yaml"),
-                    "gateway_liveness": gateway_liveness()},
+                    "gateway_liveness": gateway_liveness(),
+                    "deepseek_key_loaded": gateway_deepseek_key_loaded()},
+        "git": {"identity_windows": windows_git_identity(), "identity_wsl": wsl_git_identity(),
+                "github_ssh_auth": github_ssh_auth()},
         "env": {"UNIVERSAL_LOCAL_LITELLM_KEY": wsl_env_present("UNIVERSAL_LOCAL_LITELLM_KEY"),
                 "UNIVERSAL_EXTERNAL_LITELLM_KEY": wsl_env_present("UNIVERSAL_EXTERNAL_LITELLM_KEY"),
                 "wslenv_has_local_key": "yes" if "UNIVERSAL_LOCAL_LITELLM_KEY" in wslenv else "no"},
-        "manual": manual,
     }
 
 

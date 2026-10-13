@@ -40,11 +40,12 @@ litellm:
   runtime_dir: present
   compose_yaml: present
   gateway_liveness: "200"
+  deepseek_key_loaded: "yes"
 env:
   UNIVERSAL_LOCAL_LITELLM_KEY: present
   UNIVERSAL_EXTERNAL_LITELLM_KEY: any
   wslenv_has_local_key: "yes"
-manual:
-  deepseek_key_in_gateway_env: "yes"
-  git_identity_configured: "yes"
-  github_ssh_key_configured: "yes"
+git:
+  identity_windows: "yes"
+  identity_wsl: "yes"
+  github_ssh_auth: "yes"

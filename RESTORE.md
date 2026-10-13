@@ -228,7 +228,7 @@ py .\setup-state.py diff
 
 `scan` writes `setup-state.yaml` (tool versions, config presence, model
 aliases, variable names; never secret values). `diff` compares it with
-`setup-reference.yaml`. The `manual` section of the state is edited by hand.
+`setup-reference.yaml`. Every field is probed; nothing is edited by hand.
 
 **Check:** `diff` prints `State matches the reference.` or lists each drift.
 
