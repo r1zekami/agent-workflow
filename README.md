@@ -1,13 +1,14 @@
-# claude-code-setup
+# agent-workflow
 
-A restorable setup for Claude Code (desktop app, Code tab) on Windows + WSL:
-global agent instructions, subagents, settings, a knowledge-base skeleton, and
-a step-by-step guide to rebuild the environment on a clean machine.
+Agent workflow for Windows + WSL: five working approaches (Easy, Medium, Hard,
+Semi-Hard, Autonomous), the rules behind them for Claude Code, OpenCode and
+Codex workers, the local model gateway, a machine state check, and a
+step-by-step guide to rebuild the environment on a clean machine.
 
 ## Contents
 
 ```
-claude-code-setup/
+agent-workflow/
 ├── README.md                 ← this file
 ├── RESTORE.md                ← rebuild the whole environment on a clean PC
 ├── CLAUDE.md                 ← how Claude works on this repo itself

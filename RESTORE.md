@@ -16,7 +16,7 @@ or by Claude: by hand, or by opening Claude desktop in this repo's folder and sa
 
 | Path | What |
 |---|---|
-| `~/home/agents/claude-code-setup` | this repo (Windows) |
+| `~/home/agents/agent-workflow` | this repo (Windows) |
 | `~/home/agents/second-brain` | the knowledge base (local git, no remote) |
 | `~/.claude/` | live Claude config: `CLAUDE.md`, `settings.json`, `instructions/`, `agents/` |
 | WSL `~/wsl-dev/` | code repos |
@@ -45,15 +45,15 @@ Other locations work too, then update `second-brain.md`, `environment.md` and
 
 ```powershell
 New-Item -ItemType Directory -Force "$HOME\home\agents" | Out-Null
-git clone <this-repo-url> "$HOME\home\agents\claude-code-setup"
+git clone <this-repo-url> "$HOME\home\agents\agent-workflow"
 ```
 
-**Check:** `$HOME\home\agents\claude-code-setup\RESTORE.md` exists.
+**Check:** `$HOME\home\agents\agent-workflow\RESTORE.md` exists.
 
 ## 3. Install the Claude config
 
 ```powershell
-cd "$HOME\home\agents\claude-code-setup"
+cd "$HOME\home\agents\agent-workflow"
 pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToClaude -DryRun
 pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToClaude
 ```
@@ -186,7 +186,7 @@ $k = Read-Host "universal local LiteLLM key" -MaskInput; [Environment]::SetEnvir
 Restart Claude desktop. Then Claude installs the config (in WSL):
 
 ```bash
-S=/mnt/c/Users/<user>/home/agents/claude-code-setup/workers/codex
+S=/mnt/c/Users/<user>/home/agents/agent-workflow/workers/codex
 mkdir -p ~/.codex && sed "s#{{HOME}}#$HOME#g" $S/config.toml > ~/.codex/config.toml && chmod 600 ~/.codex/config.toml
 cp $S/models.json $S/run-cost.sh ~/.codex/
 ```

@@ -8,7 +8,7 @@
 - Workers never get secrets, never commit, push or install; their sandbox has no network.
 
 A worker is Codex CLI in WSL, running a cheap model through the local LiteLLM
-gateway (`claude-code-setup/services/litellm`, config in `workers/codex`). It
+gateway (`agent-workflow/services/litellm`, config in `workers/codex`). It
 writes code. Claude stays the orchestrator: it scopes the task, reviews the diff
 and is responsible for the result. A worker saves Claude's output tokens and
 never replaces its judgment.
@@ -57,7 +57,7 @@ Sonnet subagent directly; 18 runs scored with hidden tests.
   dominates, and a worker did not reduce them at these sizes.
 - Worker cost: 0.7 to 2.7 US cents per run, plus 30 to 60 s of wall time.
 - Sonnet matched Opus in quality and time at a lower price per token.
-Details: second-brain `personal/projects/claude-code-setup/log/2026-10-11-worker-bench.md`.
+Details: second-brain `personal/projects/agent-workflow/log/2026-10-11-worker-bench.md`.
 
 ### Models
 
