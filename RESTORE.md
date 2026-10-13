@@ -180,7 +180,7 @@ then sets the worker key once as a Windows user variable and passes it into WSL
 (in PowerShell 7 the input is masked):
 
 ```powershell
-$k = Read-Host "LiteLLM worker key" -MaskInput; [Environment]::SetEnvironmentVariable("LITELLM_WORKER_KEY", $k, "User"); $w = [Environment]::GetEnvironmentVariable("WSLENV", "User"); [Environment]::SetEnvironmentVariable("WSLENV", ((@($w, "LITELLM_WORKER_KEY") | Where-Object { $_ }) -join ":"), "User"); Remove-Variable k
+$k = Read-Host "universal local LiteLLM key" -MaskInput; [Environment]::SetEnvironmentVariable("UNIVERSAL_LOCAL_LITELLM_KEY", $k, "User"); $w = [Environment]::GetEnvironmentVariable("WSLENV", "User"); [Environment]::SetEnvironmentVariable("WSLENV", ((@($w, "UNIVERSAL_LOCAL_LITELLM_KEY") | Where-Object { $_ }) -join ":"), "User"); Remove-Variable k
 ```
 
 Restart Claude desktop. Then Claude installs the config (in WSL):
@@ -210,16 +210,29 @@ Copy-Item .\harnesses\opencode\opencode.json "$HOME\.config\opencode\"
 py .\build-agent-rules.py
 ```
 
-`opencode.json` holds the LiteLLM provider (key read from `LITELLM_WORKER_KEY`,
-or a dedicated key variable) and the permissions: `.env` denied to reads, edits
-and shell, environment dumps denied, push and installs ask. `build-agent-rules.py`
+`opencode.json` holds the LiteLLM provider (key read from `UNIVERSAL_LOCAL_LITELLM_KEY`)
+and the permissions: everything allowed except `.env` reads, environment dumps
+(denied) and `git push` (asks). `build-agent-rules.py`
 writes `~/.config/opencode/AGENTS.md`, the short rules. Rebuild after any rule change.
-Never run OpenCode with `--auto`: it approves every rule set to ask.
+Never run OpenCode with `--auto`: it approves the push prompt too.
 
 **Check:** in OpenCode, the model picker lists `LiteLLM (local)`; asking it to show a
 `.env` file is refused.
 
-## 11. Final verification
+## 11. Machine state
+
+```powershell
+py .\setup-state.py scan
+py .\setup-state.py diff
+```
+
+`scan` writes `setup-state.yaml` (tool versions, config presence, model
+aliases, variable names; never secret values). `diff` compares it with
+`setup-reference.yaml`. The `manual` section of the state is edited by hand.
+
+**Check:** `diff` prints `State matches the reference.` or lists each drift.
+
+## 12. Final verification
 
 | What | How | Expected |
 |---|---|---|
@@ -227,6 +240,7 @@ Never run OpenCode with `--auto`: it approves every rule set to ask.
 | Settings valid | `pwsh -c "Get-Content $HOME\.claude\settings.json -Raw \| ConvertFrom-Json"` | no error |
 | Plugins | new session | `superpowers:*` skills and `context7` tools available |
 | Subagents | new session | `code-design-reviewer`, `leak-auditor`, `architecture-designer`, `Explore` available |
+| Machine state | `py setup-state.py diff` | no drift |
 | Windows bd | `bd version` | a version |
 | WSL toolchain | the step 6 check | five versions |
 | Knowledge base | `git -C $HOME\home\agents\second-brain status` | a clean repo |

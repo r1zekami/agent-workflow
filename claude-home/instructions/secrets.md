@@ -7,6 +7,7 @@
 - Never put a secret into a command, file, log, note or the chat; never dump the environment.
 - A secret that leaks anyway is reported to the user at once.
 - Throwaway secrets of a local sandbox are exempt; ask when unsure.
+- Using `.env`: never open it, load it. Code: `load_dotenv()` / `os.environ["NAME"]` / `process.env.NAME`. Shell: `set -a; . ./.env; set +a; <command>` or `docker compose --env-file .env`. A missing or empty variable: report its name and stop; do not investigate the file.
 
 A secret is any credential: API keys, tokens, passwords, private keys, session
 cookies, connection strings that contain credentials.
@@ -22,6 +23,24 @@ Only through mechanisms the user controls, never through the agent:
 Code reads a secret **by name at runtime** and fails with a clear English error
 naming the missing variable. Tell the user which name to set; never ask them to
 paste a secret into the chat.
+
+### Using `.env` correctly
+
+The agent never reads `.env`; it makes the program or the shell load it. Do not
+try to "understand" the file, check a value or compare variables: that costs time
+and is the one thing that is denied.
+
+| Where | How |
+|---|---|
+| Python | `from dotenv import load_dotenv; load_dotenv()` then `os.environ["NAME"]` (fails with the name when unset) |
+| Node / Bun | `process.env.NAME` (Bun loads `.env` itself; Node: `node --env-file=.env app.js`) |
+| Rust | `dotenvy::dotenv()` then `std::env::var("NAME")` |
+| Shell, one command | `set -a; . ./.env; set +a; <command>` (the shell loads it, nothing is printed) |
+| Docker Compose | `env_file:` in `compose.yaml`, or `docker compose --env-file .env ...` |
+
+Never `cat` / `type` / `Read` the file, `echo $NAME`, `env`, `printenv`, `set`
+without arguments, `$env:NAME` or `Get-ChildItem env:`. When a variable is
+missing, tell the user which name to set and stop.
 
 ### Prohibited
 

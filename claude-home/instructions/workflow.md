@@ -6,10 +6,11 @@
 - The user's tag (`[Easy]`, `[Medium]`, ...) wins; otherwise pick from context and ask when it is unclear.
 - Easy: no plan, no new tests; the cheapest real check; "not verified" when nothing could be checked.
 - Medium: one brief up front (open questions, a short plan, any public interface change) and one approval when needed; tests first where testable; verification before any claim of done.
+- Semi-Hard (OpenCode and other harnesses without superpowers skills, subagents and workers): Hard with beads, worktree, OpenSpec change and a test per scenario, but one task at a time, a self-check checklist instead of a review, and a manual leak review instead of `leak-auditor`.
 - No completion claim without running a check.
 - Every task that changed something gets a session-log entry in second-brain.
 
-EVERY task gets an approach: Easy, Medium, Hard or Autonomous. The approach is
+EVERY task gets an approach: Easy, Medium, Hard, Semi-Hard or Autonomous. The approach is
 HOW the work is done, not how big or difficult the task is. A hard problem can be
 worked Easy, a tiny one Hard. The approach scales process only: the hard rules
 (secrets, sensitive data, `.env`, push gate, language) apply at every level,
@@ -20,6 +21,7 @@ unchanged.
 | Easy | Does it work? | Don't overthink it: make it simply work. |
 | Medium | Is it done right? | Do it properly, in one sitting: clean code by our rules and tests, no tracking, no bureaucracy. |
 | Hard | Will it last? | Build it to last: plan, tracking, isolation and review. The work can be paused, handed over and resumed. |
+| Semi-Hard | Hard without Claude Code machinery? | Hard's tracking, isolation, spec and tests, run by checklist; no skills, subagents, workers or reviewer, self-check instead. |
 | Autonomous | Can it run without the user? | Work alone from an approved plan: decide nothing that is the user's, park it as blocked till morning. |
 
 **Choosing the approach**
@@ -29,7 +31,7 @@ unchanged.
 - Autonomous is never picked from context, only on the user's explicit tag.
 - The user can switch the approach mid-task; switch immediately.
 - A repo with `openspec/`: any change of behavior or logic is Hard, always
-  (openspec.md). Easy and Medium only for changes that keep behavior identical.
+  (openspec.md; Semi-Hard where beads and worktrees do not exist). Easy and Medium only for changes that keep behavior identical.
 
 ### Easy: don't overthink it, make it simply work
 Goal: a working result, fast. Structure and quality come later; if needed,
@@ -117,6 +119,38 @@ Hard is Medium plus tracking, isolation, review and documentation.
    with a link to the second-brain note.
 
 Side quests: `bd create "..." -t bug --deps discovered-from:<current-id>` (beads.md)
+
+### Semi-Hard: Hard for harnesses without Claude Code machinery
+Goal: Hard's tracking, isolation, spec and tests in a harness that has beads
+and git (OpenCode) but no superpowers skills, subagents, workers or reviewer.
+Claude Code uses Hard. Steps are mechanical checklists: follow them in order.
+
+1. **Plan**: `bd create -t epic "Goal"`; in a repo with `openspec/` an OpenSpec
+   change (`proposal.md`, `design.md` with the interface block, spec delta,
+   `tasks.md`; openspec.md), otherwise a short plan with the interface block in
+   the reply. One approval from the user covers the whole change. No
+   brainstorming pass: the change is the plan.
+2. **Track and isolate**: `bd create --parent <epic-id>` per `tasks.md` item
+   with acceptance criteria, `bd dep add` for order, then
+   `git worktree add .worktrees/<slug> -b <type>/<slug>` (inside WSL for WSL repos).
+3. **Implement**: one task at a time: `bd ready`, `bd update <id> --claim`, a
+   failing test per spec scenario (RED), the code (GREEN), `bd close <id>`.
+   Three failed attempts at one task: `bd update <id> --status blocked`,
+   `bd note <id> "<what was tried>"`, tell the user. No parallel work.
+4. **Self-check**: re-read the whole diff once and answer in the report, per
+   item: spec scenarios all covered by tests; signatures equal the approved
+   interface block; code-design.md rules 1-5; no secrets, hosts, IPs, user names
+   or `.env` content; no scratch files staged. Fix findings. A reviewer pass
+   (Hard step 4) is run by Claude Code on the branch when the user asks.
+5. **Verify**: tests, linters and formatters; the output goes into the report.
+6. **Document and close**: archive the change when the user agrees (openspec.md),
+   record the work in second-brain (second-brain.md), `bd close <epic-id>`,
+   session-log entry, final report (code-design rule 7).
+
+- **Push**: only on an explicit yes for that push. `leak-auditor` does not exist
+  here, so the leak review is manual: read the whole `git log -p <remote>/<branch>..HEAD`
+  and check it against git.md's leak list; report findings before asking.
+- **Never**: skills, subagents, workers (they belong to Claude Code).
 
 ### Autonomous: work alone from an approved plan
 For work while the user is away (e.g. overnight). Nobody answers questions, so

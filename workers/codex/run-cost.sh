@@ -15,5 +15,5 @@ SELECT model_group AS alias, count(*) AS calls,
        sum(prompt_tokens) AS input_tokens, sum(completion_tokens) AS output_tokens,
        round(sum(spend)::numeric, 4) AS usd
 FROM \"LiteLLM_SpendLogs\"
-WHERE \"startTime\" BETWEEN '$from' AND '$to' AND model_group LIKE 'worker-%'
+WHERE \"startTime\" BETWEEN '$from' AND '$to'
 GROUP BY 1;"

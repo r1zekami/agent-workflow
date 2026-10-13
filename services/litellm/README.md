@@ -15,10 +15,10 @@ Claude Code itself never goes through it.
 
 | Alias | Model |
 |---|---|
-| `worker-deepseek-flash` | DeepSeek Flash, default worker |
-| `worker-deepseek-v4-pro` | DeepSeek V4 Pro, harder tasks |
+| `deepseek-flash` | DeepSeek Flash, default worker |
+| `deepseek-v4-pro` | DeepSeek V4 Pro, harder tasks |
 
-Add a model: a new entry in `config.yaml` (alias `worker-<provider>-<model>`,
+Add a model: a new entry in `config.yaml` (alias `<model>`, as the provider names it,
 explicit prices), its key in `.env`, then restart.
 
 ## First start (WSL)
@@ -26,7 +26,7 @@ explicit prices), its key in `.env`, then restart.
 ```bash
 mkdir -p ~/services/litellm && cd ~/services/litellm
 cp /mnt/c/Users/<user>/home/agents/claude-code-setup/services/litellm/{compose.yaml,config.yaml,.env.example} .
-umask 077; printf 'LITELLM_MASTER_KEY=sk-%s\nLITELLM_SALT_KEY=sk-%s\nPOSTGRES_PASSWORD=%s\nDEEPSEEK_API_KEY=\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 32)" "$(openssl rand -hex 24)" > .env
+umask 077; printf 'LITELLM_MASTER_KEY=sk-%s\nLITELLM_SALT_KEY=sk-%s\nPOSTGRES_PASSWORD=%s\nDEEPSEEK_KEY=\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 32)" "$(openssl rand -hex 24)" > .env
 nano .env          # paste the DeepSeek key
 docker compose up -d && docker compose ps
 ```
@@ -36,7 +36,7 @@ Then in the admin UI:
    so on a fresh start comment that line out first and sign in as `admin` with
    the master key. Internal Users → Invite User, role Admin, open the link, set a
    password, sign in with it. Then restore the line and restart.
-2. **Worker key**: Virtual Keys → Create New Key: only the `worker-*` models,
+2. **Universal local key**: Virtual Keys → Create New Key: the models workers may use,
    max budget and a reset period. Workers only ever get that key, never the
    master key or provider keys.
 
