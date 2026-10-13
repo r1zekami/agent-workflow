@@ -134,7 +134,8 @@ Claude Code uses Hard. Steps are mechanical checklists: follow them in order.
    with acceptance criteria, `bd dep add` for order, then
    `git worktree add .worktrees/<slug> -b <type>/<slug>` (inside WSL for WSL repos).
 3. **Implement**: one task at a time: `bd ready`, `bd update <id> --claim`, a
-   failing test per spec scenario (RED), the code (GREEN), `bd close <id>`.
+   failing test per spec scenario (RED), the minimal code (GREEN), a cleanup
+   pass with tests still green (REFACTOR), `bd close <id>`.
    Three failed attempts at one task: `bd update <id> --status blocked`,
    `bd note <id> "<what was tried>"`, tell the user. No parallel work.
 4. **Self-check**: re-read the whole diff once and answer in the report, per
