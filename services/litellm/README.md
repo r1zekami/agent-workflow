@@ -6,7 +6,7 @@ Claude Code itself never goes through it.
 
 | What | Where |
 |---|---|
-| Templates (this folder, in git) | `claude-code-setup/services/litellm/` |
+| Templates (this folder, in git) | `agent-workflow/services/litellm/` |
 | Runtime copy (with `.env`) | WSL `~/services/litellm/` |
 | API | `http://127.0.0.1:4000` (from WSL and from Windows, not from the network) |
 | Admin UI | `http://127.0.0.1:4000/ui` (database admin users only) |
@@ -25,7 +25,7 @@ explicit prices), its key in `.env`, then restart.
 
 ```bash
 mkdir -p ~/services/litellm && cd ~/services/litellm
-cp /mnt/c/Users/<user>/home/agents/claude-code-setup/services/litellm/{compose.yaml,config.yaml,.env.example} .
+cp /mnt/c/Users/<user>/home/agents/agent-workflow/services/litellm/{compose.yaml,config.yaml,.env.example} .
 umask 077; printf 'LITELLM_MASTER_KEY=sk-%s\nLITELLM_SALT_KEY=sk-%s\nPOSTGRES_PASSWORD=%s\nDEEPSEEK_KEY=\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 32)" "$(openssl rand -hex 24)" > .env
 nano .env          # paste the DeepSeek key
 docker compose up -d && docker compose ps

@@ -52,7 +52,7 @@ second-brain/
 ├── agents-data/
 │   ├── <agent>/          ← subagent output, one file per topic
 │   └── session-log/      ← one note per agent task, month folders + dashboard.md
-└── templates/            ← note templates (source: claude-code-setup repo)
+└── templates/            ← note templates (source: agent-workflow repo)
 ```
 
 - There are no `modules/`, `epics/` or `areas/` folders. A reusable thing is a
