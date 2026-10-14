@@ -10,6 +10,13 @@ or by Claude: by hand, or by opening Claude desktop in this repo's folder and sa
   the exact command and wait for the user to run it. Never run installers yourself.
 - Never ask for secrets, tokens or keys in the chat; GitHub access and sign-ins
   are the user's job.
+- Live configs of OpenCode (`~/.config/opencode/opencode.json`), Codex
+  (`~/.codex/config.toml`, `models.json`) and the gateway
+  (`~/services/litellm/config.yaml`) may hold models and providers that are not in
+  the repo templates. Never overwrite them wholesale: compare first, merge the
+  template changes in, keep the extra entries, and back up the file before any write.
+  A sync of the rule directives (`AGENTS.md`, `instructions.md`) is separate and
+  never touches these files.
 - After the last step run the final verification table and report every row.
 
 ## Layout
