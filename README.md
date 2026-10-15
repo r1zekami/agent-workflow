@@ -27,7 +27,7 @@ agent-workflow/
 │   └── opencode/             ← OpenCode config template and its rules header
 ├── workers/
 │   └── codex/                ← Codex CLI worker config: gateway, model metadata, worker prompt
-├── second-brain-obsidian/    ← Obsidian CSS snippet: hides templates/ in the file explorer
+├── second-brain-obsidian/    ← Obsidian CSS snippet (hides templates/), canvas-check.py for .canvas rules
 └── second-brain-templates/   ← note templates for the knowledge base
 ```
 
@@ -45,6 +45,7 @@ agent-workflow/
 | `code-style.md`, `code-design.md` | How code is written and designed |
 | `git.md` | Commit format, push gate |
 | `writing.md` | Style of READMEs, docs and notes: impersonal, plain, no long dashes |
+| `canvas.md` | Drawing Obsidian `.canvas` files: block sizes, straight lines through empty space, label blocks |
 
 ## Restore on a new machine
 

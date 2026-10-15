@@ -12,7 +12,8 @@ DISTRO = "Ubuntu-26.04"
 
 AUDIENCES = {
     "opencode": ["workflow", "language", "writing", "environment", "secrets", "sensitive-data",
-                 "git", "code-style", "code-design", "second-brain", "beads", "openspec"],
+                 "git", "code-style", "code-design", "second-brain", "beads", "openspec",
+                 "canvas"],
     "worker": ["language", "secrets", "sensitive-data", "code-style", "code-design"],
 }
 
