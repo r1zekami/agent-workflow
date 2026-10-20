@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "py -I \"{{HOME}}\\home\\agents\\agent-workflow\\harness\\claude\\hooks\\compact_context.py\""
+            "command": "py -I \"{{REPO}}\\harness\\claude\\hooks\\compact_context.py\""
           }
         ]
       }
