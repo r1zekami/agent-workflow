@@ -1,0 +1,69 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": [
+    "superpowers@git+https://github.com/obra/superpowers.git"
+  ],
+  "share": "disabled",
+  "permission": {
+    "*": "allow",
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "edit": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "external_directory": {
+      "*": "allow"
+    },
+    "bash": {
+      "*": "allow",
+      "env": "deny",
+      "env *": "deny",
+      "printenv*": "deny",
+      "*printenv*": "deny",
+      "set": "deny",
+      "export": "deny",
+      "Get-ChildItem env:*": "deny",
+      "gci env:*": "deny",
+      "dir env:*": "deny",
+      "ls env:*": "deny",
+      "Get-Item env:*": "deny",
+      "*$env:*": "deny",
+      "*[Environment]::GetEnvironmentVariable*": "deny",
+      "*/proc/*/environ*": "deny",
+      "*echo $*KEY*": "deny",
+      "*echo $*TOKEN*": "deny",
+      "*echo $*SECRET*": "deny",
+      "*echo $*PASSWORD*": "deny",
+      "*cat *.env": "deny",
+      "*cat *.env.*": "deny",
+      "*type *.env": "deny",
+      "*type *.env.*": "deny",
+      "*Get-Content *.env": "deny",
+      "*Get-Content *.env.*": "deny",
+      "*head *.env": "deny",
+      "*tail *.env": "deny",
+      "*less *.env": "deny",
+      "*more *.env": "deny",
+      "*grep * .env": "deny",
+      "*rg * .env": "deny",
+      "*sed * .env": "deny",
+      "*awk * .env": "deny",
+      "*bat *.env": "deny",
+      "cat *.env.example": "allow",
+      "type *.env.example": "allow",
+      "head *.env.example": "allow",
+      "tail *.env.example": "allow",
+      "Get-Content *.env.example": "allow",
+      "*git push*": "ask",
+      "*bd sync*": "ask",
+      "*bd dolt push*": "ask"
+    }
+  }
+}
