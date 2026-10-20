@@ -9,7 +9,7 @@ opened in this repo's folder with the prompt *"follow RESTORE.md"*.
 - Anything that installs software, needs administrator rights or `sudo`: print
   the exact command and wait for the user to run it.
 - Never ask for secrets, tokens or keys in the chat; sign-ins and provider keys
-  are the user's job.
+  are set up by hand.
 - After the last step run the final verification and report every row.
 
 ## Layout
@@ -22,7 +22,7 @@ opened in this repo's folder with the prompt *"follow RESTORE.md"*.
 | `~/.config/opencode/` | OpenCode config (`AGENTS.md`, `opencode.json`, provider keys) |
 
 The harnesses run where the user works; the environment (OS, toolchains, WSL)
-is set up by the user. Other locations work too, then update the paths in
+is set up separately. Other locations work too, then update the paths in
 `core/AGENTS.md`, `skills/second-brain/SKILL.md` and
 `permissions.additionalDirectories` in `harness/claude/settings.json`.
 
@@ -68,12 +68,14 @@ py install.py
 - copies `core/AGENTS.md` to `~/.claude/CLAUDE.md` and `~/.config/opencode/AGENTS.md`;
 - links every `skills/<name>` into `~/.claude/skills/` (a junction on Windows);
 - copies `harness/claude/agents/*.md` into `~/.claude/agents/`;
-- merges `harness/claude/settings.json` into `~/.claude/settings.json` (`{{HOME}}` expanded);
-- merges `harness/opencode/opencode.json` into `~/.config/opencode/opencode.json`,
-  keeping keys that only the live file has (providers, keys).
+- merges `harness/claude/settings.json` into `~/.claude/settings.json` (`{{HOME}}` and `{{REPO}}` expanded);
+- merges `harness/opencode/opencode.json` into `~/.config/opencode/opencode.json`.
 
-Replaced files go to `~/.agent-workflow-backup/<timestamp>/`, merged JSON files
-keep a `.bak` copy. Re-run after editing `core/AGENTS.md` or `harness/`; skill
+The merge is recursive: objects are merged, lists are unioned, and anything only
+in the live file (providers, keys, extra permissions) is kept. An entry removed
+from a template stays in the live file and is removed there by hand.
+
+Replaced and merged files are first copied to `~/.agent-workflow-backup/<timestamp>/`. Re-run after editing `core/AGENTS.md` or `harness/`; skill
 edits apply at once through the links.
 
 **Check:** `~/.claude/CLAUDE.md` starts with `# Global agent rules`, and

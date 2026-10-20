@@ -42,7 +42,7 @@ YAGNI:    struct Bcrypt;                                    // "for later", no c
 wrong:  elgamal_sha256_sign(msg, key), rsa_sha512_sign(msg, key)   # N x M functions
 right:  sign_message(msg, key, algorithm=Elgamal, hash=Sha256)     # new variant = new class
 ```
-Anything that is one of a kind that could plausibly get siblings (a check, a
+Design the axis up front. Anything that is one of a kind that could plausibly get siblings (a check, a
 transport, a format, a mode, a data source) gets a family contract and a
 registry from the first implementation, even with one member. Adding the next
 member is "new module + one registry line", never a refactor. A plain function
@@ -59,7 +59,8 @@ is only for genuinely one-off logic.
 ## 3. Name hierarchy = file hierarchy
 
 `something.from_something.from_another.hello()` beats
-`something_from_something_from_another_hello()`. The same prefix on several
+`something_from_something_from_another_hello()`. Every segment is its own module
+or class; anything new for `from_another` goes into its file. The same prefix on several
 functions (`report_read_x`, `report_write_y`) is a missing namespace level.
 
 ## 4. Module boundaries by responsibility
@@ -80,7 +81,8 @@ functions (`report_read_x`, `report_write_y`) is a missing namespace level.
 ## 6. Interface first: approval gate
 
 For everything visible from another module (new modules, classes, functions,
-methods called outside their own file), show the user and wait for OK before
+methods called outside their own file, including calls between modules of the
+same project), show the user and wait for OK before
 implementing:
 1. file/module layout;
 2. every such signature, in this form, with a blank line after each one:

@@ -20,10 +20,16 @@ always.
   `process.env.NAME`) and fails with an error naming the missing variable.
   To run with `.env`, let the program or the shell load it
   (`set -a; . ./.env; set +a; <command>`); never open it.
-- Never put a secret into a command line, file, log, issue, note or the chat.
-  Never dump the environment (`env`, `printenv`, `Get-ChildItem env:`).
-- A secret seen by accident is not repeated; a leaked secret is reported to
-  the user at once.
+  A missing or empty variable: report its name and stop; do not investigate the file.
+- Never ask the user to paste a secret into the chat; name the variable to set.
+- Never read secrets out of configs, shell history or credential stores, not
+  even "just to look".
+- Never put a secret into a command line (`export KEY=...`, an `Authorization`
+  header), file, log, issue, note or the chat. Never dump the environment
+  (`env`, `printenv`, `Get-ChildItem env:`). Setting non-secret config
+  explicitly (`*_BASE_URL`, `*_MODEL`) is fine.
+- A secret that shows up in a tool result is not quoted or repeated; a leaked
+  secret is reported to the user at once.
 - Exempt: throwaway values of a purely local sandbox. Unsure: ask.
 
 ## Sensitive infrastructure data: hard rule
@@ -38,7 +44,8 @@ always.
 
 - Never push without an explicit yes for that push. Before a push, read
   everything it sends (`git log -p <remote>/<branch>..HEAD`) for secrets and
-  infrastructure details; findings block the push.
+  infrastructure details (Claude Code: the `leak-auditor` subagent; elsewhere:
+  by hand); findings block the push.
 - Commit only when asked. Title `type(scope): short description`, short factual
   body, the session's attribution trailer.
 - Never commit agent artifacts (scratch files, logs, backups).

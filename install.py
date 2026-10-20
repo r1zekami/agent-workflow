@@ -1,7 +1,7 @@
 """Install the agent rules from this repo into Claude Code and OpenCode on this machine.
 
-Re-run after editing core/AGENTS.md or harness settings. Skills and Claude
-subagents are linked, so their edits apply without re-running.
+Re-run after editing core/AGENTS.md or anything in harness/. Skills are
+linked, so their edits apply without re-running.
 Usage: py install.py
 """
 
@@ -70,8 +70,20 @@ def copy_file(source: pathlib.Path, destination: pathlib.Path) -> None:
     log(f"copied {source.name} -> {destination}")
 
 
+def merge_values(live, template):
+    """Objects merge recursively, lists are unioned, other template values win; nothing only in the live file is lost."""
+    if isinstance(live, dict) and isinstance(template, dict):
+        merged = dict(live)
+        for key, value in template.items():
+            merged[key] = merge_values(live[key], value) if key in live else value
+        return merged
+    if isinstance(live, list) and isinstance(template, list):
+        return live + [item for item in template if item not in live]
+    return template
+
+
 def merge_json_file(template: pathlib.Path, destination: pathlib.Path, *, replacements: dict[str, str]) -> None:
-    """Template keys win at the top level; keys only in the live file (keys, providers) are kept and never printed."""
+    """Live values (provider keys, extra permissions) are kept and never printed; removed template entries stay in the live file."""
     text = template.read_text(encoding="utf-8")
     for placeholder, value in replacements.items():
         text = text.replace(placeholder, value)
@@ -83,14 +95,17 @@ def merge_json_file(template: pathlib.Path, destination: pathlib.Path, *, replac
         except json.JSONDecodeError:
             log(f"SKIPPED {destination}: not plain JSON (comments?); merge the keys of {template} by hand")
             return
-    merged = {**live_data, **template_data}
+    merged = merge_values(live_data, template_data)
     if merged == live_data:
         return
     if destination.exists():
-        shutil.copyfile(destination, destination.with_suffix(destination.suffix + ".bak"))
+        backup_copy = BACKUP / destination.relative_to(HOME)
+        backup_copy.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(destination, backup_copy)
+        log(f"backed up {destination} -> {backup_copy}")
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(merged, indent=2) + "\n", encoding="utf-8")
-    log(f"merged {template.name} into {destination} (previous copy: {destination.name}.bak)")
+    log(f"merged {template.name} into {destination}")
 
 
 def install_claude() -> None:
@@ -102,8 +117,11 @@ def install_claude() -> None:
         link_directory(CLAUDE_HOME / "skills" / skill.name, skill)
     for agent in sorted((REPO / "harness" / "claude" / "agents").glob("*.md")):
         copy_file(agent, CLAUDE_HOME / "agents" / agent.name)
-    home_for_json = str(HOME).replace("\\", "\\\\")
-    merge_json_file(REPO / "harness" / "claude" / "settings.json", CLAUDE_HOME / "settings.json", replacements={"{{HOME}}": home_for_json})
+    replacements = {
+        "{{HOME}}": str(HOME).replace("\\", "\\\\"),
+        "{{REPO}}": str(REPO).replace("\\", "\\\\"),
+    }
+    merge_json_file(REPO / "harness" / "claude" / "settings.json", CLAUDE_HOME / "settings.json", replacements=replacements)
 
 
 def install_opencode() -> None:
