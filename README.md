@@ -1,72 +1,51 @@
 # agent-workflow
 
-Agent workflow for Windows + WSL: five working approaches (Easy, Medium, Hard,
-Semi-Hard, Autonomous), the rules behind them for Claude Code, OpenCode and
-Codex workers, the local model gateway, a machine state check, and a
-step-by-step guide to rebuild the environment on a clean machine.
+Rules for coding agents, shared by Claude Code and OpenCode: one short always
+loaded rule file, skills loaded on demand, harness settings, and an install
+script. Process skills (brainstorming, planning, TDD, debugging, review,
+verification) come from [superpowers](https://github.com/obra/superpowers).
 
 ## Contents
 
 ```
 agent-workflow/
-├── README.md                 ← this file
-├── RESTORE.md                ← rebuild the whole environment on a clean PC
-├── CLAUDE.md                 ← how Claude works on this repo itself
-├── sync-claude-config.ps1    ← mirror the config between ~/.claude and claude-home/
-├── claude-home/              ← mirror of ~/.claude (whitelisted files only)
-│   ├── CLAUDE.md             ← global instructions entry point (@imports)
-│   ├── settings.json         ← user settings; {{HOME}} = your home folder
-│   ├── instructions/         ← the rules, one topic per file
-│   └── agents/               ← subagents: code-design-reviewer, leak-auditor, architecture-designer, Explore
-├── services/
-│   └── litellm/              ← local LLM gateway for worker agents (Docker in WSL)
-├── setup-reference.yaml      ← reference state of a fully set up machine
-├── setup-state.py            ← scan this machine into setup-state.yaml, diff against the reference
-├── build-agent-rules.py      ← short rules for OpenCode and Codex workers, built from the Essentials blocks
-├── harnesses/
-│   └── opencode/             ← OpenCode config template and its rules header
-├── workers/
-│   └── codex/                ← Codex CLI worker config: gateway, model metadata, worker prompt
-├── second-brain-obsidian/    ← Obsidian CSS snippet (hides templates/), canvas-check.py for .canvas rules
-└── second-brain-templates/   ← note templates for the knowledge base
+├── core/AGENTS.md            always loaded: language, secrets, sensitive data, git, working rules
+├── skills/                   loaded on demand (SKILL.md format)
+│   ├── autonomous-run/       unattended run from an approved plan
+│   ├── code-design/          design rules and the interface approval gate
+│   ├── code-docs/            final report after code work, docstrings, repo docs
+│   ├── writing/              style of docs, notes and articles
+│   ├── describing-pipelines/ pipeline notes: flow diagram, payload notation
+│   ├── obsidian-canvas/      .canvas layout rules and canvas-check.py
+│   ├── second-brain/         structure and rules of the knowledge base
+│   └── beads/                task tracking in repos with .beads/
+├── harness/
+│   ├── claude/               settings.json, subagents (leak-auditor, code-design-reviewer), compact hook
+│   └── opencode/             opencode.json: permissions, superpowers plugin
+├── second-brain-obsidian/    Obsidian CSS snippet (hides templates/)
+├── second-brain-templates/   note templates for the knowledge base
+├── install.py                installs the rules into ~/.claude and ~/.config/opencode
+└── RESTORE.md                rebuild the setup on a clean machine
 ```
 
-| Instruction file | What it governs |
-|---|---|
-| `workflow.md` | The five approaches (Easy, Medium, Hard, Semi-Hard, Autonomous) and their steps |
-| `workers.md` | Delegating scoped code tasks to cheap models through Codex workers |
-| `language.md` | English for code, docs, specs, commits and instructions |
-| `environment.md` | Windows host for routine, WSL for all development |
-| `context7.md` | When and how to fetch current library docs |
-| `beads.md` | Task tracking for Hard and Autonomous |
-| `openspec.md` | Behavior specs in code repos; behavior changes only via Hard |
-| `second-brain.md` | Structure and rules of the local knowledge base |
-| `secrets.md`, `sensitive-data.md` | Hard rules for credentials and infrastructure details |
-| `code-style.md`, `code-design.md` | How code is written and designed |
-| `git.md` | Commit format, push gate |
-| `writing.md` | Style of READMEs, docs and notes: impersonal, plain, no long dashes |
-| `canvas.md` | Drawing Obsidian `.canvas` files: block sizes, straight lines through empty space, label blocks |
+## How the harnesses load the rules
 
-## Restore on a new machine
+| Harness | Rules | Skills |
+|---|---|---|
+| Claude Code | `~/.claude/CLAUDE.md` | `~/.claude/skills/` |
+| OpenCode | `~/.config/opencode/AGENTS.md` | `~/.claude/skills/` |
 
-Follow [RESTORE.md](RESTORE.md), by hand or by opening Claude desktop in this
-folder and saying: *"follow RESTORE.md"*.
+`install.py` copies `core/AGENTS.md` to both rule files and links each skill
+folder into `~/.claude/skills/`, which both harnesses read.
 
-## Back up changes
+## Change the rules
 
-`~/.claude` is the live config; this repo is its versioned snapshot. After
-changing anything there:
-
-```powershell
-pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToRepo
-git diff
-```
-
-Then commit and push.
+Edit this repo, then run `py install.py` (needed for `core/` and `harness/`;
+skill edits apply through the links), review `git diff`, commit.
 
 ## Excluded
 
-- Knowledge-base content (notes, areas, session log): personal, local only.
-- Claude conversation history, plugin caches, account data.
+- Knowledge-base content: personal, local only.
+- Conversation history, plugin caches, account data.
 - Any secret, token, host name or personal identifier. `settings.json` uses the
-  `{{HOME}}` placeholder, expanded by the sync script on restore.
+  `{{HOME}}` placeholder, expanded by `install.py`.

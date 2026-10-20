@@ -1,45 +1,38 @@
 # Restore
 
-Rebuilds the agent environment on a clean Windows PC. It is followed by a human
-or by Claude: by hand, or by opening Claude desktop in this repo's folder and saying *"follow RESTORE.md"*.
+Rebuilds the agent setup on a clean machine. Followed by hand, or by a harness
+opened in this repo's folder with the prompt *"follow RESTORE.md"*.
 
-## For Claude
+## For the agent
 
-- Before each step run its **Check**. If it already passes, skip the step.
+- Before each step run its **Check**; if it already passes, skip the step.
 - Anything that installs software, needs administrator rights or `sudo`: print
-  the exact command and wait for the user to run it. Never run installers yourself.
-- Never ask for secrets, tokens or keys in the chat; GitHub access and sign-ins
+  the exact command and wait for the user to run it.
+- Never ask for secrets, tokens or keys in the chat; sign-ins and provider keys
   are the user's job.
-- After the last step run the final verification table and report every row.
+- After the last step run the final verification and report every row.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `~/home/agents/agent-workflow` | this repo (Windows) |
+| `~/home/agents/agent-workflow` | this repo |
 | `~/home/agents/second-brain` | the knowledge base (local git, no remote) |
-| `~/.claude/` | live Claude config: `CLAUDE.md`, `settings.json`, `instructions/`, `agents/` |
-| WSL `~/wsl-dev/` | code repos |
+| `~/.claude/` | Claude Code config; OpenCode reads its `skills/` too |
+| `~/.config/opencode/` | OpenCode config (`AGENTS.md`, `opencode.json`, provider keys) |
 
-Other locations work too, then update `second-brain.md`, `environment.md` and
-`permissions.additionalDirectories` in `settings.json` after step 3.
+The harnesses run where the user works; the environment (OS, toolchains, WSL)
+is set up by the user. Other locations work too, then update the paths in
+`core/AGENTS.md`, `skills/second-brain/SKILL.md` and
+`permissions.additionalDirectories` in `harness/claude/settings.json`.
 
-## 1. Windows base tools (user)
+## 1. Base tools
 
-- Claude desktop: <https://claude.ai/download>, sign in.
-- In a terminal:
+- Git, Python 3.12+, and (Windows) PowerShell 7.
+- Obsidian, optional: viewer for the knowledge base.
+- Git identity and a GitHub SSH key are set up by the user.
 
-  ```powershell
-  winget install --id Git.Git -e
-  winget install --id Microsoft.PowerShell -e
-  winget install --id Python.Python.3.14 -e
-  winget install --id Obsidian.Obsidian -e   # optional, viewer for the knowledge base
-  ```
-
-- Git identity and a GitHub SSH key: the user sets them up
-  (`git config --global user.name / user.email`, GitHub docs for SSH keys).
-
-**Check:** `git --version`, `pwsh -v`, `py --version` all print a version.
+**Check:** `git --version` and `py --version` (or `python3 --version`) print a version.
 
 ## 2. Clone this repo
 
@@ -48,85 +41,68 @@ New-Item -ItemType Directory -Force "$HOME\home\agents" | Out-Null
 git clone <this-repo-url> "$HOME\home\agents\agent-workflow"
 ```
 
-**Check:** `$HOME\home\agents\agent-workflow\RESTORE.md` exists.
+**Check:** `~/home/agents/agent-workflow/install.py` exists.
 
-## 3. Install the Claude config
+## 3. Harnesses
+
+- Claude Code CLI, native installer: `irm https://claude.ai/install.ps1 | iex`
+  (Windows) or `curl -fsSL https://claude.ai/install.sh | bash`. Add
+  `~/.local/bin` to `PATH`. Sign in with `claude` -> `/login`.
+- Claude desktop, optional: <https://claude.ai/download>.
+- OpenCode 2.x CLI: see <https://opencode.ai/docs/>. Windows package managers
+  are not supported; on Windows use npm (`npm install -g @opencode/cli`, and
+  allow its install script). Desktop, optional: <https://opencode.ai/download>.
+- Provider keys for OpenCode (`/connect`, or `provider` in
+  `~/.config/opencode/opencode.json`) are added by the user.
+
+**Check:** `claude --version` and `opencode --version` print a version.
+
+## 4. Install the rules
 
 ```powershell
 cd "$HOME\home\agents\agent-workflow"
-pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToClaude -DryRun
-pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToClaude
+py install.py
 ```
 
-Copies `claude-home/` (`CLAUDE.md`, `settings.json` with `{{HOME}}` expanded,
-`instructions/`, `agents/`) into `~/.claude`. Files that would be overwritten
-are first backed up to `~/.claude/backups/restore-<timestamp>/`. Restart Claude desktop afterwards.
+`install.py` does the following:
+- copies `core/AGENTS.md` to `~/.claude/CLAUDE.md` and `~/.config/opencode/AGENTS.md`;
+- links every `skills/<name>` into `~/.claude/skills/` (a junction on Windows);
+- copies `harness/claude/agents/*.md` into `~/.claude/agents/`;
+- merges `harness/claude/settings.json` into `~/.claude/settings.json` (`{{HOME}}` expanded);
+- merges `harness/opencode/opencode.json` into `~/.config/opencode/opencode.json`,
+  keeping keys that only the live file has (providers, keys).
 
-**Check:** `~/.claude/instructions/workflow.md` exists; in a new session the
-first line of a reply names the approach (`Approach: …`).
+Replaced files go to `~/.agent-workflow-backup/<timestamp>/`, merged JSON files
+keep a `.bak` copy. Re-run after editing `core/AGENTS.md` or `harness/`; skill
+edits apply at once through the links.
 
-## 4. Plugins (user, in Claude desktop)
+**Check:** `~/.claude/CLAUDE.md` starts with `# Global agent rules`, and
+`~/.claude/skills/writing/SKILL.md` exists.
 
-- **Superpowers**: `settings.json` already enables
-  `superpowers@claude-plugins-official`; if it is not installed after the
-  restart, install it from the plugin directory.
-- **Context7**: install the Context7 plugin from the plugin directory (a hosted
-  MCP server; no Node needed). Signing in is optional and only raises rate limits.
+## 5. Plugins
 
-**Check:** a new session lists `superpowers:*` skills and `context7` tools.
+- **Claude Code**: `settings.json` enables `superpowers@claude-plugins-official`;
+  if it is not installed after a restart: `claude plugin install superpowers@claude-plugins-official`.
+- **OpenCode**: the template adds superpowers to `plugins`; restart OpenCode.
 
-## 5. beads on Windows (for host-side repos)
+**Check:** a new session in each harness lists the superpowers skills
+(ask: "Tell me about your superpowers").
 
-```powershell
-irm https://raw.githubusercontent.com/gastownhall/beads/main/install.ps1 | iex
-[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path","User") + ";$env:LOCALAPPDATA\Programs\bd", "User")
-```
+## 6. beads (optional, per repo)
 
-Restart Claude desktop. `settings.json` already contains the SessionStart hook
-`bd prime --hook-json`. Do **not** run `bd setup claude` (it writes a CLAUDE.md
-into the folder it runs in).
+Install `bd` where the repos are (see <https://github.com/gastownhall/beads>).
+`settings.json` runs `bd prime --hook-json` at session start. Do **not** run
+`bd setup claude`: it writes a `CLAUDE.md` into the folder it runs in.
 
 **Check:** `bd version`.
 
-## 6. WSL (all development tools)
-
-```powershell
-wsl --install -d Ubuntu-26.04
-```
-
-A different Ubuntu release works too, then replace the distro name in
-`environment.md`. Reboot if asked and create the Linux user. Then, inside WSL:
-
-```bash
-sudo apt update && sudo apt install -y git nodejs npm unzip build-essential pkg-config
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-npm config set prefix ~/.local
-npm install -g @fission-ai/openspec@latest
-openspec config set telemetry.enabled false
-curl -fsSL https://raw.githubusercontent.com/gastownhall/beads/main/scripts/install.sh | bash
-curl -fsSL https://bun.sh/install | bash
-echo 'export BUN_INSTALL="$HOME/.bun"; export PATH="$BUN_INSTALL/bin:$PATH"' >> ~/.profile
-mkdir -p ~/wsl-dev
-git config --global user.name "<name>" && git config --global user.email "<email>"
-exec bash -l
-```
-
-PATH entries go into `~/.profile`, not `~/.bashrc`: agent commands run in a
-non-interactive login shell. Keep the `bd` version equal on Windows and in WSL.
-
-**Check** (from Git Bash on Windows):
-
-```bash
-wsl.exe -d Ubuntu-26.04 --exec bash -lc 'cargo --version; node --version; bun --version; bd version; openspec --version'
-```
-
 ## 7. Knowledge base (second-brain)
 
-Claude creates it from `instructions/second-brain.md`:
+Structure and rules: `skills/second-brain/SKILL.md`. Create the skeleton:
 
 ```powershell
 $sb = "$HOME\home\agents\second-brain"
-foreach ($d in "work\scratchpad","work\services","work\pipelines","work\projects","work\knowledge-base","work\archive",
+foreach ($d in "work\scratchpad","work\services","work\pipelines","work\projects","work\knowledge-base","work\dashboards","work\attachments","work\archive",
                 "personal\scratchpad","personal\projects","personal\knowledge-base","personal\archive",
                 "agents-data\session-log","templates") {
     New-Item -ItemType Directory -Force "$sb\$d" | Out-Null
@@ -135,115 +111,28 @@ Copy-Item .\second-brain-templates\*.md "$sb\templates\"
 git -C $sb init -b main
 ```
 
-Then Claude writes `CLAUDE.md` (a pointer to `second-brain.md`), `README.md`
-(the map), a `README.md` and an empty `domain-tags.md` in each scope, and
-`.gitignore` (`.obsidian/workspace*.json`, `.obsidian/cache`,
+Then the agent writes `AGENTS.md` (a pointer to the `second-brain` skill),
+`README.md` (the map), a `README.md` and an empty `domain-tags.md` in each
+scope, and `.gitignore` (`.obsidian/workspace*.json`, `.obsidian/cache`,
 `.obsidian/plugins/`, `.trash/`). Empty folders get a `.gitkeep`.
 
-Obsidian: open the folder as a vault, enable the core plugin **Templates**, set
-its folder to `templates`.
+Obsidian: open the folder as a vault, enable the core plugin **Templates** with
+folder `templates`, add `templates/` to **Files and links** -> **Excluded files**,
+copy `second-brain-obsidian/hide-templates.css` to `<vault>/.obsidian/snippets/`
+and enable it under **Appearance** -> **CSS snippets**.
 
-The `templates` folder is hidden from Obsidian views:
-- Settings, **Files and links**, **Excluded files**: add `templates/` (search,
-  graph and quick switcher).
-- Copy `second-brain-obsidian/hide-templates.css` to `<vault>/.obsidian/snippets/`,
-  then enable it in Settings, **Appearance**, **CSS snippets** (file explorer).
-  Inserting templates still works.
-
-The knowledge base has no remote by design. Its content survives a lost machine
-only if the user backs it up elsewhere (external drive, encrypted archive).
+The knowledge base has no remote by design; it survives a lost machine only
+through the user's own backup.
 
 **Check:** the folders exist and `git -C $sb status` works.
 
-## 8. Worker gateway: LiteLLM (optional)
+## Final verification
 
-A local, OpenAI-compatible gateway for worker agents; Claude Code itself never
-goes through it. Docker runs inside WSL (no Docker Desktop). The user runs, inside WSL:
-
-```bash
-sudo apt update && sudo apt install -y docker.io docker-compose-v2 docker-buildx && sudo usermod -aG docker $USER
-```
-
-Then `wsl.exe --terminate Ubuntu-26.04` from Windows, so the group applies.
-Everything after that (runtime folder, the generated `.env`, first start, the
-worker key with a budget) is in [services/litellm/README.md](services/litellm/README.md).
-The `.env` is written and filled by the user only.
-
-**Check:** `docker compose ps` in WSL `~/services/litellm` shows both containers
-`healthy`; `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:4000/health/liveliness`
-prints `200` from WSL and from Windows.
-
-## 9. Worker agent: Codex CLI in WSL (optional, needs step 8)
-
-The user installs Codex CLI inside WSL (official release, standalone binary),
-then sets the worker key once as a Windows user variable and passes it into WSL
-(in PowerShell 7 the input is masked):
-
-```powershell
-$k = Read-Host "universal local LiteLLM key" -MaskInput; [Environment]::SetEnvironmentVariable("UNIVERSAL_LOCAL_LITELLM_KEY", $k, "User"); $w = [Environment]::GetEnvironmentVariable("WSLENV", "User"); [Environment]::SetEnvironmentVariable("WSLENV", ((@($w, "UNIVERSAL_LOCAL_LITELLM_KEY") | Where-Object { $_ }) -join ":"), "User"); Remove-Variable k
-```
-
-Restart Claude desktop. Then Claude installs the config (in WSL):
-
-```bash
-S=/mnt/c/Users/<user>/home/agents/agent-workflow/workers/codex
-mkdir -p ~/.codex && sed "s#{{HOME}}#$HOME#g" $S/config.toml > ~/.codex/config.toml && chmod 600 ~/.codex/config.toml
-cp $S/models.json $S/run-cost.sh ~/.codex/
-```
-
-Then, on Windows, build the worker prompt (`~/.codex/instructions.md`) from the
-rule Essentials: `py build-agent-rules.py` in this repo.
-
-How Claude uses it: `instructions/workers.md`.
-
-**Check:** in an empty WSL git repo,
-`codex exec --ephemeral -s read-only -o out.txt "Reply with exactly: OK"` exits 0
-and `out.txt` contains `OK`.
-
-## 10. OpenCode (optional, needs step 8)
-
-OpenCode is the GUI harness for other models; the user installs it on Windows.
-
-```powershell
-New-Item -ItemType Directory -Force "$HOME\.config\opencode" | Out-Null
-Copy-Item .\harnesses\opencode\opencode.json "$HOME\.config\opencode\"
-py .\build-agent-rules.py
-```
-
-`opencode.json` holds the LiteLLM provider (key read from `UNIVERSAL_LOCAL_LITELLM_KEY`)
-and the permissions: everything allowed except `.env` reads, environment dumps
-(denied) and `git push` (asks). `build-agent-rules.py`
-writes `~/.config/opencode/AGENTS.md`, the short rules. Rebuild after any rule change.
-Never run OpenCode with `--auto`: it approves the push prompt too.
-
-**Check:** in OpenCode, the model picker lists `LiteLLM (local)`; asking it to show a
-`.env` file is refused.
-
-## 11. Machine state
-
-```powershell
-py .\setup-state.py scan
-py .\setup-state.py diff
-```
-
-`scan` writes `setup-state.yaml` (tool versions, config presence, model
-aliases, variable names; never secret values). `diff` compares it with
-`setup-reference.yaml`. Every field is probed; nothing is edited by hand.
-
-**Check:** `diff` prints `State matches the reference.` or lists each drift.
-
-## 12. Final verification
-
-| What | How | Expected |
-|---|---|---|
-| Instructions loaded | new session, ask anything | reply starts with `Approach: …` |
-| Settings valid | `pwsh -c "Get-Content $HOME\.claude\settings.json -Raw \| ConvertFrom-Json"` | no error |
-| Plugins | new session | `superpowers:*` skills and `context7` tools available |
-| Subagents | new session | `code-design-reviewer`, `leak-auditor`, `architecture-designer`, `Explore` available |
-| Machine state | `py setup-state.py diff` | no drift |
-| Windows bd | `bd version` | a version |
-| WSL toolchain | the step 6 check | five versions |
-| Knowledge base | `git -C $HOME\home\agents\second-brain status` | a clean repo |
-| Worker gateway (if set up) | the step 8 check | `healthy`, `200` |
-| Worker agent (if set up) | the step 9 check | exit 0, `OK` |
-| WSL repo from Claude | open a session in `\\wsl.localhost\Ubuntu-26.04\home\<user>\wsl-dev\<repo>` | file tools work, commands run via `wsl.exe --exec` |
+| Row | Check |
+|---|---|
+| Claude Code | `claude --version` |
+| OpenCode | `opencode --version` |
+| Rules | `~/.claude/CLAUDE.md` starts with `# Global agent rules` |
+| Skills | `~/.claude/skills/<name>/SKILL.md` exists for every folder in `skills/` |
+| superpowers | listed in a new session of each harness |
+| second-brain | `git -C ~/home/agents/second-brain status` works |

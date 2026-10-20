@@ -1,20 +1,15 @@
 # Working on this repo
 
-This repo is the public, versioned snapshot of the live Claude Code config in
-`~/.claude`, plus everything needed to restore it on a clean machine.
+This repo is the source of truth for the agent rules of Claude Code and
+OpenCode on this machine.
 
-- **`~/.claude` is the source of truth.** After changing anything there, sync it
-  here and review the diff:
-  `pwsh -NoProfile -File .\sync-claude-config.ps1 -Direction ToRepo`, then `git diff`.
-- Never edit `claude-home/` by hand: edit `~/.claude` and sync. Only when the user
-  asks to change the repo first: edit here, then sync `-Direction ToClaude`.
-- **Restoring on a new machine**: follow `RESTORE.md` step by step.
-- **`services/`**: templates for local services (e.g. `services/litellm/`). The
-  repo copy is the source of truth; the running copy is located in WSL
-  `~/services/<name>/` together with its `.env`, which only the user writes.
-  After a template change: copy it over, restart the service, verify it.
-- **The repo is public.** Nothing personal ever goes in: no user names (paths use
-  `~` or the `{{HOME}}` placeholder), no e-mail addresses, host names, IPs,
-  tokens, and no knowledge-base content. The `leak-auditor` subagent runs before
-  every push, not before commits (git.md).
-- Everything in this repo is English.
+- Edit here, never in `~/.claude` or `~/.config/opencode`. Then run
+  `py install.py` and check its output. Skill folders are linked, so skill edits
+  apply without re-running.
+- `core/AGENTS.md` stays short: only rules that must apply in every session.
+  Anything loaded on demand is a skill in `skills/<name>/SKILL.md` (frontmatter
+  `name` equal to the folder name, `description` saying when to use it).
+- **The repo is public.** Nothing personal ever goes in: no user names (paths
+  use `~` or the `{{HOME}}` placeholder), no e-mail addresses, host names, IPs,
+  tokens, and no knowledge-base content. The leak audit runs before every push.
+- Everything in this repo is English and follows the `writing` skill.
