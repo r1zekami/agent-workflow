@@ -71,20 +71,6 @@ Design the axis up front. Anything that is one of a kind that could plausibly ge
 - The scope of an operation is visible from the name: `export_all_orders_to_csv()` vs `find_order_by_id(order_id)`.
 - Import by full path, no aliases, where the language allows it.
 
-## 6. Interface first: approval gate
-
-For everything visible from another module (new modules, classes, functions, methods called outside their own file, including calls between modules of the same project), show the user and wait for OK before implementing:
-1. file/module layout;
-2. every such signature, in this form, with a blank line after each one:
-   ```
-   # one-liner: what it does, where it takes from, where it gives to
-   package.module.Class.method(type, type, *, option: type) -> type
-   ```
-3. a call-site example from the consumer's side;
-4. if the result is a payload, the full payload (format: rule `code-docs`).
-
-Changing an approved signature needs the same approval. Private helpers inside one file are not gated but follow rules 1-5.
-
 ## Language in code
 
 Strictly English: identifiers, comments, docstrings, log messages, error and exception messages, commit messages, TODOs. Log output is also ASCII only. Another language appears only inside string literals that are part of the program's data or logic: user-facing UI text, localized messages, parsing patterns, test data. Such a string never carries a comment in that language.
@@ -93,7 +79,30 @@ Strictly English: identifiers, comments, docstrings, log messages, error and exc
 
 - No comments, except the external facts named under Self-documenting code.
 - No emoji in code, comments or logs; no decorative banners (`# ===== X =====`).
-- Docstrings: rule `code-docs`.
+
+## Docstrings
+
+A docstring is one short sentence on what the function does: the action and its result.
+
+- Not included: parameters and types from the signature, exceptions, edge cases, implementation steps, history.
+- No docstring when the name already says everything (`is_expired()`, getters).
+- A change of behavior or signature updates the docstring in the same edit.
+- The same sentence is the signature comment in the negotiation proposal (rule `code-negotiation`).
+
+```python
+def export_all_orders_to_csv(path: Path, *, since: date) -> int:
+    """Write every order created on or after `since` to a CSV file and return the row count."""
+
+def find_session(session_id: str) -> Session:
+    """Load an active session from the cache, falling back to the database."""
+
+def charge_order(order: Order, *, gateway: PaymentGateway) -> Receipt:
+    """Charge the order total."""
+```
+```rust
+/// Merges duplicate alerts from the same source into one, keeping the earliest timestamp.
+pub fn deduplicate_alerts(alerts: Vec<Alert>) -> Vec<Alert>
+```
 
 ## Linters and formatters
 

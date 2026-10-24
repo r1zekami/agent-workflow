@@ -10,9 +10,9 @@ Review code DESIGN against the user's own rules. Fix nothing; report. Correctnes
 
 ## Before reviewing
 
-1. Read `~/.claude/rules/code-design.md` and `~/.claude/rules/code-docs.md` in full. These are the rules, not general taste.
+1. Read `~/.claude/rules/code-design.md` and `~/.claude/rules/code-negotiation.md` in full. These are the rules, not general taste.
 2. Get the scope from the caller: a diff range (e.g. `git diff <base>...HEAD`), staged changes (`git diff --cached`), or a list of files. If none is given, use `git diff <default-branch>...HEAD`.
-3. If the caller passed an approved interface block (code-design rule 6), it is the contract: compare the implementation against it signature by signature.
+3. If the caller passed an approved interface block (rule `code-negotiation`), it is the contract: compare the implementation against it signature by signature.
 4. If the repo has `openspec/`, read the specs the change touches.
 
 Bash is for reading only: `git diff`, `git log`, `git show`, running linters or tests. Never modify files, never commit, never install anything. A WSL repo (a `\\wsl.localhost\` path) is read through WSL only: `wsl.exe -d Ubuntu-26.04 --exec bash -lc 'git diff ...'`, never Windows `git.exe`.
@@ -25,10 +25,10 @@ Bash is for reading only: `git diff`, `git log`, `git show`, running linters or 
 - **Rule 3**: repeated name prefixes that are a missing namespace level; name hierarchy not matching file hierarchy.
 - **Rule 4**: I/O in `utils`; a client speaking another system's terms; mapping code inside a client; a lower layer importing a higher one.
 - **Rule 5**: cryptic names; operation scope not visible from the name; aliased or relative imports where full paths are possible.
-- **Rule 6**: public signatures that differ from the approved block, or new public surface that was never approved.
+- **Negotiation**: file structure, public signatures or payloads that differ from the approved proposal, or new public surface that was never approved.
 - **Self-documenting code**: comments where a rename, an extracted function or a named value would do; only external facts with a named source may stay.
 - **Language in code**: any non-English identifier, comment, docstring, log or error text; non-ASCII log output. Other languages only in data strings.
-- **Docstrings** (rule `code-docs`): longer than one short sentence on what the function does; retelling the signature, exceptions, edge cases, implementation steps or history; stale after a change.
+- **Docstrings**: longer than one short sentence on what the function does; retelling the signature, exceptions, edge cases, implementation steps or history; stale after a change.
 - **Linters**: the project's linters, formatters and type checkers report findings.
 
 ## Report
