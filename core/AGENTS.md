@@ -41,6 +41,7 @@ Always loaded next to this file (`~/.claude/rules/`):
 | `code-negotiation` | What is approved before implementing: file tree, signatures, call site, payload |
 | `code-docs` | Root README, `docs/` layout, docs and OpenSpec |
 | `code-report` | Report in the chat after implementing code |
+| `general-wsl` | WSL repos from a Windows host: commands inside WSL, Git Bash path rewriting, edits on the share |
 | `general-writing` | READMEs, docs, regulations, articles, notes |
 
 ## Skills
@@ -61,4 +62,4 @@ Process skills (brainstorming, planning, TDD, debugging, review, verification) c
 
 - second-brain: `~/home/agents/second-brain` (local git, never a remote).
 - These rules: `~/home/agents/agent-workflow`.
-- A repo on a `\\wsl.localhost\<distro>\...` path: git, builds and tests run inside WSL (`wsl.exe -d <distro> --cd <linux path> --exec bash -lc '<command>'`); Windows `git.exe` refuses such repos.
+- A repo in WSL opened from a Windows host: rule `general-wsl`.
