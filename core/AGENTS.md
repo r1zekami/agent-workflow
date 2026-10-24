@@ -51,7 +51,7 @@ Always loaded next to this file (`~/.claude/rules/`):
 | `code-negotiation` | What is approved before implementing: file tree, signatures, call site, payload |
 | `code-docs` | Root README, `docs/` layout, docs and OpenSpec |
 | `code-report` | Report in the chat after implementing code |
-| `writing` | READMEs, docs, regulations, articles, notes |
+| `general-writing` | READMEs, docs, regulations, articles, notes |
 
 ## Skills
 

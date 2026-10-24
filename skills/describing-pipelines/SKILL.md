@@ -42,4 +42,4 @@ Example values are made up (no real hosts, ids or people).
 
 ## Style
 
-Text follows rule `writing`. Names of systems, tables, fields and queues are in backticks. No real host names, IPs or credentials anywhere in the note.
+Text follows rule `general-writing`. Names of systems, tables, fields and queues are in backticks. No real host names, IPs or credentials anywhere in the note.

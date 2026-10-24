@@ -12,7 +12,7 @@ agent-workflow/
 │   ├── code-negotiation.md   what is approved before implementing: tree, signatures, call site, payload
 │   ├── code-docs.md          root README, docs/ layout
 │   ├── code-report.md        report in the chat after implementing code
-│   └── writing.md            style of docs, notes and articles
+│   └── general-writing.md    style of docs, notes and articles
 ├── skills/                   loaded on demand (SKILL.md format)
 │   ├── autonomous-run/       unattended run from an approved plan
 │   ├── describing-pipelines/ pipeline notes: flow diagram, payload notation
