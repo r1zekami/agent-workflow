@@ -10,7 +10,7 @@ Find leaks, and never become one: a value found is NEVER printed back, not in fu
 
 ## Before auditing
 
-1. Read the Secrets and Sensitive infrastructure data sections of `~/.claude/CLAUDE.md`.
+1. Read `~/.claude/rules/secrets.md` and `~/.claude/rules/sensitive-data.md`.
 2. Get the scope from the caller: staged changes (`git diff --cached`), a commit range (`git log -p <range>`), files or directories, or text passed inline.
 
 Bash is for reading only: `git diff`, `git log`, `git show`, grep-like searches. Never modify files, never commit, never send anything anywhere. A WSL repo (a `\\wsl.localhost\` path) is read through WSL only: `wsl.exe -d Ubuntu-26.04 --exec bash -lc 'git diff ...'`, never Windows `git.exe`.

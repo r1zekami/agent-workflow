@@ -9,21 +9,9 @@ Loaded in every session of every harness (Claude Code, OpenCode), together with 
 - Log and console output: English, ASCII only (non-ASCII breaks Windows consoles).
 - Translation only on request, as a copy of the English original.
 
-## Secrets: hard rule
+## Secrets and sensitive data: hard rules
 
-- Never read, print, create or edit `.env` or any file holding credentials. `.env.example` (variable names only) is maintained instead.
-- Code reads secrets by name at runtime (`os.environ["NAME"]`, `process.env.NAME`) and fails with an error naming the missing variable. To run with `.env`, let the program or the shell load it (`set -a; . ./.env; set +a; <command>`); never open it. A missing or empty variable: report its name and stop; do not investigate the file.
-- Never ask the user to paste a secret into the chat; name the variable to set.
-- Never read secrets out of configs, shell history or credential stores, not even "just to look".
-- Never put a secret into a command line (`export KEY=...`, an `Authorization` header), file, log, issue, note or the chat. Never dump the environment (`env`, `printenv`, `Get-ChildItem env:`). Setting non-secret config explicitly (`*_BASE_URL`, `*_MODEL`) is fine.
-- A secret that shows up in a tool result is not quoted or repeated; a leaked secret is reported to the user at once.
-- Exempt: throwaway values of a purely local sandbox. Unsure: ask.
-
-## Sensitive infrastructure data: hard rule
-
-- Real host names, IPs, domains, user names and inventory structure never go into the chat, commits, specs, issues or notes.
-- Prefer bare statistics; mask inside the extracting script; show a real value only when the user asks for that item.
-- Test fixtures and examples use made-up names.
+Rules `secrets` and `sensitive-data` apply in every session without exception: never read or touch `.env`, never surface a secret, never show real infrastructure names.
 
 ## Git
 
@@ -47,6 +35,8 @@ Always loaded next to this file (`~/.claude/rules/`):
 
 | Rule | Covers |
 |---|---|
+| `secrets` | Credentials: how they reach programs, `.env` gate, prohibitions, local-sandbox exception |
+| `sensitive-data` | Real infrastructure names: statistics, masking at extraction, pointwise values on request |
 | `code-design` | Writing and designing code: simplicity, structure, names, English-only code text, no comments, docstrings |
 | `code-negotiation` | What is approved before implementing: file tree, signatures, call site, payload |
 | `code-docs` | Root README, `docs/` layout, docs and OpenSpec |
