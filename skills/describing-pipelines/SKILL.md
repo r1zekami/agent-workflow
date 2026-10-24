@@ -5,10 +5,7 @@ description: Use when documenting a pipeline or data flow - a regular process th
 
 # Describing pipelines
 
-A pipeline is a regular process with a data flow: data is taken from a source,
-transformed, and delivered somewhere. A work pipeline is an entity in
-second-brain: `work/pipelines/<slug>/` (skill `second-brain`), created from the
-template `templates/pipeline-readme.md`.
+A pipeline is a regular process with a data flow: data is taken from a source, transformed, and delivered somewhere. A work pipeline is an entity in second-brain: `work/pipelines/<slug>/` (skill `second-brain`), created from the template `templates/pipeline-readme.md`.
 
 ## README sections
 
@@ -23,23 +20,17 @@ template `templates/pipeline-readme.md`.
 
 ## Data flow diagram
 
-One line per hop, from source to destination; each hop names the system, the
-step and the format:
+One line per hop, from source to destination; each hop names the system, the step and the format:
 ```
 <source system> (<format>)
   -> <step: what is done> (<format>)
   -> <destination system> (<format>)
 ```
-Branches are indented under the step they leave. Schedules and triggers go on
-the first line. A diagram with more than about ten hops, or with several
-branches that join again, goes to an Obsidian canvas (skill `obsidian-canvas`)
-and the README links it.
+Branches are indented under the step they leave. Schedules and triggers go on the first line. A diagram with more than about ten hops, or with several branches that join again, goes to an Obsidian canvas (skill `obsidian-canvas`) and the README links it.
 
 ## Payload notation
 
-Shown whole, with every possible field. Keys are never duplicated; alternatives
-go in the value: `/` = alternative values; `[...]` = the field is a list;
-`<...>` = computed value.
+Shown whole, with every possible field. Keys are never duplicated; alternatives go in the value: `/` = alternative values; `[...]` = the field is a list; `<...>` = computed value.
 ```
 "order_export": {
     "order_id": "<int>",
@@ -51,5 +42,4 @@ Example values are made up (no real hosts, ids or people).
 
 ## Style
 
-Text follows skill `writing`. Names of systems, tables, fields and queues are in
-backticks. No real host names, IPs or credentials anywhere in the note.
+Text follows rule `writing`. Names of systems, tables, fields and queues are in backticks. No real host names, IPs or credentials anywhere in the note.

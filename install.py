@@ -1,7 +1,6 @@
 """Install the agent rules from this repo into Claude Code and OpenCode on this machine.
 
-Re-run after editing core/AGENTS.md or anything in harness/. Skills are
-linked, so their edits apply without re-running.
+Everything is copied, nothing is linked: re-run after any edit in this repo.
 Usage: py install.py
 """
 
@@ -10,7 +9,6 @@ import json
 import os
 import pathlib
 import shutil
-import subprocess
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parent
@@ -18,6 +16,9 @@ HOME = pathlib.Path.home()
 CLAUDE_HOME = HOME / ".claude"
 OPENCODE_HOME = HOME / ".config" / "opencode"
 BACKUP = HOME / ".agent-workflow-backup" / datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+# Marks a skill folder as installed from this repo, so it is removed once the repo drops it.
+INSTALLED_SKILL_MARKER = ".installed-by-agent-workflow"
 
 # Paths left by the previous layout of this repo; moved to the backup folder.
 OBSOLETE_PATHS = [
@@ -43,21 +44,39 @@ def is_link(path: pathlib.Path) -> bool:
     return path.is_symlink() or path.is_junction()
 
 
-def link_directory(link: pathlib.Path, target: pathlib.Path) -> None:
-    if is_link(link) and link.resolve() == target.resolve():
-        return
-    if is_link(link):
+def read_tree(root: pathlib.Path) -> dict[str, bytes]:
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file() and path.name != INSTALLED_SKILL_MARKER and "__pycache__" not in path.parts
+    }
+
+
+def copy_skill(source: pathlib.Path, destination: pathlib.Path) -> None:
+    if is_link(destination):
         # rmdir removes a junction or a directory symlink without touching its target.
-        os.rmdir(link)
-    elif link.exists():
-        backup(link)
-    link.parent.mkdir(parents=True, exist_ok=True)
-    if os.name == "nt":
-        # A junction needs no admin rights or developer mode, unlike a symlink.
-        subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(target)], check=True, capture_output=True)
-    else:
-        link.symlink_to(target, target_is_directory=True)
-    log(f"linked {link} -> {target}")
+        os.rmdir(destination)
+    elif destination.exists():
+        if (destination / INSTALLED_SKILL_MARKER).exists() and read_tree(destination) == read_tree(source):
+            return
+        backup(destination)
+    shutil.copytree(source, destination, ignore=shutil.ignore_patterns("__pycache__"))
+    (destination / INSTALLED_SKILL_MARKER).write_text("", encoding="utf-8")
+    log(f"copied skill {source.name} -> {destination}")
+
+
+def remove_skills_dropped_from_repo() -> None:
+    skills_home = CLAUDE_HOME / "skills"
+    if not skills_home.exists():
+        return
+    for installed in skills_home.iterdir():
+        if (REPO / "skills" / installed.name).exists():
+            continue
+        if is_link(installed):
+            os.rmdir(installed)
+            log(f"removed link {installed}")
+        elif (installed / INSTALLED_SKILL_MARKER).exists():
+            backup(installed)
 
 
 def copy_file(source: pathlib.Path, destination: pathlib.Path) -> None:
@@ -113,21 +132,24 @@ def install_claude() -> None:
         if path.exists() and not is_link(path):
             backup(path)
     copy_file(REPO / "core" / "AGENTS.md", CLAUDE_HOME / "CLAUDE.md")
+    for rule in sorted((REPO / "rules").glob("*.md")):
+        copy_file(rule, CLAUDE_HOME / "rules" / rule.name)
+    remove_skills_dropped_from_repo()
     for skill in sorted((REPO / "skills").iterdir()):
-        link_directory(CLAUDE_HOME / "skills" / skill.name, skill)
+        copy_skill(skill, CLAUDE_HOME / "skills" / skill.name)
+    for hook in sorted((REPO / "harness" / "claude" / "hooks").glob("*.py")):
+        copy_file(hook, CLAUDE_HOME / "hooks" / hook.name)
     for agent in sorted((REPO / "harness" / "claude" / "agents").glob("*.md")):
         copy_file(agent, CLAUDE_HOME / "agents" / agent.name)
-    replacements = {
-        "{{HOME}}": str(HOME).replace("\\", "\\\\"),
-        "{{REPO}}": str(REPO).replace("\\", "\\\\"),
-    }
+    replacements = {"{{HOME}}": str(HOME).replace("\\", "\\\\")}
     merge_json_file(REPO / "harness" / "claude" / "settings.json", CLAUDE_HOME / "settings.json", replacements=replacements)
 
 
 def install_opencode() -> None:
     # Skills come from ~/.claude/skills; the documented ~/.claude/CLAUDE.md fallback is not loaded by OpenCode 2.x.
     copy_file(REPO / "core" / "AGENTS.md", OPENCODE_HOME / "AGENTS.md")
-    merge_json_file(REPO / "harness" / "opencode" / "opencode.json", OPENCODE_HOME / "opencode.json", replacements={})
+    replacements = {"{{HOME}}": HOME.as_posix()}
+    merge_json_file(REPO / "harness" / "opencode" / "opencode.json", OPENCODE_HOME / "opencode.json", replacements=replacements)
 
 
 def main() -> int:

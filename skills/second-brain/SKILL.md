@@ -5,10 +5,7 @@ description: Use for anything in the user's knowledge base second-brain (~/home/
 
 # second-brain
 
-Markdown files at `~/home/agents/second-brain`: a local git repo with **no
-remote, ever**. Obsidian is the user's viewer and editor. Read and write with
-the file tools. Always called second-brain, never "vault" ("Vault" means
-HashiCorp Vault).
+Markdown files at `~/home/agents/second-brain`: a local git repo with **no remote, ever**. Obsidian is the user's viewer and editor. Read and write with the file tools. Always called second-brain, never "vault" ("Vault" means HashiCorp Vault).
 
 Two scopes:
 
@@ -44,8 +41,7 @@ second-brain/
 └── templates/            note templates (source: agent-workflow repo)
 ```
 
-- No `modules/`, `epics/` or `areas/` folders: a reusable thing is a project, an
-  epic or area is a `domain/` tag.
+- No `modules/`, `epics/` or `areas/` folders: a reusable thing is a project, an epic or area is a `domain/` tag.
 - `scratchpad/` is the user's free space: read only when asked, never reorganized.
 - Each scope keeps its full skeleton (empty folders hold `.gitkeep`).
 
@@ -59,18 +55,11 @@ An entity (service, pipeline, project) folder:
 
 ## Reading: by scope, top-down
 
-1. **Resolve the scope first**: the user's tag (`[work]`, `[personal]`) -> the
-   entity whose `repo:` matches the working directory -> the user's words.
-   Still unclear: ask once; never read both "to be safe".
-2. **Read only `<scope>/`**: scope every Grep, Glob or tag search by path.
-   Never search the whole knowledge base.
-3. **Cheapest first**: `README.md` -> `<scope>/README.md` ->
-   `<scope>/domain-tags.md` -> Grep `tags:` for the domain -> entity
-   `README.md` -> only the notes the task needs. `log/` and `decisions.md` on
-   demand; `scratchpad/` and `archive/` only when asked.
+1. **Resolve the scope first**: the user's tag (`[work]`, `[personal]`) -> the entity whose `repo:` matches the working directory -> the user's words. Still unclear: ask once; never read both "to be safe".
+2. **Read only `<scope>/`**: scope every Grep, Glob or tag search by path. Never search the whole knowledge base.
+3. **Cheapest first**: `README.md` -> `<scope>/README.md` -> `<scope>/domain-tags.md` -> Grep `tags:` for the domain -> entity `README.md` -> only the notes the task needs. `log/` and `decisions.md` on demand; `scratchpad/` and `archive/` only when asked.
 4. Cross-scope reads only on an explicit request for that question.
-5. No links across scopes. Something needed on both sides is a separate note
-   in each scope.
+5. No links across scopes. Something needed on both sides is a separate note in each scope.
 6. Writes go into the session's scope; unsure: ask.
 
 ## Where things go
@@ -86,15 +75,13 @@ An entity (service, pipeline, project) folder:
 | A record of agent work | `agents-data/session-log/<YYYY-MM>/<entry>.md` |
 | Finished work | the whole folder moves to `<scope>/archive/` |
 
-Search the scope for an existing note before creating one; extend it instead of
-creating a near-duplicate.
+Search the scope for an existing note before creating one; extend it instead of creating a near-duplicate.
 
 ## Tags and frontmatter
 
 Obsidian tags, lowercase kebab-case, nested with `/`:
 - `scope/<work|personal>`: on every note, first, equal to its top-level folder.
-- `domain/<domain>[/<subject>]`: one level by default. Each scope's
-  `domain-tags.md` lists the tags; a new tag is added there in the same edit.
+- `domain/<domain>[/<subject>]`: one level by default. Each scope's `domain-tags.md` lists the tags; a new tag is added there in the same edit.
 - `agent/<agent-name>`: on agents-data reports.
 
 | Type | Keys |
@@ -105,29 +92,23 @@ Obsidian tags, lowercase kebab-case, nested with `/`:
 | knowledge-base | `tags`, `status: draft / done` |
 | agents-data | `tags: [scope/…, agent/<name>, domain/…]` |
 
-Templates: `templates/` in second-brain, sourced from
-`agent-workflow/second-brain-templates/`.
+Templates: `templates/` in second-brain, sourced from `agent-workflow/second-brain-templates/`.
 
 ## Naming and language
 
-English kebab-case for folders, files, tags and frontmatter. Note content is
-English and follows skill `writing`. A date prefix appears only in `log/` file
-names. Knowledge-base names go from general to specific, versions keep dots:
-`tls-ssl-1.3-1.2.md`.
+English kebab-case for folders, files, tags and frontmatter. Note content is English and follows rule `writing`. A date prefix appears only in `log/` file names. Knowledge-base names go from general to specific, versions keep dots: `tls-ssl-1.3-1.2.md`.
 
 ## Update rules
 
 - `README.md`: always the current state; rewrite outdated parts.
 - `log/`: add a new file; never rewrite old ones.
 - `decisions.md`: append at the bottom; a reversed decision is a new entry.
-- `knowledge-base/`: the content belongs to the user. Add frontmatter, tags and
-  `[[links]]`, suggest changes, never rewrite content unasked.
+- `knowledge-base/`: the content belongs to the user. Add frontmatter, tags and `[[links]]`, suggest changes, never rewrite content unasked.
 - `agents-data/<agent>/`: one file per topic; a repeated study updates it.
 
 ## Session log
 
-At the end of a task that changed something or produced an artifact, add one
-note: `agents-data/session-log/<YYYY-MM>/<YYYY-MM-DD-HHMM>-<slug>.md`.
+At the end of a task that changed something or produced an artifact, add one note: `agents-data/session-log/<YYYY-MM>/<YYYY-MM-DD-HHMM>-<slug>.md`.
 
 ```markdown
 ---
@@ -141,20 +122,15 @@ status: done / partial / blocked / not-verified / abandoned
 <one line, English, generic: what was done>
 ```
 
-Timestamp from the system clock, never guessed. Entries are never edited.
-Pure questions and answers are not logged.
+Timestamp from the system clock, never guessed. Entries are never edited. Pure questions and answers are not logged.
 
 ## Links, git, safety
 
-- Between notes: `[[wikilinks]]` within the scope. To code: the `repo:` path.
-  Specs and docs stay in the code repo; link, never copy.
-- Commit at the end of a task: `docs(<entity-slug>): <what was done>`;
-  session-log only: `docs(session-log): <what>`.
-- Never add a remote, never push. No secrets, no infrastructure specifics, no
-  real people's data.
+- Between notes: `[[wikilinks]]` within the scope. To code: the `repo:` path. Specs and docs stay in the code repo; link, never copy.
+- Commit at the end of a task: `docs(<entity-slug>): <what was done>`; session-log only: `docs(session-log): <what>`.
+- Never add a remote, never push. No secrets, no infrastructure specifics, no real people's data.
 
 ## Obsidian setup
 
-- CSS snippet hiding `templates/`: `agent-workflow/second-brain-obsidian/hide-templates.css`
-  -> `.obsidian/snippets/`.
+- CSS snippet hiding `templates/`: `agent-workflow/second-brain-obsidian/hide-templates.css` -> `.obsidian/snippets/`.
 - Canvas files: skill `obsidian-canvas`.
