@@ -22,35 +22,30 @@ The root README is short: what the project is, and links to everything else. Sec
 4. **Documentation**: links only: `docs/README.md` first, then the main documents.
 5. **License**: one line with the license name and a link to `LICENSE`.
 
-Example:
+Template:
 ```markdown
-# SCAMP
+# <Project name>
 
-SCAMP is an extremely simplified, declarative agent management protocol, inspired by OpAMP. It is NOT an OpAMP implementation.
+<One or two sentences: what the project is. Optional: how it differs from a similar known project.>
 
 ## Features
 
-- One declarative document describes the desired state of every agent.
-- ...
+- <Notable or unique capability>
 
-## Deployment
+## Installation
 
-Run the server with Docker:
+<Quick start: one command or one call that gives a working result.>
 
-    docker run -p 8080:8080 example/scamp-server
-
-- [Deploy with Docker](docs/deployment/deploy-in-docker.md)
-- [Deploy in Kubernetes](docs/deployment/deploy-in-k8s.md)
+- [<Guide title>](docs/installation.md)
 
 ## Documentation
 
 - [Documentation index](docs/README.md)
 - [Architecture](docs/architecture.md)
-- [Protocol](docs/protocol.md)
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+<License name>, see [LICENSE](LICENSE).
 ```
 
 ## docs/
