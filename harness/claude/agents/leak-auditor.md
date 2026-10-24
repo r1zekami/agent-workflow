@@ -23,6 +23,7 @@ Bash is for reading only: `git diff`, `git log`, `git show`, grep-like searches.
 - Any content of a `.env` file; `.env` itself being staged.
 
 **Infrastructure specifics (severity: high)**
+- Absolute home paths that carry a user name: `C:\Users\<name>`, `/home/<name>`, `/Users/<name>`.
 - Internal-looking hostnames and FQDNs, internal domains, UNC paths.
 - IP addresses, except documentation ranges (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24) and localhost.
 - Logins, usernames, personal e-mail addresses, real-looking people's names.
@@ -33,7 +34,22 @@ Bash is for reading only: `git diff`, `git log`, `git show`, grep-like searches.
 - Domain-specific enumerations that reveal the business (lists of internal item kinds, internal codes, project codenames).
 - Test fixtures and examples that look copied from a real dump instead of made up.
 
+**Build and runtime artifacts (severity: medium)**
+- Files that never belong in a repo: bytecode and caches (`__pycache__/`, `*.pyc`, `*.class`), build output (`*.o`, `*.exe`, `*.dll`, `target/`, `dist/`), dependencies (`node_modules/`), local databases (`*.db`, `*.sqlite`), OS files (`.DS_Store`, `Thumbs.db`), logs. Fix: drop from the commit and add to `.gitignore`.
+
 When unsure, report it as **possible** (severity: low) and say why.
+
+## Binary files
+
+A text diff shows a binary file only as `Bin`, so its content is checked separately. Compiled files, archives, images and databases often carry absolute paths, user names, hosts or keys.
+
+1. List binary files in the scope: `git diff --numstat <range>` (or `git log --numstat <range>`) marks them with `-` in both count columns; for files on disk, use the file type or extension.
+2. For each binary added or changed in the scope, extract printable strings and search them with the same checks as text. Portable extraction (no `strings` needed):
+   ```
+   git show <commit>:<path> | py -I -c "import re,sys; [print(s.decode('ascii')) for s in re.findall(rb'[\x20-\x7e]{6,}', sys.stdin.buffer.read())]"
+   ```
+   Use `python3` where `py` is missing. Pipe the output through a filter instead of reading it whole, for example `grep -iE 'users|/home/|key|token|secret|password|@|https?://'`, then read only the matching lines.
+3. Report findings with location `commit <short-hash> <path> (binary)`. A binary that is itself an artifact is reported under artifacts even when its strings are clean.
 
 ## Report
 
@@ -46,4 +62,4 @@ Start with a verdict line: `CLEAN` or `FINDINGS: <n>`.
 - **Masked excerpt**: the kind and the length only, e.g. `OpenAI-style API key, 51 chars` or `internal-looking FQDN, 3 labels`. Not a single character of the value: for many secrets even the first characters are secret material.
 - **Fix**: concrete: replace with a placeholder, move to `.env.example` as a name only, generalise the wording, drop the file from the commit.
 
-End with one line: what scope was audited and what could not be read. If a secret is found in something already committed or pushed, say so explicitly: the key must be treated as leaked and rotated.
+End with one line: what scope was audited, how many binary files were checked by string extraction, and what could not be read. If a secret is found in something already committed or pushed, say so explicitly: the key must be treated as leaked and rotated.
