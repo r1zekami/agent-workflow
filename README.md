@@ -10,7 +10,8 @@ agent-workflow/
 ├── rules/                    always loaded
 │   ├── code-design.md        design rules, English-only code text, no comments, docstrings
 │   ├── code-negotiation.md   what is approved before implementing: tree, signatures, call site, payload
-│   ├── code-docs.md          final report after code work, root README, docs/ layout
+│   ├── code-docs.md          root README, docs/ layout
+│   ├── code-report.md        report in the chat after implementing code
 │   └── writing.md            style of docs, notes and articles
 ├── skills/                   loaded on demand (SKILL.md format)
 │   ├── autonomous-run/       unattended run from an approved plan

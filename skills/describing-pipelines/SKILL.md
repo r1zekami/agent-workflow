@@ -1,6 +1,6 @@
 ---
 name: describing-pipelines
-description: Use when documenting a pipeline or data flow - a regular process that moves data between systems - in second-brain, a repo README or a final report. Holds the note layout, the flow diagram and the payload notation.
+description: Use when documenting a pipeline or data flow - a regular process that moves data between systems - in second-brain, repo docs or a code report. Holds the note layout, the flow diagram and the payload notation.
 ---
 
 # Describing pipelines

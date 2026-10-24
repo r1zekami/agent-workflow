@@ -2,35 +2,20 @@
 
 All documentation follows rule `writing`. A change of install, deployment, configuration, architecture or behavior updates the affected docs in the same change.
 
-## Final report after code work
-
-Sections in this order. A section with nothing to say is omitted, never filled with "n/a". A list of changed files is never part of the report: changes per release go to the release notes.
-
-1. **Signatures**: new and changed ones, in the format of rule `code-negotiation`.
-2. **Pipeline**: a text diagram: from where, through what, to where.
-3. **Payload**: if the pipeline builds one, shown whole in the notation of rule `code-negotiation`.
-4. **How to verify**: command and expected result, plus what was already run.
-5. **Not done**: assumptions and open questions.
-
 ## Root README.md
 
 The root README is short: what the project is, and links to everything else. Sections in this order; a section with nothing real to say is omitted.
 
 1. **Title and description**: the project name as the heading, then one or two sentences on what the project is. A distinction from a similar known project goes here when confusion is likely.
-2. **Features**: a short list of what the project does that is notable or unique. Omitted when there is nothing notable.
-3. **Installation** or **Deployment** (whichever fits the product): a quick start of a few lines (the shortest path to a working result: one command or one call), then links to the guides in `docs/`.
-4. **Documentation**: links only: `docs/README.md` first, then the main documents.
-5. **License**: one line with the license name and a link to `LICENSE`.
+2. **Installation** or **Deployment** (whichever fits the product): a quick start of a few lines (the shortest path to a working result: one command or one call), then links to the guides in `docs/`.
+3. **Documentation**: links only: `docs/README.md` first, then the main documents.
+4. **License**: one line with the license name and a link to `LICENSE`.
 
 Template:
 ```markdown
 # <Project name>
 
 <One or two sentences: what the project is. Optional: how it differs from a similar known project.>
-
-## Features
-
-- <Notable or unique capability>
 
 ## Installation
 
