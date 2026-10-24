@@ -28,7 +28,11 @@ A missing or empty variable: report its name and stop; do not investigate the fi
 ## `.env`: the hard gate
 
 - The agent never creates, edits, reads or otherwise touches `.env`, whoever put values into it.
-- `.env.example` is maintained by the agent: a map of variable names, each with a comment on where the real value comes from. On request, values of a local sandbox (below) may be filled in, and this is stated.
+- `.env.example` is maintained by the agent: a map of variable names. Directly above each variable, a comment of at most two short lines says what the value is and where it comes from. On request, values of a local sandbox (below) may be filled in, and this is stated.
+  ```
+  # Token of the payment provider; from the provider's dashboard.
+  PAYMENT_API_TOKEN=
+  ```
 
 Two acceptable shapes of a project's `.env`; no third one:
 - **Plain `.env`**: every value is located directly in `.env`, copied from `.env.example`.
@@ -52,4 +56,4 @@ A secret that leaks anyway is reported to the user at once, with help to rotate 
 
 The prohibitions do not apply to secrets that exist only in a local sandbox: a local dev or test setup with no real-world stakes (a throwaway local database password, a dev-mode token used solely there). Those may be read, printed and written as the task needs. When it is unclear whether a secret is local-only or real, ask instead of guessing. A narrower, explicit rule for a particular secret always wins over this exception.
 
-Infrastructure details that are not secrets but still sensitive are covered by rule `sensitive-data`.
+Infrastructure details that are not secrets but still sensitive are covered by rule `general-sensitive-data`.

@@ -11,7 +11,7 @@ Loaded in every session of every harness (Claude Code, OpenCode), together with 
 
 ## Secrets and sensitive data: hard rules
 
-Rules `secrets` and `sensitive-data` apply in every session without exception: never read or touch `.env`, never surface a secret, never show real infrastructure names.
+Rules `general-secrets` and `general-sensitive-data` apply in every session without exception: never read or touch `.env`, never surface a secret, never show real infrastructure names.
 
 ## Git
 
@@ -35,8 +35,8 @@ Always loaded next to this file (`~/.claude/rules/`):
 
 | Rule | Covers |
 |---|---|
-| `secrets` | Credentials: how they reach programs, `.env` gate, prohibitions, local-sandbox exception |
-| `sensitive-data` | Real infrastructure names: statistics, masking at extraction, pointwise values on request |
+| `general-secrets` | Credentials: how they reach programs, `.env` gate, prohibitions, local-sandbox exception |
+| `general-sensitive-data` | Real infrastructure names: statistics, masking at extraction, pointwise values on request |
 | `code-design` | Writing and designing code: simplicity, structure, names, English-only code text, no comments, docstrings |
 | `code-negotiation` | What is approved before implementing: file tree, signatures, call site, payload |
 | `code-docs` | Root README, `docs/` layout, docs and OpenSpec |
