@@ -55,7 +55,7 @@ py install.py
 
 `install.py` does the following:
 - copies `core/AGENTS.md` to `~/.claude/CLAUDE.md` and `~/.config/opencode/AGENTS.md`;
-- copies `rules/*.md` into `~/.claude/rules/`;
+- copies `rules/*.md` into `~/.claude/rules/` and removes rules that were installed from the repo and are no longer in it;
 - copies every `skills/<name>` into `~/.claude/skills/` and removes skills that were installed from the repo and are no longer in it;
 - copies `harness/claude/agents/*.md` into `~/.claude/agents/` and `harness/claude/hooks/*.py` into `~/.claude/hooks/`;
 - merges `harness/claude/settings.json` into `~/.claude/settings.json` (`{{HOME}}` expanded);
@@ -65,7 +65,7 @@ The merge is recursive: objects are merged, lists are unioned, and anything only
 
 Replaced and merged files are first copied to `~/.agent-workflow-backup/<timestamp>/`. Nothing is linked: re-run after any edit in the repo.
 
-**Check:** `~/.claude/CLAUDE.md` starts with `# Global agent rules`, and `~/.claude/rules/writing.md` exists.
+**Check:** `~/.claude/CLAUDE.md` starts with `# Global agent rules`, and `~/.claude/rules/general-writing.md` exists.
 
 ## 5. Plugins
 

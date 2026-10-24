@@ -20,6 +20,9 @@ BACKUP = HOME / ".agent-workflow-backup" / datetime.datetime.now().strftime("%Y%
 # Marks a skill folder as installed from this repo, so it is removed once the repo drops it.
 INSTALLED_SKILL_MARKER = ".installed-by-agent-workflow"
 
+# Lists the rule files installed from this repo, so a rule dropped from the repo is removed.
+INSTALLED_RULES_MANIFEST = ".installed-by-agent-workflow"
+
 # Paths left by the previous layout of this repo; moved to the backup folder.
 OBSOLETE_PATHS = [
     CLAUDE_HOME / "instructions",
@@ -127,13 +130,26 @@ def merge_json_file(template: pathlib.Path, destination: pathlib.Path, *, replac
     log(f"merged {template.name} into {destination}")
 
 
+def install_rules() -> None:
+    rules_home = CLAUDE_HOME / "rules"
+    manifest = rules_home / INSTALLED_RULES_MANIFEST
+    repo_rules = sorted((REPO / "rules").glob("*.md"))
+    previously_installed = manifest.read_text(encoding="utf-8").split() if manifest.exists() else []
+    for name in previously_installed:
+        dropped_rule = rules_home / name
+        if dropped_rule.exists() and not (REPO / "rules" / name).exists():
+            backup(dropped_rule)
+    for rule in repo_rules:
+        copy_file(rule, rules_home / rule.name)
+    manifest.write_text("\n".join(rule.name for rule in repo_rules) + "\n", encoding="utf-8")
+
+
 def install_claude() -> None:
     for path in OBSOLETE_PATHS:
         if path.exists() and not is_link(path):
             backup(path)
     copy_file(REPO / "core" / "AGENTS.md", CLAUDE_HOME / "CLAUDE.md")
-    for rule in sorted((REPO / "rules").glob("*.md")):
-        copy_file(rule, CLAUDE_HOME / "rules" / rule.name)
+    install_rules()
     remove_skills_dropped_from_repo()
     for skill in sorted((REPO / "skills").iterdir()):
         copy_skill(skill, CLAUDE_HOME / "skills" / skill.name)

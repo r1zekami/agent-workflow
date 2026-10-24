@@ -1,6 +1,6 @@
 # Documenting code
 
-All documentation follows rule `writing`. A change of install, deployment, configuration, architecture or behavior updates the affected docs in the same change.
+All documentation follows rule `general-writing`. A change of install, deployment, configuration, architecture or behavior updates the affected docs in the same change.
 
 ## Root README.md
 

@@ -1,4 +1,4 @@
-# Writing
+# General writing
 
 The text reads as documentation a careful person wrote: clear, neutral, and only as long as it needs to be. The default language is English; this rule sets the style.
 

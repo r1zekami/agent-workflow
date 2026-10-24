@@ -96,7 +96,7 @@ Templates: `templates/` in second-brain, sourced from `agent-workflow/second-bra
 
 ## Naming and language
 
-English kebab-case for folders, files, tags and frontmatter. Note content is English and follows rule `writing`. A date prefix appears only in `log/` file names. Knowledge-base names go from general to specific, versions keep dots: `tls-ssl-1.3-1.2.md`.
+English kebab-case for folders, files, tags and frontmatter. Note content is English and follows rule `general-writing`. A date prefix appears only in `log/` file names. Knowledge-base names go from general to specific, versions keep dots: `tls-ssl-1.3-1.2.md`.
 
 ## Update rules
 
