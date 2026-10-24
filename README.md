@@ -8,8 +8,9 @@ Rules for coding agents, shared by Claude Code and OpenCode: always loaded rules
 agent-workflow/
 ├── core/AGENTS.md            always loaded: language, secrets, sensitive data, git, working rules
 ├── rules/                    always loaded
-│   ├── code-design.md        design rules, English-only code text, interface approval gate
-│   ├── code-docs.md          final report after code work, docstrings, repo docs
+│   ├── code-design.md        design rules, English-only code text, no comments, docstrings
+│   ├── code-negotiation.md   what is approved before implementing: tree, signatures, call site, payload
+│   ├── code-docs.md          final report after code work, root README, docs/ layout
 │   └── writing.md            style of docs, notes and articles
 ├── skills/                   loaded on demand (SKILL.md format)
 │   ├── autonomous-run/       unattended run from an approved plan

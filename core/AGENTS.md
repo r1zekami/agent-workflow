@@ -47,8 +47,9 @@ Always loaded next to this file (`~/.claude/rules/`):
 
 | Rule | Covers |
 |---|---|
-| `code-design` | Writing and designing code, English-only code text, interface approval gate |
-| `code-docs` | Final report after code work, docstrings, repo docs |
+| `code-design` | Writing and designing code: simplicity, structure, names, English-only code text, no comments, docstrings |
+| `code-negotiation` | What is approved before implementing: file tree, signatures, call site, payload |
+| `code-docs` | Final report after code work, root README, `docs/` layout, docs and OpenSpec |
 | `writing` | READMEs, docs, regulations, articles, notes |
 
 ## Skills
