@@ -8,8 +8,8 @@ Rules for coding agents, shared by Claude Code and OpenCode: always loaded rules
 agent-workflow/
 ├── core/AGENTS.md            always loaded: language, git, working rules, index of rules and skills
 ├── rules/                    always loaded
-│   ├── secrets.md            credentials, .env gate
-│   ├── sensitive-data.md     real infrastructure names in chat, notes, commits
+│   ├── general-secrets.md    credentials, .env gate
+│   ├── general-sensitive-data.md real infrastructure names in chat, notes, commits
 │   ├── code-design.md        design rules, English-only code text, no comments, docstrings
 │   ├── code-negotiation.md   what is approved before implementing: tree, signatures, call site, payload
 │   ├── code-docs.md          root README, docs/ layout
