@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "py -I \"{{REPO}}\\harness\\claude\\hooks\\compact_context.py\""
+            "command": "py -I \"{{HOME}}\\.claude\\hooks\\compact_context.py\""
           }
         ]
       }
