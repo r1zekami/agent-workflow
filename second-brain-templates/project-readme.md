@@ -1,5 +1,5 @@
 ---
-tags: [scope/, domain/]
+tags: [scope/, project/, domain/]
 status: idea
 repo: none
 ---
@@ -25,12 +25,3 @@ repo: none
 - Docs: 
 - Related projects: 
 - Beads epic: 
-
-## History
-
-```dataview
-LIST
-FROM ""
-WHERE file.folder = this.file.folder + "/log"
-SORT file.name DESC
-```

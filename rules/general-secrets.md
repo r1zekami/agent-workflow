@@ -45,6 +45,11 @@ A secret is never hardcoded anywhere else, in any form.
 - Reading secrets out of configs (`.env`, editor settings, `~/.*rc`, shell history, credential stores), even "just to look", even to reproduce a bug.
 - Substituting a secret into a command: `export API_KEY=...`, `-H "Authorization: ..."`, `VAR=... cmd`.
 - Printing the environment (`env`, `printenv`, `set` without arguments, `echo $KEY`, `$env:NAME`, `Get-ChildItem env:`) or enabling debug modes that dump it.
+- Commands that print a container's environment: `docker inspect <container>` without `--format`, `docker inspect --format '{{.Config.Env}}'`, `docker exec <container> env`, `docker compose config` (it substitutes `.env` values into the output). Ask for the one non-secret field needed instead:
+  ```
+  printing Env:  docker inspect web-1
+  safe:          docker inspect --format '{{.State.Status}} {{.State.Health.Status}}' web-1
+  ```
 - Writing a secret to a file, a log, an issue, a spec or a note.
 - Surfacing a secret in the chat or in reasoning by any other means. A secret that shows up in a tool result (an `Authorization` header in network output, a key echoed in stderr) is not quoted and not repeated.
 

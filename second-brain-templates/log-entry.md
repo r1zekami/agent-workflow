@@ -1,5 +1,5 @@
 ---
-tags: [scope/, domain/]
+tags: [scope/, project/, domain/]
 ---
 
 # {{date}}: {{title}}

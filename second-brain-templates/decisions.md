@@ -1,5 +1,5 @@
 ---
-tags: [scope/, domain/]
+tags: [scope/, project/, domain/]
 ---
 
 # Decisions: {{title}}

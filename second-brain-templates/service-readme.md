@@ -16,11 +16,3 @@ status: active
 ## Known bugs
 
 <!-- problems of the system or its data: where the right value is and what was decided -->
-
-## Used by
-
-```dataview
-TABLE status, file.folder AS "Where"
-FROM "work/pipelines" OR "work/projects"
-WHERE contains(services, regexreplace(this.file.folder, "^.*/", "")) AND file.name = "README"
-```

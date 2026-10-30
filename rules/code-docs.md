@@ -33,6 +33,22 @@ Template:
 <License name>, see [LICENSE](LICENSE).
 ```
 
+## Agent instruction file
+
+Every code repo has an `AGENTS.md` at the root and a `CLAUDE.md` with the single line `@AGENTS.md`, so every harness loads the same file in every session. `AGENTS.md` is short: the second-brain entity, a table from task to the document that describes it, then repo-specific rules.
+
+```markdown
+second-brain: personal/projects/<slug>
+
+| Task | Document |
+|---|---|
+| Run locally | `docs/development.md` |
+| Run the stand in Docker | `docs/deployment/deploy-in-docker.md` |
+| Run tests and linters | `docs/development.md` |
+```
+
+The `second-brain:` line is present when the repo has an entity. The table lists every task the repo documents. A new or changed guide in `docs/` updates the table in the same change. A repo with content in `CLAUDE.md` moves that content to `AGENTS.md` the next time the file changes.
+
 ## docs/
 
 Detailed documentation lives in `docs/`; the README only links to it.
