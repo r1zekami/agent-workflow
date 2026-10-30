@@ -26,8 +26,18 @@ Rules `general-secrets` and `general-sensitive-data` apply in every session with
 - Multi-step work keeps its plan and progress in a file (a plan file or beads), not only in the chat, so a compaction loses nothing.
 - No claim of done, fixed or passing without a check run in this session. Nothing could be checked: say "not verified".
 - Library and API facts come from current sources (official docs, release notes), not from memory.
+- Before running, building, testing or deploying a project, read the documents that the repo's `AGENTS.md` table names for that task; without a table, read `README.md` and `docs/README.md`. Follow the documented way. Documentation that contradicts the code is reported, never silently bypassed.
 - Destructive operations (deleting data, force operations, history rewrites) need an explicit yes.
-- A task that changed something or produced an artifact ends with a session-log entry in second-brain (skill `second-brain`).
+
+## second-brain
+
+A repo is tracked in second-brain when its `AGENTS.md` has a `second-brain:` line or its path is the `repo:` of an entity (`<scope>/projects|services|pipelines/<slug>/README.md`). Load skill `second-brain` before writing.
+
+- A decision goes into the entity's `decisions.md` when it is made, not at the end of the session. A decision is a choice between alternatives that a later session needs: architecture, interface, tool, data format, an approach rejected and why. Routine edits and bug fixes are not decisions.
+- The entity's `README.md` is rewritten when the project's state changes: a feature lands, a component appears or goes, the way to run or deploy the project changes.
+- A milestone (a merged PR, a finished slice, a release) adds a file to the entity's `log/`.
+- Every note about a project carries the tag `project/<slug>`. Creating a new project folder comes with a proposal of that tag to the user.
+- A task that changed something or produced an artifact ends with a session-log entry; its `target` links the entity note when one exists.
 
 ## Rules
 

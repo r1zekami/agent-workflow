@@ -86,7 +86,7 @@ Structure and rules: `skills/second-brain/SKILL.md`. Create the skeleton:
 
 ```powershell
 $sb = "$HOME\home\agents\second-brain"
-foreach ($d in "work\scratchpad","work\services","work\pipelines","work\projects","work\knowledge-base","work\dashboards","work\attachments","work\archive",
+foreach ($d in "work\scratchpad","work\services","work\pipelines","work\projects","work\knowledge-base","work\attachments","work\archive",
                 "personal\scratchpad","personal\projects","personal\knowledge-base","personal\archive",
                 "agents-data\session-log","templates") {
     New-Item -ItemType Directory -Force "$sb\$d" | Out-Null
@@ -95,9 +95,9 @@ Copy-Item .\second-brain-templates\*.md "$sb\templates\"
 git -C $sb init -b main
 ```
 
-Then the agent writes `AGENTS.md` (a pointer to the `second-brain` skill), `README.md` (the map), a `README.md` and an empty `domain-tags.md` in each scope, and `.gitignore` (`.obsidian/workspace*.json`, `.obsidian/cache`, `.obsidian/plugins/`, `.trash/`). Empty folders get a `.gitkeep`.
+Then the agent writes `AGENTS.md` (a pointer to the `second-brain` skill), `README.md` (the map), a `README.md` and an empty `tags.md` in each scope, and `.gitignore` (`.obsidian/workspace*.json`, `.obsidian/cache`, `.obsidian/plugins/`, `.trash/`). Empty folders get a `.gitkeep`.
 
-Obsidian: open the folder as a vault, enable the core plugin **Templates** with folder `templates`, add `templates/` to **Files and links** -> **Excluded files**, copy `second-brain-obsidian/hide-templates.css` to `<vault>/.obsidian/snippets/` and enable it under **Appearance** -> **CSS snippets**.
+Obsidian: open the folder as a vault, enable the core plugin **Templates** with folder `templates`, add `templates/` to **Files and links** -> **Excluded files**, copy `second-brain-obsidian/hide-templates.css` to `<vault>/.obsidian/snippets/` and enable it under **Appearance** -> **CSS snippets**. No community plugins are installed.
 
 The knowledge base has no remote by design; it survives a lost machine only through the user's own backup.
 

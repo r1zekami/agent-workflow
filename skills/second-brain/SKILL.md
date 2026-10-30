@@ -21,23 +21,22 @@ second-brain/
 ├── README.md             the map, for the user
 ├── work/
 │   ├── README.md         scope map
-│   ├── domain-tags.md    every domain tag, one line of meaning
+│   ├── tags.md           every domain and project tag, one line of meaning
 │   ├── scratchpad/       raw notes, prompts, ideas
 │   ├── services/<slug>/  external systems
 │   ├── pipelines/<slug>/ regular processes with a data flow
 │   ├── projects/<slug>/  one-off work with a result
 │   ├── knowledge-base/   articles, regulations, guides
-│   ├── dashboards/       Dataview pages and generated summaries
 │   ├── attachments/      originals: swagger, pdf, old DAGs
 │   └── archive/          finished work, moved whole, never deleted
 ├── personal/
-│   ├── README.md, domain-tags.md, scratchpad/
+│   ├── README.md, tags.md, scratchpad/
 │   ├── projects/<slug>/  anything with a goal and an end
 │   ├── knowledge-base/   own research articles
 │   └── archive/
 ├── agents-data/
 │   ├── <agent>/          agent reports, one file per topic
-│   └── session-log/      one note per agent task, month folders + dashboard.md
+│   └── session-log/      one note per agent task, month folders
 └── templates/            note templates (source: agent-workflow repo)
 ```
 
@@ -55,9 +54,9 @@ An entity (service, pipeline, project) folder:
 
 ## Reading: by scope, top-down
 
-1. **Resolve the scope first**: the user's tag (`[work]`, `[personal]`) -> the entity whose `repo:` matches the working directory -> the user's words. Still unclear: ask once; never read both "to be safe".
+1. **Resolve the scope first**: the user's tag (`[work]`, `[personal]`) -> the `second-brain:` line of the repo's `AGENTS.md` -> the entity whose `repo:` matches the working directory -> the user's words. Still unclear: ask once; never read both "to be safe".
 2. **Read only `<scope>/`**: scope every Grep, Glob or tag search by path. Never search the whole knowledge base.
-3. **Cheapest first**: `README.md` -> `<scope>/README.md` -> `<scope>/domain-tags.md` -> Grep `tags:` for the domain -> entity `README.md` -> only the notes the task needs. `log/` and `decisions.md` on demand; `scratchpad/` and `archive/` only when asked.
+3. **Cheapest first**: `README.md` -> `<scope>/README.md` -> `<scope>/tags.md` -> Grep `tags:` for the project or domain tag -> entity `README.md` -> only the notes the task needs. `log/` and `decisions.md` on demand; `scratchpad/` and `archive/` only when asked.
 4. Cross-scope reads only on an explicit request for that question.
 5. No links across scopes. Something needed on both sides is a separate note in each scope.
 6. Writes go into the session's scope; unsure: ask.
@@ -81,8 +80,32 @@ Search the scope for an existing note before creating one; extend it instead of 
 
 Obsidian tags, lowercase kebab-case, nested with `/`:
 - `scope/<work|personal>`: on every note, first, equal to its top-level folder.
-- `domain/<domain>[/<subject>]`: one level by default. Each scope's `domain-tags.md` lists the tags; a new tag is added there in the same edit.
+- `project/<slug>`: on every note inside a project folder, and on every note elsewhere that is about the project: knowledge-base articles, agent reports, session-log entries. `<slug>` equals the project folder name.
+- `domain/<domain>[/<subject>]`: the field; one level by default.
 - `agent/<agent-name>`: on agents-data reports.
+
+Each scope's `tags.md` lists its domain and project tags, one line of meaning each. A new tag is added there in the same edit. An archived project keeps its tag and its row.
+
+```markdown
+---
+tags: [scope/personal]
+---
+# Tags: personal
+
+## Domains
+
+| Tag | Meaning |
+|---|---|
+| `domain/<domain>` | <one line> |
+
+## Projects
+
+| Tag | Project |
+|---|---|
+| `project/<slug>` | [[projects/<slug>/README\|<slug>]]: <one line> |
+```
+
+A project folder is created only for work that outlives one session: its own repo, several sessions of work, its own decisions. Creating one, the agent proposes the tag `project/<slug>` to the user; on a yes, the tag goes into `tags.md`, the project's `README.md` and every note of the project. A `.canvas` file carries no tags; its folder places it.
 
 | Type | Keys |
 |---|---|
@@ -102,7 +125,7 @@ English kebab-case for folders, files, tags and frontmatter. Note content is Eng
 
 - `README.md`: always the current state; rewrite outdated parts.
 - `log/`: add a new file; never rewrite old ones.
-- `decisions.md`: append at the bottom; a reversed decision is a new entry.
+- `decisions.md`: append at the bottom when the decision is made; a reversed decision is a new entry. An entity keeps its decisions only in `decisions.md`, never in a second file under another name.
 - `knowledge-base/`: the content belongs to the user. Add frontmatter, tags and `[[links]]`, suggest changes, never rewrite content unasked.
 - `agents-data/<agent>/`: one file per topic; a repeated study updates it.
 
@@ -112,7 +135,7 @@ At the end of a task that changed something or produced an artifact, add one not
 
 ```markdown
 ---
-tags: [agent/session-log, scope/work]   # or scope/personal
+tags: [agent/session-log, scope/work, project/<slug>]   # scope/personal; project tag when the task belongs to a project
 timestamp: YYYY-MM-DDTHH:MM
 harness: claude-code / opencode
 model: <model id>
@@ -132,5 +155,8 @@ Timestamp from the system clock, never guessed. Entries are never edited. Pure q
 
 ## Obsidian setup
 
+second-brain uses core Obsidian only: no community plugins and no query blocks (Dataview, Charts, Excalidraw). A note reads the same in Obsidian and as plain text. Lists a query would build are plain `[[links]]`, or left to the core Backlinks and Tags panes.
+
+- Core plugin Templates with folder `templates`.
 - CSS snippet hiding `templates/`: `agent-workflow/second-brain-obsidian/hide-templates.css` -> `.obsidian/snippets/`.
-- Canvas files: skill `obsidian-canvas`.
+- Canvas files (core plugin): skill `obsidian-canvas`.
