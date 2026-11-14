@@ -25,7 +25,10 @@ Rules `general-secrets` and `general-sensitive-data` apply in every session with
 - Ask only about decisions that are the user's (scope, interfaces, design, anything destructive); assume the rest and list assumptions in the report.
 - Multi-step work keeps its plan and progress in a file (a plan file or beads), not only in the chat, so a compaction loses nothing.
 - No claim of done, fixed or passing without a check run in this session. Nothing could be checked: say "not verified".
-- Library and API facts come from current sources (official docs, release notes), not from memory.
+- Facts about a library, package, tool, CLI or API come from current sources (official docs, release notes, the package registry), never from memory. The check happens before the fact is used: in a proposal, a comparison of options, code, a config, docs, a skill or a rule, and in the chat.
+  - Checked for every name used: the package or tool exists under that name, its latest version and release date, and every command, flag, config key and signature mentioned, in that version.
+  - A fact that could not be checked is marked "not verified" next to it.
+  - Several tools at once (a table of alternatives, a list of dependencies) are checked one by one, not by sample.
 - Before running, building, testing or deploying a project, read the documents that the repo's `AGENTS.md` table names for that task; without a table, read `README.md` and `docs/README.md`. Follow the documented way. Documentation that contradicts the code is reported, never silently bypassed.
 - Destructive operations (deleting data, force operations, history rewrites) need an explicit yes.
 
@@ -65,6 +68,8 @@ Load the matching skill before the work, not after:
 | Obsidian `.canvas` files | `obsidian-canvas` |
 | Anything in second-brain | `second-brain` |
 | Repo with `.beads/` | `beads` |
+| Refactor to the code rules (`/refactor-all`, `/refactor-latest`) | `refactor` |
+| Tests from the spec by an isolated subagent, mutation testing (`/mutations-tests`) | `mutation-testing` |
 
 Process skills (brainstorming, planning, TDD, debugging, review, verification) come from superpowers. A repo with `openspec/` follows native OpenSpec (`/opsx:*`) and its own `openspec/config.yaml`.
 

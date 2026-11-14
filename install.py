@@ -20,8 +20,8 @@ BACKUP = HOME / ".agent-workflow-backup" / datetime.datetime.now().strftime("%Y%
 # Marks a skill folder as installed from this repo, so it is removed once the repo drops it.
 INSTALLED_SKILL_MARKER = ".installed-by-agent-workflow"
 
-# Lists the rule files installed from this repo, so a rule dropped from the repo is removed.
-INSTALLED_RULES_MANIFEST = ".installed-by-agent-workflow"
+# Lists the files of a folder installed from this repo (rules, commands), so a file dropped from the repo is removed.
+INSTALLED_FILES_MANIFEST = ".installed-by-agent-workflow"
 
 # Paths left by the previous layout of this repo; moved to the backup folder.
 OBSOLETE_PATHS = [
@@ -130,18 +130,19 @@ def merge_json_file(template: pathlib.Path, destination: pathlib.Path, *, replac
     log(f"merged {template.name} into {destination}")
 
 
-def install_rules() -> None:
-    rules_home = CLAUDE_HOME / "rules"
-    manifest = rules_home / INSTALLED_RULES_MANIFEST
-    repo_rules = sorted((REPO / "rules").glob("*.md"))
+def install_markdown_folder(source: pathlib.Path, destination: pathlib.Path) -> None:
+    """Copy every Markdown file of a repo folder and back up the files the repo dropped since the last install."""
+    destination.mkdir(parents=True, exist_ok=True)
+    manifest = destination / INSTALLED_FILES_MANIFEST
+    repo_files = sorted(source.glob("*.md"))
     previously_installed = manifest.read_text(encoding="utf-8").split() if manifest.exists() else []
     for name in previously_installed:
-        dropped_rule = rules_home / name
-        if dropped_rule.exists() and not (REPO / "rules" / name).exists():
-            backup(dropped_rule)
-    for rule in repo_rules:
-        copy_file(rule, rules_home / rule.name)
-    manifest.write_text("\n".join(rule.name for rule in repo_rules) + "\n", encoding="utf-8")
+        dropped_file = destination / name
+        if dropped_file.exists() and not (source / name).exists():
+            backup(dropped_file)
+    for repo_file in repo_files:
+        copy_file(repo_file, destination / repo_file.name)
+    manifest.write_text("\n".join(repo_file.name for repo_file in repo_files) + "\n", encoding="utf-8")
 
 
 def install_claude() -> None:
@@ -149,7 +150,8 @@ def install_claude() -> None:
         if path.exists() and not is_link(path):
             backup(path)
     copy_file(REPO / "core" / "AGENTS.md", CLAUDE_HOME / "CLAUDE.md")
-    install_rules()
+    install_markdown_folder(REPO / "rules", CLAUDE_HOME / "rules")
+    install_markdown_folder(REPO / "commands", CLAUDE_HOME / "commands")
     remove_skills_dropped_from_repo()
     for skill in sorted((REPO / "skills").iterdir()):
         copy_skill(skill, CLAUDE_HOME / "skills" / skill.name)
@@ -164,6 +166,7 @@ def install_claude() -> None:
 def install_opencode() -> None:
     # Skills come from ~/.claude/skills; the documented ~/.claude/CLAUDE.md fallback is not loaded by OpenCode 2.x.
     copy_file(REPO / "core" / "AGENTS.md", OPENCODE_HOME / "AGENTS.md")
+    install_markdown_folder(REPO / "commands", OPENCODE_HOME / "commands")
     replacements = {"{{HOME}}": HOME.as_posix()}
     merge_json_file(REPO / "harness" / "opencode" / "opencode.json", OPENCODE_HOME / "opencode.json", replacements=replacements)
 

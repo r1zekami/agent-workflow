@@ -25,6 +25,7 @@ Bash is for reading only: `git diff`, `git log`, `git show`, running linters or 
 - **Rule 3**: repeated name prefixes that are a missing namespace level; name hierarchy not matching file hierarchy.
 - **Rule 4**: I/O in `utils`; a client speaking another system's terms; mapping code inside a client; a lower layer importing a higher one.
 - **Rule 5**: cryptic names; operation scope not visible from the name; aliased or relative imports where full paths are possible.
+- **Rule 6**: a user-facing entity without an opaque `id` or without a readable `name`; internal references (API paths, foreign keys, messages) by `name`; meaning parsed out of an `id`.
 - **Negotiation**: file structure, public signatures or payloads that differ from the approved proposal, or new public surface that was never approved.
 - **Self-documenting code**: comments where a rename, an extracted function or a named value would do; only external facts with a named source may stay.
 - **Language in code**: any non-English identifier, comment, docstring, log or error text; non-ASCII log output. Other languages only in data strings.

@@ -20,8 +20,14 @@ agent-workflow/
 │   ├── autonomous-run/       unattended run from an approved plan
 │   ├── describing-pipelines/ pipeline notes: flow diagram, payload notation
 │   ├── obsidian-canvas/      .canvas layout rules and canvas-check.py
+│   ├── mutation-testing/     tests from the spec by an isolated subagent, mutation run, survivor triage
+│   ├── refactor/             refactor to the code rules: scope, inventory, approval, batches
 │   ├── second-brain/         structure and rules of the knowledge base
 │   └── beads/                task tracking in repos with .beads/
+├── commands/                 slash commands, installed for both harnesses
+│   ├── mutations-tests.md    /mutations-tests: skill mutation-testing
+│   ├── refactor-all.md       /refactor-all: skill refactor on the whole repo
+│   └── refactor-latest.md    /refactor-latest: skill refactor on the session's changes
 ├── harness/
 │   ├── claude/               settings.json, subagents (leak-auditor, code-design-reviewer), compact hook
 │   └── opencode/             opencode.json: permissions, superpowers plugin
@@ -33,10 +39,10 @@ agent-workflow/
 
 ## How the harnesses load the rules
 
-| Harness | Core | Rules | Skills |
-|---|---|---|---|
-| Claude Code | `~/.claude/CLAUDE.md` | `~/.claude/rules/*.md` | `~/.claude/skills/` |
-| OpenCode | `~/.config/opencode/AGENTS.md` | `~/.claude/rules/*.md` (`instructions` in `opencode.json`) | `~/.claude/skills/` |
+| Harness | Core | Rules | Skills | Commands |
+|---|---|---|---|---|
+| Claude Code | `~/.claude/CLAUDE.md` | `~/.claude/rules/*.md` | `~/.claude/skills/` | `~/.claude/commands/` |
+| OpenCode | `~/.config/opencode/AGENTS.md` | `~/.claude/rules/*.md` (`instructions` in `opencode.json`) | `~/.claude/skills/` | `~/.config/opencode/commands/` |
 
 `install.py` copies everything; nothing is linked.
 

@@ -71,6 +71,18 @@ Design the axis up front. Anything that is one of a kind that could plausibly ge
 - The scope of an operation is visible from the name: `export_all_orders_to_csv()` vs `find_order_by_id(order_id)`.
 - Import by full path, no aliases, where the language allows it.
 
+## 6. Entities carry an id and a name
+
+Unless the user explicitly excludes it, every entity a user creates, selects or sees has two identifiers:
+- `id`: immutable and opaque (for example, a UUID). APIs, links, foreign keys, messages on internal channels and logs refer to the entity by `id`.
+- `name`: readable by a person, shown in the UI and in reports, may change.
+
+```
+wrong:  DELETE /projects/billing-v2          # renaming the project breaks every link
+right:  DELETE /projects/7f3c9a2e-...        # UI shows "billing-v2"
+```
+A `name` is resolved to an `id` once, at the edge where the user typed it; internal code passes the `id` on. Uniqueness of `name` follows what the entity is and the project's norm: a login is unique within the system, a display label usually is not. Code never parses meaning out of an `id`.
+
 ## Language in code
 
 Strictly English: identifiers, comments, docstrings, log messages, error and exception messages, commit messages, TODOs. Log output is also ASCII only. Another language appears only inside string literals that are part of the program's data or logic: user-facing UI text, localized messages, parsing patterns, test data. Such a string never carries a comment in that language.
