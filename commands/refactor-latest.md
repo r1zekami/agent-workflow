@@ -4,4 +4,4 @@ description: Refactor the changes of the current session to the code rules (code
 
 Load skill `refactor` and follow it with the scope `/refactor-latest`: the changes of the current session.
 
-Base (a commit or a branch; empty means the default scope of the skill): $ARGUMENTS
+Additional instructions (may name a base commit or branch for the scope): $ARGUMENTS

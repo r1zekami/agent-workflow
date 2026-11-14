@@ -12,7 +12,7 @@ A refactor changes structure, never behavior. The target is the state described 
 | Command | Scope |
 |---|---|
 | `/refactor-all` | Every tracked source file of the repo, excluding generated code, vendored code and build output. |
-| `/refactor-latest` | Files changed in the current session: uncommitted changes plus the commits of the current branch since it left the default branch. On the default branch: the commits made in this session. An argument `<base>` (a commit or a branch) overrides both: `git diff <base>`. |
+| `/refactor-latest` | Files changed in the current session: uncommitted changes plus the commits of the current branch since it left the default branch. On the default branch: the commits made in this session. A base commit or branch named in the additional instructions overrides both: `git diff <base>`. |
 
 When the session boundary is unclear (after a compaction, on the default branch with earlier commits of the same day), show the commit list and ask which commits belong to the scope.
 

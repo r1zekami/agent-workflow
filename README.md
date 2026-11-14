@@ -46,6 +46,38 @@ agent-workflow/
 
 `install.py` copies everything; nothing is linked.
 
+## Usage
+
+Rules and `core/AGENTS.md` are loaded in every session; nothing is run for them. Skills are loaded on demand: the agent sees each skill's `description` and loads the skill when the task matches it. Commands start a skill explicitly.
+
+Commands start with `/`; skills without a command are referenced with `@` in the prompt. Text after either is optional and is passed to the agent as additional instructions.
+
+```
+# Refactor the whole repo to the code rules
+/refactor-all
+
+# Refactor the changes of the current session
+/refactor-latest
+
+# Tests from the spec by an isolated subagent, then mutation testing
+/mutations-tests
+
+# Unattended run of an approved plan
+@autonomous-run
+
+# Notes, decisions and session log in the knowledge base
+@second-brain
+
+# Document a pipeline or data flow
+@describing-pipelines
+
+# Obsidian .canvas diagram
+@obsidian-canvas
+
+# Task tracking in a repo with .beads/
+@beads
+```
+
 ## Change the rules
 
 Edit this repo, run `py install.py`, review `git diff`, commit.

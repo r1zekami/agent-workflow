@@ -4,4 +4,4 @@ description: Tests from the spec by an isolated subagent, then mutation testing 
 
 Load skill `mutation-testing` and follow it.
 
-Spec, feature or change to work on: $ARGUMENTS
+Additional instructions (may name the spec, feature or change): $ARGUMENTS
