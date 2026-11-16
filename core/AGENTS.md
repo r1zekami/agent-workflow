@@ -63,6 +63,7 @@ Load the matching skill before the work, not after:
 
 | Work | Skill |
 |---|---|
+| Installing or adding any package or dependency | `dependency-check` |
 | Unattended run from an approved plan | `autonomous-run` |
 | Describing a pipeline or data flow | `describing-pipelines` |
 | Obsidian `.canvas` files | `obsidian-canvas` |

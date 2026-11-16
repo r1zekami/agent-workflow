@@ -18,6 +18,7 @@ agent-workflow/
 │   └── general-writing.md    style of docs, notes and articles
 ├── skills/                   loaded on demand (SKILL.md format)
 │   ├── autonomous-run/       unattended run from an approved plan
+│   ├── dependency-check/     package checks before any install: age, maintenance, advisories
 │   ├── describing-pipelines/ pipeline notes: flow diagram, payload notation
 │   ├── obsidian-canvas/      .canvas layout rules and canvas-check.py
 │   ├── mutation-testing/     tests from the spec by an isolated subagent, mutation run, survivor triage
@@ -64,6 +65,9 @@ Commands start with `/`; skills without a command are referenced with `@` in the
 
 # Unattended run of an approved plan
 @autonomous-run
+
+# Check a package before installing or adding it
+@dependency-check
 
 # Notes, decisions and session log in the knowledge base
 @second-brain
