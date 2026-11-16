@@ -20,10 +20,12 @@ The agent never reads `.env`; the program or the shell loads it. No attempt to "
 | Python | `from dotenv import load_dotenv; load_dotenv()`, then `os.environ["NAME"]` (fails with the name when unset) |
 | Node / Bun | `process.env.NAME` (Bun loads `.env` itself; Node: `node --env-file=.env app.js`) |
 | Rust | `dotenvy::dotenv()`, then `std::env::var("NAME")` |
-| Shell, one command | `set -a; . ./.env; set +a; <command>` (the shell loads it, nothing is printed) |
+| One command (Python tooling) | `uv run --env-file .env <command>` |
 | Docker Compose | `env_file:` in `compose.yaml`, or `docker compose --env-file .env ...` |
 
 A missing or empty variable: report its name and stop; do not investigate the file.
+
+`.env` is never sourced by a shell (`. ./.env`, `source .env`): the shell executes the file as a script, so a line like `X=$(...)` runs a command.
 
 ## `.env`: the hard gate
 
