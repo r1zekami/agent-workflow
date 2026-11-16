@@ -31,6 +31,11 @@ OBSOLETE_PATHS = [
     CLAUDE_HOME / "agents" / "architecture-designer.md",
 ]
 
+# Keys of live JSON files left by the previous format of a template; dropped before the merge.
+OBSOLETE_JSON_KEYS = {
+    OPENCODE_HOME / "opencode.json": ["permission"],
+}
+
 
 def log(message: str) -> None:
     print(message)
@@ -93,14 +98,17 @@ def copy_file(source: pathlib.Path, destination: pathlib.Path) -> None:
 
 
 def merge_values(live, template):
-    """Objects merge recursively, lists are unioned, other template values win; nothing only in the live file is lost."""
+    """Objects and lists merge in template order with live-only entries last, other template values win; nothing only in the live file is lost."""
     if isinstance(live, dict) and isinstance(template, dict):
-        merged = dict(live)
+        merged = {}
         for key, value in template.items():
             merged[key] = merge_values(live[key], value) if key in live else value
+        for key, value in live.items():
+            if key not in merged:
+                merged[key] = value
         return merged
     if isinstance(live, list) and isinstance(template, list):
-        return live + [item for item in template if item not in live]
+        return template + [item for item in live if item not in template]
     return template
 
 
@@ -117,8 +125,13 @@ def merge_json_file(template: pathlib.Path, destination: pathlib.Path, *, replac
         except json.JSONDecodeError:
             log(f"SKIPPED {destination}: not plain JSON (comments?); merge the keys of {template} by hand")
             return
+    live_text_before_merge = json.dumps(live_data)
+    for obsolete_key in OBSOLETE_JSON_KEYS.get(destination, []):
+        if obsolete_key in live_data:
+            del live_data[obsolete_key]
+            log(f"dropped obsolete key {obsolete_key} from {destination}")
     merged = merge_values(live_data, template_data)
-    if merged == live_data:
+    if json.dumps(merged) == live_text_before_merge:
         return
     if destination.exists():
         backup_copy = BACKUP / destination.relative_to(HOME)
@@ -160,7 +173,9 @@ def install_claude() -> None:
     for agent in sorted((REPO / "harness" / "claude" / "agents").glob("*.md")):
         copy_file(agent, CLAUDE_HOME / "agents" / agent.name)
     replacements = {"{{HOME}}": str(HOME).replace("\\", "\\\\")}
-    merge_json_file(REPO / "harness" / "claude" / "settings.json", CLAUDE_HOME / "settings.json", replacements=replacements)
+    merge_json_file(
+        REPO / "harness" / "claude" / "settings.json", CLAUDE_HOME / "settings.json", replacements=replacements
+    )
 
 
 def install_opencode() -> None:
@@ -168,7 +183,9 @@ def install_opencode() -> None:
     copy_file(REPO / "core" / "AGENTS.md", OPENCODE_HOME / "AGENTS.md")
     install_markdown_folder(REPO / "commands", OPENCODE_HOME / "commands")
     replacements = {"{{HOME}}": HOME.as_posix()}
-    merge_json_file(REPO / "harness" / "opencode" / "opencode.json", OPENCODE_HOME / "opencode.json", replacements=replacements)
+    merge_json_file(
+        REPO / "harness" / "opencode" / "opencode.json", OPENCODE_HOME / "opencode.json", replacements=replacements
+    )
 
 
 def main() -> int:

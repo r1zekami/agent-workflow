@@ -59,9 +59,9 @@ py install.py
 - copies every `skills/<name>` into `~/.claude/skills/` and removes skills that were installed from the repo and are no longer in it;
 - copies `harness/claude/agents/*.md` into `~/.claude/agents/` and `harness/claude/hooks/*.py` into `~/.claude/hooks/`;
 - merges `harness/claude/settings.json` into `~/.claude/settings.json` (`{{HOME}}` expanded);
-- merges `harness/opencode/opencode.json` into `~/.config/opencode/opencode.json`.
+- merges `harness/opencode/opencode.json` (OpenCode 2 format) into `~/.config/opencode/opencode.json`, dropping the OpenCode 1 `permission` object first.
 
-The merge is recursive: objects are merged, lists are unioned, and anything only in the live file (providers, keys, extra permissions) is kept. An entry removed from a template stays in the live file and is removed there by hand.
+The merge is recursive: objects and lists are merged in the template's order with entries only in the live file after them, and anything only in the live file (providers, keys, extra permissions) is kept. The order matters for the OpenCode `permissions` array, where the last matching rule wins; an extra rule added in the live file comes last and therefore wins over the template. An entry removed from a template stays in the live file and is removed there by hand.
 
 Replaced and merged files are first copied to `~/.agent-workflow-backup/<timestamp>/`. Nothing is linked: re-run after any edit in the repo.
 
