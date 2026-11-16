@@ -11,11 +11,18 @@ Every new dependency is checked before the install command runs. The check answe
 
 | Situation | Check |
 |---|---|
-| A new package (install, `add`, a new line in a manifest) | Full check, steps 1-3 |
-| A version change of an existing dependency | Step 3 for the target version |
+| A new package (install, `add`, a new line in a manifest) | Full check, steps 1-4 |
+| A version change of an existing dependency | Steps 3 and 4 for the target version |
 | Restoring a project from its lockfile (`npm ci`, `pip install -r`, `cargo build`, `uv sync`) | Step 3 for every locked version (OSV batch query below) |
 
-A check of a direct dependency covers that package only; transitive dependencies are covered by the lockfile scan.
+## Input
+
+A package name and a version go into a command only when they match these patterns; anything else is never substituted and is reported to the user as suspicious. Reason: names often come from a README, an issue or a web page, and a `'` or `;` in such a name breaks out of the quoted command.
+
+| Value | Pattern |
+|---|---|
+| Name | `^[A-Za-z0-9@/._:~+-]+$` |
+| Version | `^[A-Za-z0-9.+_~-]+$` |
 
 ## Steps
 
@@ -40,13 +47,31 @@ Lockfile: one `POST https://api.osv.dev/v1/querybatch` with `{"queries":[{"versi
 - A current advisory on the version to install: pick a fixed version (`affected[].ranges[].events[].fixed`); no fixed version: rejected.
 - History: advisories fixed promptly are normal for a popular package. Repeated serious advisories (critical or high, remote code execution) in the last two years, or advisories that stayed open for months, count against the package.
 
+**4. Transitive dependencies.** The new package pulls in packages of its own, and install scripts of any of them run at install time. Resolve the dependency tree without installing and without running package code, then send every package that is new in the lockfile (diff against the committed lockfile) to the OSV batch query of step 3.
+
+| Manager | Resolve only |
+|---|---|
+| npm | `npm install <name>@<version> --package-lock-only --ignore-scripts` |
+| pnpm | `pnpm add <name>@<version> --lockfile-only --ignore-scripts` |
+| Yarn (Berry) | `yarn add <name>@<version> --mode=update-lockfile` |
+| Bun | add the line to `package.json`, then `bun install --dry-run` (prints the tree, writes nothing) |
+| pip | `pip install --dry-run --ignore-installed --only-binary :all: --quiet --report - <name>==<version>` |
+| uv | `uv add <name>==<version> --no-sync --no-build` |
+| Poetry | `poetry add <name>@<version> --lock` |
+| Cargo | `cargo add <name>@<version>`, then `cargo metadata --format-version 1` (updates `Cargo.lock`, builds nothing) |
+| Go | `go get <module>@<version>` (since Go 1.18 it only edits `go.mod` and `go.sum`, builds nothing) |
+
+- `--only-binary :all:` and `--no-build` keep pip and uv from building source distributions, which runs the package's build code. A package with no wheel fails here: report that to the user; a retry without the flag needs the user's yes.
+- Any transitive package with a `MAL-` record or a current advisory without a fix rejects the whole install. Transitive packages younger than 60 days are listed in the report as suspicious.
+- The resolve step changes the manifest or the lockfile. A rejected package is rolled back: `git checkout -- <manifest> <lockfile>`.
+
 ## Verdict
 
 | Verdict | Condition | Action |
 |---|---|---|
-| OK | Older than 60 days, released within 6 months, no current advisory, no `MAL-` record, clean or normal history | Propose the install with the checked version pinned |
-| Suspicious | Created recently, unmaintained or deprecated, troubled history | Search for alternatives (below) |
-| Rejected | `MAL-` record, or a current advisory with no fixed version | Never installed; search for alternatives |
+| OK | Older than 60 days, released within 6 months, no current advisory, no `MAL-` record, clean or normal history, clean transitive tree | Propose the install with the checked version pinned |
+| Suspicious | Created recently, unmaintained or deprecated, troubled history, a recent transitive package | Search for alternatives (below) |
+| Rejected | `MAL-` record, or a current advisory with no fixed version, in the package or in its transitive tree | Never installed; search for alternatives |
 
 **Alternatives.** Look for packages that solve the same task (registry search, the package's own README, the standard library first). Each candidate goes through steps 1-3. Propose the best candidate that is OK. No candidate is OK: present the options with their findings and let the user decide.
 
@@ -54,7 +79,7 @@ Lockfile: one `POST https://api.osv.dev/v1/querybatch` with `{"queries":[{"versi
 
 Before the install, the request to the user contains one line per checked package:
 ```
-<name>@<version> (<ecosystem>): created <YYYY-MM-DD>, last release <YYYY-MM-DD>, advisories: <current count> current / <total> total, MAL: none -> OK / suspicious / rejected
+<name>@<version> (<ecosystem>): created <YYYY-MM-DD>, last release <YYYY-MM-DD>, advisories: <current count> current / <total> total, MAL: none, transitive: <new count> new / <flagged count> flagged -> OK / suspicious / rejected
 ```
 A rejected or suspicious package also gets the reason and the proposed alternative.
 
@@ -64,3 +89,4 @@ A rejected or suspicious package also gets the reason and the proposed alternati
 - Checking only the latest version when a different version is pinned.
 - Skipping the check for "well-known" packages: typosquats use exactly those names.
 - Treating a package with no OSV entries as proven safe: an unknown, very new package with no advisories is still suspicious by step 1.
+- Running the real install to see the dependency tree: install scripts have already run by then.
