@@ -86,6 +86,13 @@ Commands start with `/`; skills without a command are referenced with `@` in the
 
 Edit this repo, run `py install.py`, review `git diff`, commit.
 
+Python files are checked with [Ruff](https://docs.astral.sh/ruff/) (configuration in `ruff.toml`):
+
+```
+ruff format .
+ruff check .
+```
+
 ## Excluded
 
 - Knowledge-base content: personal, local only.

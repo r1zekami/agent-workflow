@@ -1,16 +1,17 @@
 """Check an Obsidian .canvas against the obsidian-canvas skill (SKILL.md next to this file). Usage: py canvas-check.py <file.canvas>"""
+
 import json
 import math
 import sys
 
-CHAR_PX = 8.4          # average glyph width at 16px body text
-CODE_CHAR_PX = 9.4     # monospace inline code
+CHAR_PX = 8.4  # average glyph width at 16px body text
+CODE_CHAR_PX = 9.4  # monospace inline code
 HEADING_CHAR_PX = 13.5
-PAD_X = 48             # left + right content padding
-PAD_Y = 28             # top + bottom content padding
+PAD_X = 48  # left + right content padding
+PAD_Y = 28  # top + bottom content padding
 LINE_PX = 26
 HEADING_PX = 48
-CLEARANCE = 12         # free space a line keeps around every block
+CLEARANCE = 12  # free space a line keeps around every block
 
 
 def text_width_px(line):
@@ -33,8 +34,13 @@ def needed_height(text, width):
 
 def side_point(node, side):
     x, y, w, h = node["x"], node["y"], node["width"], node["height"]
-    return {"top": (x + w / 2, y), "bottom": (x + w / 2, y + h),
-            "left": (x, y + h / 2), "right": (x + w, y + h / 2)}[side]
+    points = {
+        "top": (x + w / 2, y),
+        "bottom": (x + w / 2, y + h),
+        "left": (x, y + h / 2),
+        "right": (x + w, y + h / 2),
+    }
+    return points[side]
 
 
 def segment_hits_rect(p1, p2, node, margin):
@@ -50,15 +56,18 @@ def segment_hits_rect(p1, p2, node, margin):
 
 def facing(from_side, to_side, p1, p2):
     (x1, y1), (x2, y2) = p1, p2
-    pairs = {("right", "left"): x2 > x1 and abs(y1 - y2) < 0.5,
-             ("left", "right"): x2 < x1 and abs(y1 - y2) < 0.5,
-             ("bottom", "top"): y2 > y1 and abs(x1 - x2) < 0.5,
-             ("top", "bottom"): y2 < y1 and abs(x1 - x2) < 0.5}
+    pairs = {
+        ("right", "left"): x2 > x1 and abs(y1 - y2) < 0.5,
+        ("left", "right"): x2 < x1 and abs(y1 - y2) < 0.5,
+        ("bottom", "top"): y2 > y1 and abs(x1 - x2) < 0.5,
+        ("top", "bottom"): y2 < y1 and abs(x1 - x2) < 0.5,
+    }
     return pairs.get((from_side, to_side), False)
 
 
 def check(path):
-    canvas = json.load(open(path, encoding="utf-8"))
+    with open(path, encoding="utf-8") as canvas_file:
+        canvas = json.load(canvas_file)
     nodes = {n["id"]: n for n in canvas["nodes"]}
     blocks = [n for n in canvas["nodes"] if n["type"] != "group"]
     problems = []
@@ -67,9 +76,13 @@ def check(path):
         if need > node["height"]:
             problems.append(f"scroll: {node['id']} needs ~{need:.0f}px, has {node['height']}")
     for i, a in enumerate(blocks):
-        for b in blocks[i + 1:]:
-            if (a["x"] < b["x"] + b["width"] and b["x"] < a["x"] + a["width"]
-                    and a["y"] < b["y"] + b["height"] and b["y"] < a["y"] + a["height"]):
+        for b in blocks[i + 1 :]:
+            if (
+                a["x"] < b["x"] + b["width"]
+                and b["x"] < a["x"] + a["width"]
+                and a["y"] < b["y"] + b["height"]
+                and b["y"] < a["y"] + a["height"]
+            ):
                 problems.append(f"overlap: {a['id']} / {b['id']}")
     for edge in canvas["edges"]:
         if edge.get("label"):

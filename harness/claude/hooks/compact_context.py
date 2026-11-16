@@ -22,7 +22,9 @@ def run_git(cwd: pathlib.Path, *arguments: str) -> str:
         command = ["wsl.exe", "-d", segments[1], "--cd", linux_path, "--exec", *command]
         working_directory = None
     try:
-        result = subprocess.run(command, cwd=working_directory, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        result = subprocess.run(
+            command, cwd=working_directory, capture_output=True, text=True, encoding="utf-8", errors="replace"
+        )
     except OSError:
         return ""
     if result.returncode != 0:

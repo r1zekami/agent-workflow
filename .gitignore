@@ -11,3 +11,4 @@ backups/
 # Python bytecode
 __pycache__/
 *.pyc
+.ruff_cache/
