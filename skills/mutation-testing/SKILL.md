@@ -1,6 +1,6 @@
 ---
 name: mutation-testing
-description: Use when the user runs /mutations-tests or asks for tests written from the spec by an isolated agent and checked by mutation testing. Holds the spec and brief preparation, the test-writer subagent dispatch, the frozen-tests check, the mutation run and the triage of surviving mutants.
+description: Use when the user asks for tests written from the spec by an isolated agent and checked by mutation testing. Holds the spec and brief preparation, the test-writer subagent dispatch, the frozen-tests check, the mutation run and the triage of surviving mutants.
 ---
 
 # Spec tests and mutation testing

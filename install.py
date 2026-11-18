@@ -20,7 +20,7 @@ BACKUP = HOME / ".agent-workflow-backup" / datetime.datetime.now().strftime("%Y%
 # Marks a skill folder as installed from this repo, so it is removed once the repo drops it.
 INSTALLED_SKILL_MARKER = ".installed-by-agent-workflow"
 
-# Lists the files of a folder installed from this repo (rules, commands), so a file dropped from the repo is removed.
+# Lists the files of a folder installed from this repo (rules), so a file dropped from the repo is removed.
 INSTALLED_FILES_MANIFEST = ".installed-by-agent-workflow"
 
 # Paths left by the previous layout of this repo; moved to the backup folder.
@@ -29,6 +29,8 @@ OBSOLETE_PATHS = [
     CLAUDE_HOME / "skills" / "context7-mcp",
     CLAUDE_HOME / "agents" / "Explore.md",
     CLAUDE_HOME / "agents" / "architecture-designer.md",
+    CLAUDE_HOME / "commands",
+    OPENCODE_HOME / "commands",
 ]
 
 # Keys of live JSON files left by the previous format of a template; dropped before the merge.
@@ -164,7 +166,6 @@ def install_claude() -> None:
             backup(path)
     copy_file(REPO / "core" / "AGENTS.md", CLAUDE_HOME / "CLAUDE.md")
     install_markdown_folder(REPO / "rules", CLAUDE_HOME / "rules")
-    install_markdown_folder(REPO / "commands", CLAUDE_HOME / "commands")
     remove_skills_dropped_from_repo()
     for skill in sorted((REPO / "skills").iterdir()):
         copy_skill(skill, CLAUDE_HOME / "skills" / skill.name)
@@ -181,7 +182,6 @@ def install_claude() -> None:
 def install_opencode() -> None:
     # Skills come from ~/.claude/skills; the documented ~/.claude/CLAUDE.md fallback is not loaded by OpenCode 2.x.
     copy_file(REPO / "core" / "AGENTS.md", OPENCODE_HOME / "AGENTS.md")
-    install_markdown_folder(REPO / "commands", OPENCODE_HOME / "commands")
     replacements = {"{{HOME}}": HOME.as_posix()}
     merge_json_file(
         REPO / "harness" / "opencode" / "opencode.json", OPENCODE_HOME / "opencode.json", replacements=replacements

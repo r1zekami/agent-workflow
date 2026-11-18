@@ -69,8 +69,9 @@ Load the matching skill before the work, not after:
 | Obsidian `.canvas` files | `obsidian-canvas` |
 | Anything in second-brain | `second-brain` |
 | Repo with `.beads/` | `beads` |
-| Refactor to the code rules (`/refactor-all`, `/refactor-latest`) | `refactor` |
-| Tests from the spec by an isolated subagent, mutation testing (`/mutations-tests`) | `mutation-testing` |
+| Refactor the whole repo to the code rules | `refactor-all` |
+| Refactor the session's changes to the code rules | `refactor-latest` |
+| Tests from the spec by an isolated subagent, mutation testing | `mutation-testing` |
 
 Process skills (brainstorming, planning, TDD, debugging, review, verification) come from superpowers. A repo with `openspec/` follows native OpenSpec (`/opsx:*`) and its own `openspec/config.yaml`.
 
